@@ -145,13 +145,6 @@ const bikeData: BikeData = {
       power: "77 кВт/ц",
       image: "/bike3.png",
     },
-    {
-      title: "Husqvarna Norden 901",
-      model: "2023 HUSQVARNA NORDEN",
-      cc: "889CC",
-      power: "77 кВт/ц",
-      image: "/bike3.png",
-    },
   ],
 };
 
