@@ -7,11 +7,13 @@ import { MdLocalPhone, MdOutlineEmail } from "react-icons/md";
 
 export const Footer = () => {
   return (
+
     <footer className="bg-[#1C1917] text-gray-300 pt-10 w-full">
       <div className="max-w-7xl mx-auto px-6 md:px-12 grid gap-20">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
           {/* Help Links */}
           <nav aria-label="Footer Navigation">
+
             <h3 className="text-white font-bold mb-4">Тусламж</h3>
             <ul className="space-y-2">
               <li>
@@ -114,10 +116,12 @@ export const Footer = () => {
           </div>
         </div>
 
+
         {/* Bottom Bar */}
         <div className="border-t border-[#A8A29E] pt-4 flex flex-col md:flex-row justify-between items-center text-sm text-gray-400">
           <p>© 2025 МОТО. Бүх эрх хуулиар хамгаалагдсан.</p>
           <p className="mt-2 md:mt-0">Зохиогчийн эрхийн тухай</p>
+
         </div>
       </div>
 

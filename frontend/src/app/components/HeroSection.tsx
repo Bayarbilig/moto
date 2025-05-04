@@ -1,9 +1,10 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
-import scrollSvg from "../svgs/scrollSvg.svg";
-import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
+import scrollSvg from "../svgs/scrollSvg.svg";
 
 const slides = [
   {
@@ -37,8 +38,7 @@ export const HeroSection = () => {
   }, []);
 
   return (
-    <section className="relative h-screen overflow-hidden ">
-      {/* Animated Background Image */}
+    <section className="relative h-screen overflow-hidden">
       <AnimatePresence mode="wait">
         <motion.div
           key={slides[current].background}
@@ -47,15 +47,12 @@ export const HeroSection = () => {
           exit={{ opacity: 0 }}
           transition={{ duration: 1.5 }}
           className="absolute inset-0 bg-no-repeat bg-cover bg-center"
-          style={{
-            backgroundImage: `url("${slides[current].background}")`,
-          }}
+          style={{ backgroundImage: `url(${slides[current].background})` }}
         >
           <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent"></div>
         </motion.div>
       </AnimatePresence>
 
-      {/* Slide content */}
       <div className="relative z-10 h-full flex justify-end items-center px-6 md:px-20">
         <motion.div
           key={slides[current].title}
@@ -71,7 +68,6 @@ export const HeroSection = () => {
         </motion.div>
       </div>
 
-      {/* Arrows */}
       <div className="flex justify-between absolute w-full top-[50%] px-8 md:px-24">
         <button onClick={prevSlide} className="z-40">
           <BiChevronLeft size={48} className="text-[#ff6b00]" />
@@ -81,9 +77,7 @@ export const HeroSection = () => {
         </button>
       </div>
 
-      {/* Dots + Scroll */}
-      <div className="flex w-full absolute bottom-6 justify-around items-end ">
-        {/* Dots */}
+      <div className="flex w-full absolute bottom-6 justify-around items-end">
         <div className="flex gap-1">
           {slides.map((_, i) => (
             <div
@@ -96,7 +90,6 @@ export const HeroSection = () => {
           ))}
         </div>
 
-        {/* Scroll down */}
         <div className="flex flex-col items-center gap-2">
           <p className="text-white">Scroll down</p>
           <Image src={scrollSvg} height={60} width={10} alt="Scroll icon" />

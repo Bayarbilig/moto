@@ -9,7 +9,7 @@ export const ProductSection = () => {
   const scrollAccessories = (direction: "left" | "right") => {
     const container = accessoriesRef.current;
     if (container) {
-      const scrollAmount = 260 * 3 + 36; // 3 items width + spacing
+      const scrollAmount = container.clientWidth * 0.75; // Scroll by 75% of the container width for a smoother experience
       container.scrollBy({
         left: direction === "left" ? -scrollAmount : scrollAmount,
         behavior: "smooth",
@@ -20,7 +20,7 @@ export const ProductSection = () => {
   const scrollEquipment = (direction: "left" | "right") => {
     const container = equipmentRef.current;
     if (container) {
-      const scrollAmount = 260 * 3 + 36; // 3 items width + spacing
+      const scrollAmount = container.clientWidth * 0.75; // Same as above
       container.scrollBy({
         left: direction === "left" ? -scrollAmount : scrollAmount,
         behavior: "smooth",
@@ -134,10 +134,11 @@ export const ProductSection = () => {
       style={{ backgroundImage: "url('/section2.png')" }}
     >
       <div className="max-w-7xl mx-auto px-6 md:px-12">
-        <h2 className="text-2xl font-bold mb-8 text-white">
-          Мотоциклийн сэлбэг, багаж хэрэгсэл
+        <h2 className="text-xl md:text-2xl font-bold mb-8 text-white">
+          Мотоциклийн сэлбэг
         </h2>
 
+        {/* Accessories Section */}
         <div className="relative">
           <div
             ref={accessoriesRef}
@@ -152,20 +153,19 @@ export const ProductSection = () => {
                   <img
                     src={product.image}
                     alt={product.name}
-                    className="w-full h-full object-cover "
+                    className="w-full h-full object-cover"
                   />
                   <div className="absolute top-0 left-3 bg-[#F95F19] w-fit transform -skew-x-12">
-                    <span className="product-price px-3 py-2 text-white">
+                    <span className="product-price text-white py-2 px-3">
                       {product.price}
                     </span>
-                    {/* Display price */}
                   </div>
                 </div>
                 <div className="p-4">
-                  <p className="text-gray-400 text-xs uppercase">
+                  <p className="text-gray-400 text-xs md:text-sm uppercase">
                     {product.brand}
                   </p>
-                  <h3 className="text-white font-bold mt-1">
+                  <h3 className="text-white font-bold mt-1 text-sm md:text-base">
                     {product.name}
                     {product.model && ` ${product.model}`}
                   </h3>
@@ -179,7 +179,7 @@ export const ProductSection = () => {
             onClick={() => scrollAccessories("left")}
             className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-4 p-2 bg-[#F95F19] rounded-full hidden md:block"
           >
-            <BiChevronLeft size={24} className="text-white " />
+            <BiChevronLeft size={24} className="text-white" />
           </button>
           <button
             onClick={() => scrollAccessories("right")}
@@ -192,8 +192,8 @@ export const ProductSection = () => {
 
       {/* Equipment Section */}
       <div className="max-w-7xl mx-auto px-6 md:px-12">
-        <h2 className="text-2xl font-bold mb-8 text-white">
-          Мотоциклийн сэлбэг, багаж хэрэгсэл
+        <h2 className="text-xl md:text-xl font-bold mb-8 text-white">
+          Мотоциклийн багаж хэрэгсэл
         </h2>
 
         <div className="relative">
@@ -219,10 +219,10 @@ export const ProductSection = () => {
                   </div>
                 </div>
                 <div className="p-4">
-                  <p className="text-gray-400 text-xs uppercase">
+                  <p className="text-gray-400 text-xs md:text-sm uppercase">
                     {product.brand}
                   </p>
-                  <h3 className="text-white font-bold mt-1">
+                  <h3 className="text-white font-bold mt-1 text-sm md:text-base">
                     {product.name}
                     {product.model && ` ${product.model}`}
                   </h3>
