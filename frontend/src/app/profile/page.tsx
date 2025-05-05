@@ -1,51 +1,124 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { toast } from "react-hot-toast";
+import { uploadImageToCloud } from "@/utils/uploadImage";
+
+interface Profile {
+  name: string;
+  email: string;
+  avatar: string;
+}
 
 const ProfilePage = () => {
   const router = useRouter();
+  const [profile, setProfile] = useState<Profile>({
+    name: "",
+    email: "",
+    avatar: "",
+  });
+
+  const [isSaving, setIsSaving] = useState(false);
+
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      // Upload the image to Cloud or S3
+      const imageUrl = await uploadImageToCloud(file);
+      setProfile((prev) => ({ ...prev, avatar: imageUrl }));
+    } catch (error) {
+      toast.error("Зураг илгээхэд алдаа гарлаа");
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setProfile((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const saveProfile = async () => {
+    try {
+      setIsSaving(true);
+
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(profile), // profile-д URL байж байх ёстой
+      });
+
+      if (!response.ok) throw new Error("Хадгалах явцад алдаа гарлаа");
+
+      toast.success("Профайл амжилттай хадгалагдлаа!");
+    } catch (error) {
+      toast.error((error as Error).message);
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   return (
-    <div className="bg-[#1E1E1E] min-h-screen py-10 sm:py-16 px-4 sm:px-6 md:px-8 my-9 text-white">
-      <div className="max-w-3xl mx-auto">
-        {/* Хувийн мэдээлэл */}
-        <h1 className="text-2xl sm:text-3xl font-bold mb-6">Миний профайл</h1>
+    <div className="max-w-xl mx-auto py-20 px-4">
+      <h1 className="text-2xl font-bold mb-6 text-white">Профайл</h1>
 
-        <div className="bg-[#262626] p-6 rounded-lg shadow-md space-y-4">
-          <div>
-            <label className="block text-sm text-gray-400">Нэр</label>
-            <input
-              type="text"
-              className="mt-1 w-full px-4 py-2 rounded bg-[#1E1E1E] text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-orange-500"
-              placeholder="Таны нэр"
-            />
+      {/* Profile Image Upload */}
+      {/* <div className="mb-6 flex items-center gap-4">
+        {profile.avatar ? (
+          <Image
+            src={profile.avatar}
+            alt="Profile"
+            width={80}
+            height={80}
+            className="rounded-full object-cover"
+          />
+        ) : (
+          <div className="w-20 h-20 bg-gray-600 rounded-full flex items-center justify-center text-white text-sm">
+            Зураг
           </div>
+        )}
+        <label className="cursor-pointer text-sm text-orange-400">
+          📸 Зураг нэмэх
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            className="hidden"
+          />
+        </label>
+      </div> */}
 
-          <div>
-            <label className="block text-sm text-gray-400">Имэйл</label>
-            <input
-              type="email"
-              className="mt-1 w-full px-4 py-2 rounded bg-[#1E1E1E] text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-orange-500"
-              placeholder="email@example.com"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm text-gray-400">Нууц үг</label>
-            <input
-              type="password"
-              className="mt-1 w-full px-4 py-2 rounded bg-[#1E1E1E] text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-orange-500"
-              placeholder="••••••••"
-            />
-          </div>
-
-          <div className="flex justify-end pt-4">
-            <button className="bg-[#F95F19] hover:bg-orange-600 transition px-6 py-2 rounded text-white font-medium">
-              Хадгалах
-            </button>
-          </div>
-        </div>
+      {/* Profile Inputs */}
+      <div className="mb-4">
+        <label className="block text-white mb-1">Нэр</label>
+        <input
+          type="text"
+          name="name"
+          value={profile.name}
+          onChange={handleChange}
+          className="w-full p-2 rounded bg-gray-700 text-white"
+        />
       </div>
+
+      <div className="mb-6">
+        <label className="block text-white mb-1">Имэйл</label>
+        <input
+          type="email"
+          name="email"
+          value={profile.email}
+          onChange={handleChange}
+          className="w-full p-2 rounded bg-gray-700 text-white"
+        />
+      </div>
+
+      <button
+        onClick={saveProfile}
+        disabled={isSaving}
+        className="bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded"
+      >
+        {isSaving ? "Хадгалж байна..." : "Хадгалах"}
+      </button>
     </div>
   );
 };
