@@ -36,40 +36,34 @@ const TeamMember = ({
 const About = () => {
   const teamMembers = [
     {
-      name: "Paul George",
+      name: "Dorj",
       role: "Founder",
-      image:
-        "https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8OHx8YnVzaW5lc3MlMjBtYW58ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
+      image: "dorj.jpg",
     },
     {
-      name: "Samuel Davis",
+      name: "Bat-erdene",
       role: "CEO",
-      image:
-        "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTR8fGJ1c2luZXNzJTIwbWFufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
+      image: "Bat-erdene.jpg",
     },
     {
-      name: "Amelia Taylor",
+      name: "Tuguldur",
       role: "Manager",
-      image:
-        "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8YnVzaW5lc3MlMjB3b21hbnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60",
+      image: "Tuguldur.jpg",
     },
     {
-      name: "Lily May",
-      role: "Health officer",
-      image:
-        "https://images.unsplash.com/photo-1580894732444-8ecded7900cd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8YnVzaW5lc3MlMjB3b21hbnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60",
+      name: "Tselmeg",
+      role: "Mechanic and welder",
+      image: "Tselmeg.jpg",
     },
     {
-      name: "Alexander Moore",
-      role: "Photographer",
-      image:
-        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8YnVzaW5lc3MlMjBtYW58ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
+      name: "Bilguun",
+      role: "Mechanic",
+      image: "u.bilguun.jpg",
     },
     {
-      name: "Edward Scott",
-      role: "Technician",
-      image:
-        "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTd8fGJ1c2luZXNzJTIwbWFufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
+      name: "Radnaabazar",
+      role: "Mechanic",
+      image: "radnaa.jpg",
     },
   ];
 
@@ -118,24 +112,23 @@ const About = () => {
         <div className="container mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <div>
-              <h1 className="text-4xl md:text-5xl font-bold text-white mb-8">
-                About us
+              <h1 className="text-4xl md:text-5xl font-bold text-slate-400 mb-8">
+                "Мотоцикл сонирхогч та бүхэндээ хамгийн чанартай барааг хүргэх
+                болно"
               </h1>
             </div>
             <div>
               <p className="text-white text-lg">
-                The history of our company began with the passion of
-                nature-loving and adventure-seeking travelers who wanted to
-                experience and share the wonder of motorcycle travel through the
-                mountains and deserts. This is what led us to create this
-                company.
+                Мото спортод дуртай, адал явдалд дурлагч та бүхэнд зориулагдсан
+                Мото шоп нь зөвхөн чанартай, баталгаатай бараа бүтээгдэхүүн,
+                тоног төхөөрөмж, мэргэжлийн засвар үйлчилгээ, сэлбэг хэрэгслийг
+                нэг дороос санал болгож байна.
               </p>
               <p className="text-white text-lg mt-4">
-                Our team first united with three words: nature, motorcycle and
-                adventure, and set a goal to travel to the beautiful places of
-                our country and share it with others. Throughout the journey,
-                protecting the environment and respecting local culture and
-                history have been at the core of our operations.
+                Энэхүү брэнд нь байгаль, хурд болон эрх чөлөө гэсэн гурван үнэ
+                цэнийг эрхэмлэн үйл ажиллагаагаа явуулдаг. Анх хобби маягаар
+                эхэлсэн аялал маань өнөөдөр олон зуун хэрэглэгчтэй, мэргэжлийн
+                түвшний баг болж өргөжсөн.
               </p>
             </div>
           </div>
@@ -148,19 +141,20 @@ const About = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
               <img
-                src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8dGVhbSUyMG1lZXRpbmd8ZW58MHx8MHx8&auto=format&fit=crop&w=800&q=60"
+                src="eliteGroup.jpg"
                 alt="Team Meeting"
                 className="w-full rounded-md shadow-xl"
               />
             </div>
             <div>
               <h2 className="text-2xl md:text-3xl font-bold text-white mb-6">
-                FROM PASSION TO PURPOSE
+                ХҮСЭЛ МӨРӨӨДЛӨӨС ЭРХЭМ ЗОРИЛГОД
               </h2>
               <p className="text-white text-lg">
-                Our desire to share our lifestyle and passion for adventure is
-                enough to motivate us to continuously improve and innovate in
-                all aspects of our travel company.
+                Байгальд ээлтэй, аюулгүй, сэтгэл хөдөлгөм аялал зохион байгуулах
+                нь бидний туйлын зорилго. Мөн зөвхөн аялал биш — хэрэглэгч
+                бүрдээ мото ертөнцийн сэтгэл хөдлөл, үнэ цэнийг мэдрүүлэхийг
+                зорьдог.
               </p>
             </div>
           </div>
@@ -171,7 +165,7 @@ const About = () => {
       <section className="py-16 px-6 md:px-12">
         <div className="container mx-auto">
           <h2 className="text-2xl md:text-3xl font-bold text-white mb-12">
-            OUR TEAM
+            МАНАЙ БАГ
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
             {teamMembers.map((member, index) => (
@@ -187,10 +181,10 @@ const About = () => {
       </section>
 
       {/* Guides Section */}
-      <section className="py-16 px-6 md:px-12">
+      {/* <section className="py-16 px-6 md:px-12">
         <div className="container mx-auto">
           <h2 className="text-2xl md:text-3xl font-bold text-white mb-12">
-            OUR EXPERIENCED GUIDES
+            ТУРШЛАГАТАЙ ГАЙД НАР
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
             {guides.map((guide, index) => (
@@ -204,7 +198,7 @@ const About = () => {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
     </div>
   );
 };
