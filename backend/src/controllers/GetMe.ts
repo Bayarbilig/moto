@@ -1,6 +1,6 @@
 // controllers/userController.ts
 import { Request, Response } from "express";
-import User from "../models/User";
+import User from "../models/UserModel";
 import { AuthenticatedRequest } from "./Authmiddlewaret";
 
 export const getMe = async (req: AuthenticatedRequest, res: Response) => {

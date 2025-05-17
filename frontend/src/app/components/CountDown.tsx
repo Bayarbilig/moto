@@ -15,6 +15,7 @@ export const CountdownSection = (): JSX.Element => {
 
   useEffect(() => {
     const getTimeRemaining = (): TimeLeft => {
+      
       const storedEndDate = localStorage.getItem("countdownEndDate");
 
       let endDate: Date;

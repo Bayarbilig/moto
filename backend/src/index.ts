@@ -10,6 +10,8 @@ import BrandRoute from "./routes/BrandRoute";
 import accessRoute from "./routes/AccessoryRoute";
 import equipRoute from "./routes/EquipmentRoute";
 import eventRouter from "./routes/EventRoute";
+import workerRoute from "./routes/WorkerRoute";
+import bookingRouter from "./routes/BookingRoute";
 
 dotenv.config();
 
@@ -28,6 +30,9 @@ app.use("/api/brands", BrandRoute);
 app.use("/api/accessories", accessRoute);
 app.use("/api/equipment", equipRoute);
 app.use("/api/event", eventRouter);
+app.use("/api/worker", workerRoute);
+app.use("/api/booking", bookingRouter);
+
 app.listen(port, () => {
   console.log(`Сервер ${port} порт дээр ажиллаж байна`);
 });

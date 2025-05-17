@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useState } from "react";
 import EventCard from "../components/EventCard";
 import { useRouter } from "next/navigation";
-import { Event } from "../components/Types";
+import { Event } from "../components/types";
 import { api } from "@/lib/axios";
 
 const Page = () => {

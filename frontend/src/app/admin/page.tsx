@@ -3,16 +3,19 @@ import { api } from "@/lib/axios";
 import React, { useEffect, useState, useCallback } from "react";
 import { toast } from "react-toastify";
 
-import { Event, Brand, Bike, Accessory, Equipment } from "../components/Types";
+import { Event, Brand, Bike, Accessory, Equipment } from "../components/types";
 import UsersTab from "../components/UserTab";
 import BrandManager from "../components/BrandManeger";
 import AccessoryManager from "../components/AccessoryManeger";
 import { BikeManager } from "../components/BikeManeger";
 import { EquipmentManager } from "../components/EquipmentManeger";
 import EventForm from "../components/EventForm";
-import { EventManeger } from "../components/EventManeger";
-// Components
-
+import { useRouter } from "next/navigation";
+import { jwtDecode } from "jwt-decode";
+import { EventManager } from "../components/EventManeger";
+import BookingForm from "../components/BookingForm";
+import WorkerList from "../components/WorkerList";
+import AddWorkerForm from "../components/AddWorkerForm";
 const AdminPanel = () => {
   const [activeTab, setActiveTab] = useState("Users");
   const [userData, setUserData] = useState([]);
@@ -21,6 +24,33 @@ const AdminPanel = () => {
   const [accessories, setAccessories] = useState<Accessory[]>([]);
   const [equipment, setEquipment] = useState<Equipment[]>([]);
   const [events, setEvents] = useState<Event[]>([]);
+
+  const router = useRouter();
+  interface DecodedToken {
+    role: string;
+  }
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      router.replace("/");
+      return;
+    }
+
+    try {
+      const decoded: DecodedToken = jwtDecode(token);
+
+      if (decoded.role !== "admin") {
+        router.replace("/");
+      }
+    } catch (err) {
+      console.error("Invalid token", err);
+      router.replace("/");
+    }
+  }, []);
+
   // Fetch users data
   const fetchUserData = useCallback(async () => {
     try {
@@ -218,9 +248,9 @@ const AdminPanel = () => {
   ]);
 
   return (
-    <div className="p-4 py-32 h-fit">
-      <div className="flex gap-12 py-12">
-        {["Users", "Moto", "Event"].map((tab) => (
+    <div className="p-4 py-32 h-fit ">
+      <div className="flex gap-12 py-12 px-32">
+        {["Users", "Moto", "Event", "Time"].map((tab) => (
           <p
             key={tab}
             className={`cursor-pointer ${
@@ -232,6 +262,8 @@ const AdminPanel = () => {
               ? "Хэрэглэгч"
               : tab === "Moto"
               ? "Мото Үүсгэх"
+              : tab === "Time"
+              ? "Цаг авах"
               : "Эвэнт харах"}
           </p>
         ))}
@@ -241,7 +273,7 @@ const AdminPanel = () => {
 
       {activeTab === "Moto" && (
         <div className="grid gap-32 w-full px-32">
-          <div className="flex gap-20">
+          <div className="grid gap-20">
             <BrandManager
               brands={brands}
               onCreateBrand={handleCreateBrand}
@@ -255,7 +287,7 @@ const AdminPanel = () => {
             />
           </div>
 
-          <div className="flex w-full gap-12">
+          <div className="grid w-full gap-12">
             <BikeManager
               brands={brands}
               bikes={bikes}
@@ -272,9 +304,18 @@ const AdminPanel = () => {
         </div>
       )}
       {activeTab === "Event" && (
-        <div className="bg-[#1a1a1a] flex gap-12 w-[800px] p-6">
-          <EventForm onCreate={handleCreateEvent} />
-          <EventManeger events={events} onDeleteEvent={handleDeleteEvent} />
+        <div className="px-32">
+          <div className="bg-[#1a1a1a] flex gap-12 w-full p-6 ">
+            <EventForm onCreate={handleCreateEvent} />
+            <EventManager events={events} onDeleteEvent={handleDeleteEvent} />
+          </div>
+        </div>
+      )}
+      {activeTab === "Time" && (
+        <div className="px-32 flex items-start gap-12">
+          <BookingForm />
+          <WorkerList />
+          <AddWorkerForm />
         </div>
       )}
     </div>

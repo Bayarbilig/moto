@@ -1,7 +1,6 @@
-// components/BrandManager.tsx
 import React, { useState } from "react";
 import { BiTrash } from "react-icons/bi";
-import { Brand } from "./Types";
+import { Brand } from "./types";
 
 interface BrandManagerProps {
   brands: Brand[];
@@ -23,62 +22,61 @@ const BrandManager: React.FC<BrandManagerProps> = ({
     const value = e.target.value;
     setCreateBrandData({
       name: value,
-      slug: value, // Auto-generate slug from name
+      slug: value,
     });
   };
 
   const handleSubmit = () => {
-    if (!createBrandData.name) return;
-
+    if (!createBrandData.name.trim()) return;
     onCreateBrand(createBrandData).then(() => {
-      // Reset form after successful creation
       setCreateBrandData({ name: "", slug: "" });
     });
   };
 
   return (
-    <div className="w-fit bg-[#1a1a1a] px-4 py-14 flex gap-24 items-center text-white rounded">
-      <div className="grid gap-4">
-        <div>
-          <label htmlFor="brand" className="block mb-1">
-            Create Brand
-          </label>
-          <input
-            id="brand"
-            type="text"
-            value={createBrandData.name}
-            onChange={handleChange}
-            required
-            className="p-2 rounded bg-transparent border-2 border-gray-700 text-white"
-          />
+    <div className="bg-[#1a1a1a] text-white rounded-lg p-6 flex flex-col md:flex-row gap-10">
+      {/* Create Brand Section */}
+      <div className="w-full md:w-1/2">
+        <h2 className="text-xl font-semibold mb-4">Шинэ Брэнд үүсгэх</h2>
+        <div className="space-y-4">
+          <div>
+            <label htmlFor="brand" className="block mb-1 text-sm font-medium">
+              Брэндийн нэр
+            </label>
+            <input
+              id="brand"
+              type="text"
+              value={createBrandData.name}
+              onChange={handleChange}
+              placeholder="Жишээ: Yamaha"
+              className="w-full p-2 rounded bg-[#2a2a2a] border border-gray-600 focus:outline-none focus:ring-2 focus:ring-orange-500"
+            />
+          </div>
+          <button
+            onClick={handleSubmit}
+            className="w-full bg-orange-600 hover:bg-orange-700 text-white py-2 rounded transition disabled:opacity-50"
+          >
+            Үүсгэх
+          </button>
         </div>
-        <button
-          onClick={handleSubmit}
-          className="bg-[#e15617] px-4 py-2 rounded"
-        >
-          Brand үүсгэх
-        </button>
       </div>
 
-      <div>
-        <label htmlFor="brand" className="block mb-1">
-          Delete Brand
-        </label>
-        <div
-          className="w-[200px] max-h-[240px] overflow-auto scrollbar-thin scrollbar-thumb-[#e15617] scrollbar-track-[#222] rounded"
-          style={{
-            scrollbarColor: "#e15617 #222",
-            scrollbarWidth: "thin",
-          }}
-        >
+      {/* Delete Brand Section */}
+      <div className="w-full md:w-1/2">
+        <h2 className="text-xl font-semibold mb-4">Брэнд жагсаалт</h2>
+        <div className="max-h-[200px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-orange-600 scrollbar-track-[#222] space-y-2">
           {brands.map((brand) => (
             <div
               key={brand._id}
-              onClick={() => onDeleteBrand(brand._id)}
-              className="border border-gray-700 px-4 py-2 flex items-center w-full justify-between cursor-pointer hover:bg-gray-800"
+              onClick={() => {
+                if (confirm(`"${brand.name}" брэндийг устгах уу?`)) {
+                  onDeleteBrand(brand._id);
+                }
+              }}
+              className="group flex items-center justify-between bg-[#2a2a2a] border border-gray-700 rounded-lg p-3 hover:border-orange-600 transition cursor-pointer"
             >
-              <p>{brand.name}</p>
-              <BiTrash />
+              <span className="text-sm text-white">{brand.name}</span>
+              <BiTrash className="text-red-500 text-lg group-hover:scale-110 transition" />
             </div>
           ))}
         </div>

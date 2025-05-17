@@ -6,7 +6,7 @@ import { BiMapPin } from "react-icons/bi";
 import { CgLock } from "react-icons/cg";
 import { FaUserSecret } from "react-icons/fa";
 import { LiaCalendarDaySolid } from "react-icons/lia";
-import { Event } from "@/app/components/Types";
+import { Event } from "@/app/components/types";
 // Fake data for demonstration (normally fetch from API)
 
 const EventDetailPage = () => {

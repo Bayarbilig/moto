@@ -2,8 +2,7 @@
 import { api } from "@/lib/axios";
 import Head from "next/head";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { events } from "./mock";
+import { useCallback, useEffect, useState } from "react";
 
 // Types
 type RegistrationStep = "personal" | "motorcycle" | "completion";
@@ -29,7 +28,22 @@ const MotorcycleRegistration = () => {
   const router = useRouter();
   const { id } = useParams();
   const [name, setName] = useState<string>("");
-
+  interface Event {
+    id: number;
+    title: string;
+  }
+  const [events, setEvents] = useState<Event[]>([]);
+  const fetchEvents = useCallback(async () => {
+    try {
+      const res = await api.get("/api/event");
+      setEvents(res.data);
+    } catch (error) {
+      console.error("Failed to fetch accessories:", error);
+    }
+  }, []);
+  useEffect(() => {
+    fetchEvents();
+  }, [fetchEvents]);
   useEffect(() => {
     const matchedEvent = events.find((event) => event.id === Number(id));
     if (matchedEvent) {

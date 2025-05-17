@@ -12,17 +12,22 @@ export const Header = () => {
 
   const navigate = (path: string) => {
     router.push(path);
-    setMenuOpen(false); // close mobile menu on navigation
+    setMenuOpen(false);
   };
-  const myToken = localStorage.getItem("token");
-  const [token, setToken] = useState(false);
+  const [token, setToken] = useState<boolean | null>(null);
+
   useEffect(() => {
+    const myToken = localStorage.getItem("token");
     if (myToken) {
       setToken(true);
-    } else if (!myToken) {
+    } else {
       setToken(false);
     }
-  }, [myToken]);
+  }, []);
+
+  if (token === null) {
+    return null;
+  }
 
   const navLinks = [
     { label: "Худалдаа", path: "/bike" },

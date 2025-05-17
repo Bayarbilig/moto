@@ -81,8 +81,15 @@ const SignupPage = () => {
   };
 
   return (
-    <div className="min-h-screen   flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8 bg-[#1a1a1a] p-8 rounded-lg shadow-lg">
+    <div
+      className="min-h-screen   flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8"
+      style={{
+        backgroundImage: "url('/honda.jpg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
+      <div className="max-w-md w-full space-y-8 bg-[#1a1a1a]/80 p-8 rounded-lg shadow-lg backdrop-blur-md">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
             Бүртгүүлэх
@@ -101,6 +108,7 @@ const SignupPage = () => {
                 type="text"
                 autoComplete="name"
                 value={formData.name}
+                placeholder="Нэр оруулна уу"
                 onChange={handleChange}
                 className={`w-full p-2 rounded bg-transparent text-white border ${
                   errors.name ? "border-red-500" : "border-gray-600"
@@ -122,6 +130,7 @@ const SignupPage = () => {
                 autoComplete="email"
                 value={formData.email}
                 onChange={handleChange}
+                placeholder="Е-майл оруулна уу"
                 className={`w-full p-2 rounded bg-transparent text-white border ${
                   errors.email ? "border-red-500" : "border-gray-600"
                 }`}
@@ -141,6 +150,7 @@ const SignupPage = () => {
                 type="password"
                 autoComplete="new-password"
                 value={formData.password}
+                placeholder="Нууц үг оруулна уу"
                 onChange={handleChange}
                 className={`w-full p-2 rounded bg-transparent text-white border ${
                   errors.password ? "border-red-500" : "border-gray-600"

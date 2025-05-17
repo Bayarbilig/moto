@@ -58,7 +58,7 @@ const LoginPage = () => {
       const response = await api.post("/api/users/login", formData);
 
       const { token } = response.data;
-
+      // if (typeof window === "undefined") return;
       localStorage.setItem("token", token);
       const decoded = jwtDecode<TokenPayload>(token);
 
@@ -80,8 +80,15 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen  flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8 bg-[#1a1a1a] p-8 rounded-lg shadow-lg">
+    <div
+      className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8"
+      style={{
+        backgroundImage: "url('/honda.jpg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
+      <div className="max-w-md w-full space-y-8 bg-[#1a1a1a]/80 p-8 rounded-lg shadow-lg backdrop-blur-md z-50">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
             Нэвтрэх
@@ -93,6 +100,7 @@ const LoginPage = () => {
           <input
             type="email"
             name="email"
+            placeholder="Е-майл оруулна уу"
             value={formData.email}
             onChange={handleChange}
             className={`w-full p-2 rounded bg-transparent text-white border ${
@@ -109,6 +117,7 @@ const LoginPage = () => {
           <input
             type="password"
             name="password"
+            placeholder="Нууц үг оруулна уу"
             value={formData.password}
             onChange={handleChange}
             className={`w-full p-2 rounded bg-transparent text-white border ${

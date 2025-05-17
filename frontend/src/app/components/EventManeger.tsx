@@ -1,36 +1,47 @@
 import React from "react";
 import { BiTrash } from "react-icons/bi";
-import { Event } from "./Types";
+import { Event } from "./types";
 
 type EventManagerProps = {
   events: Event[];
   onDeleteEvent: (_id: string) => void;
 };
 
-export const EventManeger = ({ events, onDeleteEvent }: EventManagerProps) => {
+export const EventManager = ({ events, onDeleteEvent }: EventManagerProps) => {
   return (
-    <div className="flex-1 grid h-fit text-white">
-      <label className="mb-1">Delete Equipment</label>
-      <div
-        className="max-h-[240px] overflow-auto scrollbar-thin scrollbar-thumb-[#e15617] scrollbar-track-[#222] rounded"
-        style={{
-          scrollbarColor: "#e15617 #222",
-          scrollbarWidth: "thin",
-        }}
-      >
-        {events.map((item, index) => (
+    <div className="flex-1">
+      <h2 className="text-xl font-semibold mb-4 text-white">All Events</h2>
+      <div className="max-h-[460px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-[#e15617] scrollbar-track-[#222] space-y-4">
+        {events.map((item) => (
           <div
-            onClick={() => item._id && onDeleteEvent(item._id)}
-            key={index}
-            className="border border-gray-700 px-4 w-full py-2 flex items-center justify-between cursor-pointer"
+            key={item._id}
+            onClick={() => {
+              if (
+                item._id &&
+                confirm(`"${item.title}" нэртэй тэмцээнээ устгах уу?`)
+              ) {
+                onDeleteEvent(item._id);
+              }
+            }}
+            className="group border border-gray-700 rounded-lg overflow-hidden bg-[#2a2a2a] hover:border-[#e15617] transition cursor-pointer"
           >
-            <div className="flex items-center gap-2">
+            <div className="flex gap-4 items-center p-4">
               {item.image && (
-                <img src={item.image} alt={item.title} className="w-16 h-16" />
+                <img
+                  src={item.image}
+                  alt={item.title}
+                  className="w-48 h-48 object-cover rounded border border-gray-600"
+                />
               )}
-              <p>{item.title}</p>
+              <div className="flex-1 text-sm space-y-1 text-white">
+                <p className="font-semibold">{item.title}</p>
+                <p className="text-gray-400">Төрөл: {item.category}</p>
+                <p className="text-gray-400">Тайлбар: {item.description}</p>
+                <p className="text-gray-400">Огноо: {item.date}</p>
+                <p className="text-gray-400">Байршил: {item.location}</p>
+              </div>
+              <BiTrash className="text-red-500 text-xl hover:scale-110 transition" />
             </div>
-            <BiTrash />
           </div>
         ))}
       </div>
