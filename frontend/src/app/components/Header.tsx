@@ -1,18 +1,28 @@
 "use client";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 import { RiUser3Line } from "react-icons/ri";
 import { HiOutlineMenu, HiOutlineX } from "react-icons/hi";
 
 export const Header = () => {
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   const navigate = (path: string) => {
     router.push(path);
     setMenuOpen(false); // close mobile menu on navigation
   };
+  const myToken = localStorage.getItem("token");
+  const [token, setToken] = useState(false);
+  useEffect(() => {
+    if (myToken) {
+      setToken(true);
+    } else if (!myToken) {
+      setToken(false);
+    }
+  }, [myToken]);
 
   const navLinks = [
     { label: "Худалдаа", path: "/bike" },
@@ -45,13 +55,35 @@ export const Header = () => {
           ))}
         </nav>
 
-        {/* Profile/Login Icon */}
-        <div
-          onClick={() => navigate("/profile")}
-          className="hidden md:flex items-center justify-center w-10 h-10 rounded-full bg-[#F95F19]/90 hover:bg-[#f95f19] cursor-pointer transition-colors"
-        >
-          <RiUser3Line className="text-white text-xl" />
-        </div>
+        {!token ? (
+          <div className="hidden md:flex gap-4 ">
+            <div
+              className={`flex items-center justify-center cursor-pointer border border-[#F95F19] px-4 py-2 rounded-sm duration-700 ${
+                pathname === "/login" ? "bg-[#F95F19]/90" : "hover:bg-[#f95f19]"
+              }`}
+              onClick={() => navigate("/login")}
+            >
+              <p className="text-white">Нэвтрэх</p>
+            </div>
+            <div
+              className={`flex items-center justify-center border border-[#F95F19] cursor-pointer px-4 py-2 rounded-sm duration-700 ${
+                pathname === "/signup"
+                  ? "bg-[#F95F19]/90"
+                  : "hover:bg-[#f95f19]"
+              }`}
+              onClick={() => navigate("/signup")}
+            >
+              <p className="text-white">Бүртгүүлэх</p>
+            </div>
+          </div>
+        ) : (
+          <div
+            onClick={() => navigate("/profile")}
+            className="hidden md:flex items-center justify-center w-10 h-10 rounded-full bg-[#F95F19]/90 hover:bg-[#f95f19] cursor-pointer transition-colors"
+          >
+            <RiUser3Line className="text-white text-xl" />
+          </div>
+        )}
 
         {/* Mobile Menu Toggle */}
         <div className="md:hidden flex items-center">

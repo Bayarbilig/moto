@@ -1,10 +1,24 @@
 "use client";
+import { useCallback, useEffect, useState } from "react";
 import EventCard from "../components/EventCard";
 import { useRouter } from "next/navigation";
-import { events } from "../components/mock";
+import { Event } from "../components/Types";
+import { api } from "@/lib/axios";
 
 const Page = () => {
+  const [events, setEvents] = useState<Event[]>([]);
   const router = useRouter();
+  const fetchEvents = useCallback(async () => {
+    try {
+      const res = await api.get("/api/event");
+      setEvents(res.data);
+    } catch (error) {
+      console.error("Failed to fetch accessories:", error);
+    }
+  }, []);
+  useEffect(() => {
+    fetchEvents();
+  }, [fetchEvents]);
   return (
     <div className=" py-32 bg-[#1E1E1E] ">
       <div className=" mx-auto px-4">
@@ -26,8 +40,8 @@ const Page = () => {
               location={event.location}
               viewButtonText={event.viewButtonText}
               applyButtonText={event.applyButtonText}
-              onView={() => router.push(`/detail/${event.id}`)}
-              onApply={() => router.push(`/register/${event.id}`)}
+              onView={() => router.push(`/detail/${event._id}`)}
+              onApply={() => router.push(`/register/${event._id}`)}
             />
           ))}
         </div>

@@ -1,19 +1,19 @@
-import mongoose, { Document, Schema } from "mongoose";
+import mongoose, { Schema, Document } from "mongoose";
 
-export interface Bike extends Document {
+export interface IBike extends Document {
   brand: string;
   title: string;
-  modelName: string; // renamed from "modelName" to avoid conflict
+  bikeModel: string;
   cc: string;
   power: string;
   image: string;
 }
 
-const BikeSchema = new Schema<Bike>(
+const BikeSchema = new Schema<IBike>(
   {
     brand: { type: String, required: true },
     title: { type: String, required: true },
-    modelName: { type: String, required: true }, // updated field
+    bikeModel: { type: String, required: true },
     cc: { type: String, required: true },
     power: { type: String, required: true },
     image: { type: String, required: true },
@@ -21,4 +21,5 @@ const BikeSchema = new Schema<Bike>(
   { timestamps: true }
 );
 
-export default mongoose.model<Bike>("Bike", BikeSchema);
+export default mongoose.models.Bike ||
+  mongoose.model<IBike>("Bike", BikeSchema);

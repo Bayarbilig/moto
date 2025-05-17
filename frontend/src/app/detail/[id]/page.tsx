@@ -1,37 +1,34 @@
 "use client";
+import { api } from "@/lib/axios";
 import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { BiMapPin } from "react-icons/bi";
 import { CgLock } from "react-icons/cg";
 import { FaUserSecret } from "react-icons/fa";
 import { LiaCalendarDaySolid } from "react-icons/lia";
-
+import { Event } from "@/app/components/Types";
 // Fake data for demonstration (normally fetch from API)
-const events = [
-  {
-    id: 1,
-    image: "/event.png",
-    category: "Мото Кросс",
-    title: "Монгол Мото Кросс 2025",
-    description:
-      "Хамгийн том мото кроссын тэмцээн. Энэхүү тэмцээнд оролцогчид хүнд нөхцөлд мотоциклоор уралдана. Шороон зам, саад, усан гаталга, өгсүүр, уруудах гэх мэт олон төрлийн бэрхшээлийг туулах шаардлагатай.",
-    date: "2025-06-15",
-    location: "Төв аймаг, Зуунмод сумын ойролцоо",
-  },
-  {
-    id: 2,
-    image: "/event2.png",
-    category: "Мото Кросс",
-    title: "Монгол Мото Кросс 2026",
-    description:
-      "Шинэ арга хэмжээ! Энэ удаагийн тэмцээн шинэ маршруттай болно. Бүх оролцогчдод амжилт хүсье!",
-    date: "2026-07-10",
-    location: "Улаанбаатар хот",
-  },
-];
 
 const EventDetailPage = () => {
   const { id } = useParams();
-  const event = events.find((e) => e.id === Number(id));
+  const [event, setEvent] = useState<Event | null>(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!id) return;
+
+    const fetchEvent = async () => {
+      try {
+        const res = await api.get<Event>(`/api/event/${id}`);
+        setEvent(res.data);
+      } catch (error) {
+        console.error("Event fetch error:", error);
+      } finally {
+      }
+    };
+
+    fetchEvent();
+  }, [id]);
 
   if (!event) {
     return (
@@ -40,7 +37,6 @@ const EventDetailPage = () => {
       </div>
     );
   }
-  const router = useRouter();
   return (
     <div className="min-h-screen bg-neutral-900 text-white">
       {/* Header Banner */}
@@ -143,7 +139,7 @@ const EventDetailPage = () => {
 
           <button
             className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 rounded"
-            onClick={() => router.push(`/register/${event.id}`)}
+            onClick={() => router.push(`/register/${event._id}`)}
           >
             Бүртгүүлэх
           </button>
