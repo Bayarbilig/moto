@@ -5,6 +5,13 @@ import dotenv from "dotenv";
 import bikeRouter from "./routes/BikeRoute";
 import toolRouter from "./routes/ToolRoute";
 import router from "./routes/RegistrationRoute";
+import userRouter from "./routes/UserRoutes";
+import BrandRoute from "./routes/BrandRoute";
+import accessRoute from "./routes/AccessoryRoute";
+import equipRoute from "./routes/EquipmentRoute";
+import eventRouter from "./routes/EventRoute";
+import workerRoute from "./routes/WorkerRoute";
+import bookingRouter from "./routes/BookingRoute";
 
 dotenv.config();
 
@@ -18,6 +25,14 @@ app.use(cors());
 app.use("/api/bike", bikeRouter);
 app.use("/api/tools", toolRouter);
 app.use("/api/register", router);
+app.use("/api/users", userRouter);
+app.use("/api/brands", BrandRoute);
+app.use("/api/accessories", accessRoute);
+app.use("/api/equipment", equipRoute);
+app.use("/api/event", eventRouter);
+app.use("/api/worker", workerRoute);
+app.use("/api/booking", bookingRouter);
+
 app.listen(port, () => {
   console.log(`Сервер ${port} порт дээр ажиллаж байна`);
 });

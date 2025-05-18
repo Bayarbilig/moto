@@ -1,9 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
-import { toast } from "react-hot-toast";
 import { uploadImageToCloud } from "@/utils/uploadImage";
+import { toast } from "react-toastify";
 
 interface Profile {
   name: string;
@@ -112,13 +111,25 @@ const ProfilePage = () => {
         />
       </div>
 
-      <button
-        onClick={saveProfile}
-        disabled={isSaving}
-        className="bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded"
-      >
-        {isSaving ? "Хадгалж байна..." : "Хадгалах"}
-      </button>
+      <div className="flex justify-between">
+        <button
+          onClick={saveProfile}
+          disabled={isSaving}
+          className="bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded"
+        >
+          {isSaving ? "Хадгалж байна..." : "Хадгалах"}
+        </button>
+        <button
+          onClick={() => {
+            localStorage.removeItem("token");
+            router.push("/");
+            toast.success("Амжилттай гарлаа");
+          }}
+          className="bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded"
+        >
+          гарах
+        </button>
+      </div>
     </div>
   );
 };

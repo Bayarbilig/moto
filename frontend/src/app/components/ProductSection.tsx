@@ -1,10 +1,22 @@
 "use client";
 import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
-import { useRef } from "react";
-
+import { useCallback, useEffect, useRef, useState } from "react";
+import { api } from "@/lib/axios";
+import { Equipment } from "./types";
+interface Access {
+  model: string;
+  brand: string;
+  price: string;
+  id: null | undefined;
+  image: string;
+  _id: string;
+  name: string;
+}
 export const ProductSection = () => {
   const accessoriesRef = useRef<HTMLDivElement>(null);
   const equipmentRef = useRef<HTMLDivElement>(null);
+  const [accessories, setAccessories] = useState<Access[]>([]);
+  const [equipment, setEquipment] = useState<Equipment[]>([]);
 
   const scrollAccessories = (direction: "left" | "right") => {
     const container = accessoriesRef.current;
@@ -27,110 +39,30 @@ export const ProductSection = () => {
       });
     }
   };
+  const fetchAccessories = useCallback(async () => {
+    try {
+      const res = await api.get("/api/accessories");
+      setAccessories(res.data);
+    } catch (error) {
+      console.error("Failed to fetch accessories:", error);
+    }
+  }, []);
+  const fetchEquipment = useCallback(async () => {
+    try {
+      const res = await api.get("/api/equipment");
+      setEquipment(res.data);
+    } catch (error) {
+      console.error("Failed to fetch equipment:", error);
+    }
+  }, []);
 
-  const accessories = [
-    {
-      id: 1,
-      image: "tool1.png",
-      price: "₮155000", // Added price
-      brand: "МАСКА",
-      name: "FOX JERSEY",
-    },
-    {
-      id: 2,
-      image: "tool2.png",
-      price: "₮155000", // Added price
-      brand: "МОТОЦИКЛ ХЭРЭГСЭЛ",
-      name: "2017 HUSQVARNA",
-      model: "FX450 4T",
-    },
-    {
-      id: 3,
-      image: "tool3.png",
-      price: "₮155000", // Added price
-      brand: "ХАСЕЛГ",
-      name: "2013 HARLEY DAVIDSON",
-      model: "883",
-    },
-    {
-      id: 4,
-      image: "tool3.png",
-      price: "₮155000", // Added price
-      brand: "ХАСЕЛГ",
-      name: "2013 HARLEY DAVIDSON",
-      model: "883",
-    },
-    {
-      id: 5,
-      image: "tool3.png",
-      price: "₮155000", // Added price
-      brand: "ХАСЕЛГ",
-      name: "2013 HARLEY DAVIDSON",
-      model: "883",
-    },
-    {
-      id: 6,
-      image: "tool3.png",
-      price: "₮1550000", // Added price
-      brand: "ХАСЕЛГ",
-      name: "2013 HARLEY DAVIDSON",
-      model: "883",
-    },
-  ];
-
-  const equipment = [
-    {
-      id: 1,
-      image: "tool4.png",
-      price: "₮155000", // Added price
-      brand: "МАСКА",
-      name: "FOX JERSEY",
-    },
-    {
-      id: 2,
-      image: "tool5.png",
-      price: "₮155000", // Added price
-      brand: "МОТОЦИКЛ ХЭРЭГСЭЛ",
-      name: "2017 HUSQVARNA",
-      model: "FX450 4T",
-    },
-    {
-      id: 3,
-      image: "tool6.png",
-      price: "₮155000", // Added price
-      brand: "ХАСЕЛГ",
-      name: "2013 HARLEY DAVIDSON",
-      model: "883",
-    },
-    {
-      id: 4,
-      image: "tool3.png",
-      price: "₮155000", // Added price
-      brand: "ХАСЕЛГ",
-      name: "2013 HARLEY DAVIDSON",
-      model: "883",
-    },
-    {
-      id: 5,
-      image: "tool3.png",
-      price: "₮155000", // Added price
-      brand: "ХАСЕЛГ",
-      name: "2013 HARLEY DAVIDSON",
-      model: "883",
-    },
-    {
-      id: 6,
-      image: "tool3.png",
-      price: "₮155000", // Added price
-      brand: "ХАСЕЛГ",
-      name: "2013 HARLEY DAVIDSON",
-      model: "883",
-    },
-  ];
-
+  useEffect(() => {
+    fetchEquipment();
+    fetchAccessories();
+  }, [fetchEquipment, fetchAccessories]);
   return (
     <section
-      className="py-16 bg-moto-dark bg-cover gap-32 grid py-24"
+      className="py-16 bg-moto-dark bg-cover gap-32 grid "
       style={{ backgroundImage: "url('/section2.png')" }}
     >
       <div className="max-w-7xl mx-auto px-6 md:px-12">
@@ -144,10 +76,10 @@ export const ProductSection = () => {
             ref={accessoriesRef}
             className="flex space-x-6 overflow-x-auto scroll-smooth scrollbar-hide pb-6"
           >
-            {accessories.map((product) => (
+            {accessories.map((product, index) => (
               <div
-                key={product.id}
-                className="min-w-[260px] bg-moto-gray rounded-md overflow-hidden flex-shrink-0"
+                key={index}
+                className="min-w-[260px] max-w-[260px]  bg-moto-gray rounded-md overflow-hidden flex-shrink-0"
               >
                 <div className="relative h-48 overflow-hidden border-b mb-2 border-gray-300">
                   <img
@@ -175,18 +107,22 @@ export const ProductSection = () => {
           </div>
 
           {/* Navigation Buttons */}
-          <button
-            onClick={() => scrollAccessories("left")}
-            className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-4 p-2 bg-[#F95F19] rounded-full hidden md:block"
-          >
-            <BiChevronLeft size={24} className="text-white" />
-          </button>
-          <button
-            onClick={() => scrollAccessories("right")}
-            className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-4 p-2 bg-[#F95F19] rounded-full hidden md:block"
-          >
-            <BiChevronRight size={24} className="text-white" />
-          </button>
+          {accessories.length > 4 && (
+            <>
+              <button
+                onClick={() => scrollAccessories("left")}
+                className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-4 p-2 bg-[#F95F19] rounded-full hidden md:block"
+              >
+                <BiChevronLeft size={24} className="text-white" />
+              </button>
+              <button
+                onClick={() => scrollAccessories("right")}
+                className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-4 p-2 bg-[#F95F19] rounded-full hidden md:block"
+              >
+                <BiChevronRight size={24} className="text-white" />
+              </button>
+            </>
+          )}
         </div>
       </div>
 
@@ -201,10 +137,10 @@ export const ProductSection = () => {
             ref={equipmentRef}
             className="flex space-x-6 overflow-x-auto scroll-smooth scrollbar-hide pb-6"
           >
-            {equipment.map((product) => (
+            {equipment.map((product, index) => (
               <div
-                key={product.id}
-                className="min-w-[260px] bg-moto-gray rounded-md overflow-hidden flex-shrink-0"
+                key={index}
+                className="min-w-[260px] max-w-[260px]  bg-moto-gray rounded-md overflow-hidden flex-shrink-0"
               >
                 <div className="relative h-48 overflow-hidden border-b mb-2 border-gray-300">
                   <img
@@ -232,18 +168,22 @@ export const ProductSection = () => {
           </div>
 
           {/* Navigation Buttons */}
-          <button
-            onClick={() => scrollEquipment("left")}
-            className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-4 p-2 bg-[#F95F19] rounded-full hidden md:block"
-          >
-            <BiChevronLeft size={24} className="text-white" />
-          </button>
-          <button
-            onClick={() => scrollEquipment("right")}
-            className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-4 p-2 bg-[#F95F19] rounded-full hidden md:block"
-          >
-            <BiChevronRight size={24} className="text-white" />
-          </button>
+          {equipment.length > 4 && (
+            <>
+              <button
+                onClick={() => scrollEquipment("left")}
+                className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-4 p-2 bg-[#F95F19] rounded-full hidden md:block"
+              >
+                <BiChevronLeft size={24} className="text-white" />
+              </button>
+              <button
+                onClick={() => scrollEquipment("right")}
+                className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-4 p-2 bg-[#F95F19] rounded-full hidden md:block"
+              >
+                <BiChevronRight size={24} className="text-white" />
+              </button>
+            </>
+          )}
         </div>
       </div>
     </section>

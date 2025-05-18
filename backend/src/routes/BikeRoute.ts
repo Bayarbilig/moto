@@ -1,18 +1,16 @@
-import express from "express";
+import { Router } from "express";
 import {
-  createBike,
-  deleteBike,
-  getBikeById,
-  getBikes,
-  updateBike,
+  createBikes,
+  getBikesByBrand,
+  getAllBikes,
+  deleteBikeById,
 } from "../controllers/BikeController";
 
-const bikeRouter = express.Router();
+const bikeRouter = Router();
 
-bikeRouter.post("/", createBike);
-bikeRouter.get("/", getBikes);
-bikeRouter.get("/:id", getBikeById);
-bikeRouter.put("/:id", updateBike);
-bikeRouter.delete("/:id", deleteBike);
+bikeRouter.post("/bikes", createBikes);
+bikeRouter.get("/bikes", getAllBikes);
+bikeRouter.get("/bikes/:brand", getBikesByBrand);
+bikeRouter.delete("/bikes/:id", deleteBikeById);
 
 export default bikeRouter;

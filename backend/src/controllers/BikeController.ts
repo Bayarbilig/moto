@@ -1,79 +1,46 @@
 import { Request, Response } from "express";
 import BikeModel from "../models/BikeModel";
 
-// Create
-export const createBike = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
+export const createBikes = async (req: Request, res: Response) => {
   try {
-    const bike = await BikeModel.create(req.body);
-    res.status(201).json(bike);
-  } catch (err) {
-    res.status(400).json({ error: "Failed to create bike", details: err });
+    const bikes = req.body;
+    const created = await BikeModel.insertMany(bikes);
+    res.status(201).json(created);
+  } catch (error) {
+    res.status(500).json({ message: "Error creating bikes", error });
   }
 };
 
-// Read all
-export const getBikes = async (_req: Request, res: Response): Promise<void> => {
+export const getBikesByBrand = async (req: Request, res: Response) => {
+  try {
+    const { brand } = req.params;
+    const bikes = await BikeModel.find({ brand: brand.toLowerCase() });
+    res.status(200).json(bikes);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching bikes", error });
+  }
+};
+
+export const getAllBikes = async (_req: Request, res: Response) => {
   try {
     const bikes = await BikeModel.find();
     res.status(200).json(bikes);
-  } catch (err) {
-    res.status(500).json({ error: "Failed to fetch bikes", details: err });
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching all bikes", error });
   }
 };
-
-// Read one
-export const getBikeById = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
+export const deleteBikeById = async (req: Request, res: Response) => {
   try {
-    const bike = await BikeModel.findById(req.params.id);
-    if (!bike) {
-      res.status(404).json({ error: "Bike not found" });
+    const { id } = req.params;
+    const deleted = await BikeModel.findByIdAndDelete(id);
+
+    if (!deleted) {
+      res.status(404).json({ message: "Bike not found" });
       return;
     }
-    res.status(200).json(bike);
-  } catch (err) {
-    res.status(500).json({ error: "Failed to fetch bike", details: err });
-  }
-};
 
-// Update
-export const updateBike = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
-  try {
-    const bike = await BikeModel.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true,
-    });
-    if (!bike) {
-      res.status(404).json({ error: "Bike not found" });
-      return;
-    }
-    res.status(200).json(bike);
-  } catch (err) {
-    res.status(400).json({ error: "Failed to update bike", details: err });
-  }
-};
-
-// Delete
-export const deleteBike = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
-  try {
-    const bike = await BikeModel.findByIdAndDelete(req.params.id);
-    if (!bike) {
-      res.status(404).json({ error: "Bike not found" });
-      return;
-    }
-    res.status(200).json({ message: "Bike deleted successfully" });
-  } catch (err) {
-    res.status(500).json({ error: "Failed to delete bike", details: err });
+    res.status(200).json({ message: "Bike deleted successfully", deleted });
+  } catch (error) {
+    res.status(500).json({ message: "Error deleting bike", error });
   }
 };
