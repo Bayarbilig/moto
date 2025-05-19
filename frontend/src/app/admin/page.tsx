@@ -13,9 +13,9 @@ import EventForm from "../components/EventForm";
 import { useRouter } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
 import { EventManager } from "../components/EventManeger";
-import BookingForm from "../components/BookingForm";
-import WorkerList from "../components/WorkerList";
-import AddWorkerForm from "../components/AddWorkerForm";
+import { CreateService } from "../components/CreateService";
+import { Services } from "../components/Services";
+
 const AdminPanel = () => {
   const [activeTab, setActiveTab] = useState("Users");
   const [userData, setUserData] = useState([]);
@@ -250,7 +250,7 @@ const AdminPanel = () => {
   return (
     <div className="p-4 py-32 h-fit ">
       <div className="flex gap-12 py-12 px-32">
-        {["Users", "Moto", "Event", "Time"].map((tab) => (
+        {["Users", "Moto", "Event", "Time", "Service"].map((tab) => (
           <p
             key={tab}
             className={`cursor-pointer ${
@@ -263,7 +263,9 @@ const AdminPanel = () => {
               : tab === "Moto"
               ? "Мото Үүсгэх"
               : tab === "Time"
-              ? "Цаг авах"
+              ? "Үйлчилгээ үүсгэх"
+              : tab === "Service"
+              ? "Үйлчилгээ Харах"
               : "Эвэнт харах"}
           </p>
         ))}
@@ -313,9 +315,12 @@ const AdminPanel = () => {
       )}
       {activeTab === "Time" && (
         <div className="px-32 flex items-start gap-12">
-          <BookingForm />
-          <WorkerList />
-          <AddWorkerForm />
+          <CreateService />
+        </div>
+      )}
+      {activeTab === "Service" && (
+        <div className="px-32 flex items-start gap-12">
+          <Services />
         </div>
       )}
     </div>

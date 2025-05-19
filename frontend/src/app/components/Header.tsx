@@ -33,6 +33,7 @@ export const Header = () => {
     { label: "Худалдаа", path: "/bike" },
     { label: "Тэмцээн", path: "/tournament" },
     { label: "Бидний тухай", path: "/about" },
+    { label: "Үйлчилгээ", path: "/service" },
   ];
 
   return (

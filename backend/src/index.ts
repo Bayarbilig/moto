@@ -12,6 +12,8 @@ import equipRoute from "./routes/EquipmentRoute";
 import eventRouter from "./routes/EventRoute";
 import workerRoute from "./routes/WorkerRoute";
 import bookingRouter from "./routes/BookingRoute";
+import serviceRouter from "./routes/ServiceRoute";
+import motoServiceRouter from "./routes/MotoServiceRoute";
 
 dotenv.config();
 
@@ -32,6 +34,8 @@ app.use("/api/equipment", equipRoute);
 app.use("/api/event", eventRouter);
 app.use("/api/worker", workerRoute);
 app.use("/api/booking", bookingRouter);
+app.use("/api/services", serviceRouter);
+app.use("/api/motoservices", motoServiceRouter);
 
 app.listen(port, () => {
   console.log(`Сервер ${port} порт дээр ажиллаж байна`);
