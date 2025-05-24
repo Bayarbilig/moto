@@ -3,7 +3,7 @@ import { api } from "@/lib/axios";
 import React, { useEffect, useState, useCallback } from "react";
 import { toast } from "react-toastify";
 
-import { Event, Brand, Bike, Accessory, Equipment } from "../components/types";
+import { Event, Brand, Bike, Accessory, Equipment } from "../components/Types";
 import UsersTab from "../components/UserTab";
 import BrandManager from "../components/BrandManeger";
 import AccessoryManager from "../components/AccessoryManeger";
