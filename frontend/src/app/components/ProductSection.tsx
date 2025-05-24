@@ -2,7 +2,7 @@
 import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { api } from "@/lib/axios";
-import { Equipment } from "./types";
+import { Equipment } from "./Types";
 interface Access {
   model: string;
   brand: string;
