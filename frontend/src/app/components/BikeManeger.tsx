@@ -180,7 +180,7 @@ export const BikeManager = ({
                   <p className="font-semibold text-white">{item.title}</p>
                   <p className="text-gray-400">Model: {item.bikeModel}</p>
                   <p className="text-gray-400">CC: {item.cc}</p>
-                  <p className="text-gray-400">Power: {item.power}</p>
+                  <p className="text-gray-400">HorsePower: {item.power}</p>
                   <p className="text-gray-400">Brand: {item.brand}</p>
                 </div>
                 <BiTrash className="text-red-500 text-xl hover:scale-110 transition" />
