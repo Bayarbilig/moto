@@ -1,3 +1,3 @@
 {
-  "redirects": [{ "source": "/", "destination": "/home", "permanent": true }]
+  "redirects": [{ "source": "/", "destination": "/", "permanent": true }]
 }
