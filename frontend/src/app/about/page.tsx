@@ -48,12 +48,12 @@ const About = () => {
     {
       name: "Tuguldur",
       role: "Manager",
-      image: "Tuguldur.jpg",
+      image: "tuguldur.jpg",
     },
     {
       name: "Tselmeg",
       role: "Mechanic and welder",
-      image: "Tselmeg.jpg",
+      image: "Tselmeg-about.jpg",
     },
     {
       name: "Bilguun",
