@@ -53,7 +53,9 @@ const Page = () => {
             <p className="text-sm text-gray-400 mb-2">{bike.bikeModel}</p>
             <div className="flex justify-between text-sm text-gray-300">
               <span>Моторын багтаамж: {bike.cc}</span>
-              <span>Хүч: {bike.power}</span>
+              <span>Хүч: {bike.power}
+                
+              </span>
             </div>
           </div>
         ))}
