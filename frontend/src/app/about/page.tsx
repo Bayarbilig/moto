@@ -48,12 +48,12 @@ const About = () => {
     {
       name: "Tuguldur",
       role: "Manager",
-      image: "Tuguldur.jpg",
+      image: "tuguldur.jpg",
     },
     {
       name: "Tselmeg",
       role: "Mechanic and welder",
-      image: "Tselmeg.jpg",
+      image: "Tselmeg-about.jpg",
     },
     {
       name: "Bilguun",
@@ -161,7 +161,7 @@ const About = () => {
         </div>
       </section>
 
-      {/* Team Section */}
+      {/* Team Section */} 
       <section className="py-16 px-6 md:px-12">
         <div className="container mx-auto">
           <h2 className="text-2xl md:text-3xl font-bold text-white mb-12">
