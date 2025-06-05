@@ -89,7 +89,8 @@ export const Header = () => {
           >
             <RiUser3Line className="text-white text-xl" />
           </div>
-        )}
+        )
+        }
 
         {/* Mobile Menu Toggle */}
         <div className="md:hidden flex items-center">
