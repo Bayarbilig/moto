@@ -3,6 +3,9 @@ import { api } from "@/lib/axios";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { HeroSection } from "../components/HeroSection";
+// import { BrandTabs } from "../components/BrandTabs";
+import { ProductSection } from "../components/ProductSection";
+import { CountdownSection } from "../components/CountDown";
 
 // Bike type
 type Bike = {
@@ -62,6 +65,9 @@ const Page = () => {
           ))}
         </div>
       </div>
+      {/* <BrandTabs /> */}
+      <ProductSection />
+      <CountdownSection />
     </>
   );
 };
