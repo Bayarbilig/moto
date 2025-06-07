@@ -141,7 +141,7 @@ const About = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
               <img
-                src="eliteGroup.jpg"
+                src="eliteMotoAboutGroup.jpg"
                 alt="Team Meeting"
                 className="w-full rounded-md shadow-xl"
               />
@@ -161,7 +161,7 @@ const About = () => {
         </div>
       </section>
 
-      {/* Team Section */} 
+      {/* Team Section */}
       <section className="py-16 px-6 md:px-12">
         <div className="container mx-auto">
           <h2 className="text-2xl md:text-3xl font-bold text-white mb-12">
