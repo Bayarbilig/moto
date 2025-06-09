@@ -47,7 +47,7 @@ export const ProductGrid = ({ title, items, loading }: ProductGridProps) => (
                   {item.name} {item.model && ` ${item.model}`}
                 </h2>
                 <p className="text-[#F95F19] font-semibold mt-1">
-                  {item.price}
+                  {item.price}₮
                 </p>
               </div>
             </div>

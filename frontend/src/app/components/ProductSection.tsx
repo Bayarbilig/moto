@@ -68,11 +68,6 @@ export const ProductSection = () => {
     </div>
   );
 
-  const formatPrice = (price: string) => {
-    const parsed = parseInt(price);
-    return isNaN(parsed) ? price : parsed.toLocaleString() + " ₮";
-  };
-
   const renderProducts = (
     items: Access[] | Equipment[],
     type: "accessory" | "equipment"
@@ -110,7 +105,7 @@ export const ProductSection = () => {
                   />
                   <div className="absolute top-0 left-2 bg-[#F95F19] w-fit transform -skew-x-12">
                     <span className="product-price text-white py-1 px-2 text-sm">
-                      {formatPrice(product.price)}
+                      {product.price}₮
                     </span>
                   </div>
                 </div>
