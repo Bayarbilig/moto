@@ -1,4 +1,5 @@
 "use client";
+
 import { api } from "@/lib/axios";
 import React, { useEffect, useState, useCallback } from "react";
 import { toast } from "react-toastify";
@@ -18,7 +19,7 @@ import { Services } from "../components/Services";
 
 const AdminPanel = () => {
   const [activeTab, setActiveTab] = useState("Users");
-  const [userData, setUserData] = useState([]);
+  const [userData, setUserData] = useState<any[]>([]);
   const [brands, setBrands] = useState<Brand[]>([]);
   const [bikes, setBikes] = useState<Bike[]>([]);
   const [accessories, setAccessories] = useState<Accessory[]>([]);
@@ -26,10 +27,12 @@ const AdminPanel = () => {
   const [events, setEvents] = useState<Event[]>([]);
 
   const router = useRouter();
+
   interface DecodedToken {
     role: string;
   }
 
+  // Check authentication and admin role
   useEffect(() => {
     if (typeof window === "undefined") return;
     const token = localStorage.getItem("token");
@@ -49,9 +52,9 @@ const AdminPanel = () => {
       console.error("Invalid token", err);
       router.replace("/");
     }
-  }, []);
+  }, [router]);
 
-  // Fetch users data
+  // Fetch user data
   const fetchUserData = useCallback(async () => {
     try {
       const response = await api.get("/api/register");
@@ -91,12 +94,14 @@ const AdminPanel = () => {
       console.error("Failed to fetch accessories:", error);
     }
   }, []);
+
+  // Fetch events
   const fetchEvents = useCallback(async () => {
     try {
       const res = await api.get("/api/event");
       setEvents(res.data);
     } catch (error) {
-      console.error("Failed to fetch accessories:", error);
+      console.error("Failed to fetch events:", error);
     }
   }, []);
 
@@ -181,6 +186,18 @@ const AdminPanel = () => {
       console.error("Failed to delete bike:", error);
     }
   };
+  const handleUpdateBike = async (id: string, data: Partial<Bike>) => {
+    try {
+      await api.put(`/api/bike/bikes/${id}`, data);
+      setBikes((prev) =>
+        prev.map((bike) => (bike._id === id ? { ...bike, ...data } : bike))
+      );
+      toast.success("Мотоцикл амжилттай шинэчлэгдлээ");
+    } catch (error) {
+      toast.error("Шинэчлэхэд алдаа гарлаа");
+      console.error("Failed to update bike:", error);
+    }
+  };
 
   // Create equipment
   const handleCreateEquipment = async (equipmentData: any) => {
@@ -205,16 +222,20 @@ const AdminPanel = () => {
       console.error("Failed to delete equipment:", error);
     }
   };
+
+  // Delete event
   const handleDeleteEvent = async (id: any) => {
     try {
       await api.delete(`/api/event/${id}`);
       setEvents((prev) => prev.filter((item) => item._id !== id));
       toast.success("Амжилттай устлаа");
     } catch (error) {
-      toast.error("Failed to delete equipment");
-      console.error("Failed to delete equipment:", error);
+      toast.error("Failed to delete event");
+      console.error("Failed to delete event:", error);
     }
   };
+
+  // Create event
   const handleCreateEvent = async (newEvent: Event) => {
     try {
       const res = await api.post("/api/event", newEvent);
@@ -222,10 +243,11 @@ const AdminPanel = () => {
       setEvents([...events, res.data]);
     } catch (err) {
       console.error("Үүсгэхэд алдаа:", err);
+      toast.error("Үүсгэхэд алдаа гарлаа");
     }
   };
 
-  // Initial data loading
+  // Initial data loading & refresh user data every 30 seconds
   useEffect(() => {
     fetchUserData();
     fetchBrands();
@@ -233,6 +255,7 @@ const AdminPanel = () => {
     fetchAccessories();
     fetchEquipment();
     fetchEvents();
+
     const userDataInterval = setInterval(fetchUserData, 30000);
 
     return () => {
@@ -261,12 +284,12 @@ const AdminPanel = () => {
             {tab === "Users"
               ? "Хэрэглэгч"
               : tab === "Moto"
-              ? "Мото Үүсгэх"
-              : tab === "Time"
-              ? "Үйлчилгээ үүсгэх"
-              : tab === "Service"
-              ? "Үйлчилгээ Харах"
-              : "Эвэнт харах"}
+                ? "Мото Үүсгэх"
+                : tab === "Time"
+                  ? "Үйлчилгээ үүсгэх"
+                  : tab === "Service"
+                    ? "Үйлчилгээ Харах"
+                    : "Эвэнт харах"}
           </p>
         ))}
       </div>
@@ -295,8 +318,8 @@ const AdminPanel = () => {
               bikes={bikes}
               onCreateBike={handleCreateBike}
               onDeleteBike={handleDeleteBike}
+              onUpdateBike={handleUpdateBike}
             />
-
             <EquipmentManager
               equipment={equipment}
               onCreateEquipment={handleCreateEquipment}
@@ -305,6 +328,7 @@ const AdminPanel = () => {
           </div>
         </div>
       )}
+
       {activeTab === "Event" && (
         <div className="px-32">
           <div className="bg-[#1a1a1a] flex gap-12 w-full p-6 ">
@@ -313,11 +337,13 @@ const AdminPanel = () => {
           </div>
         </div>
       )}
+
       {activeTab === "Time" && (
         <div className="px-32 flex items-start gap-12">
           <CreateService />
         </div>
       )}
+
       {activeTab === "Service" && (
         <div className="px-32 flex items-start gap-12">
           <Services />

@@ -1,3 +1,6 @@
+// ------------------------------
+// User Entry Types
+// ------------------------------
 export interface PersonalInfo {
   lastName: string;
   firstName: string;
@@ -23,38 +26,75 @@ export interface Entry {
   tournament: Tournament;
 }
 
+// ------------------------------
+// Brand
+// ------------------------------
 export interface Brand {
   _id: string;
   name: string;
   slug: string;
 }
 
+// ------------------------------
+// Bikes
+// ------------------------------
 export interface Bike {
   _id: string;
-  image: string;
   title: string;
-  brand: string;
   bikeModel: string;
   cc: string;
   power: string;
+  image: string;
+  images?: string[];
+  description?: string;
+  variants?: string[];
+  year?: number;
+  price?: number;
+  stock?: number;
+  warranty?: string;
+  features?: string[];
+  weight?: string;
+  topSpeed?: string;
+  fuelType?: string;
+  transmission?: string;
+  seatHeight?: string;
+  mileage?: string;
+  videoUrl?: string;
+  isAvailable?: boolean;
+  brand: Brand;
 }
 
+// For creating a bike (brand as ID only)
+export interface CreateBikeDto extends Omit<Bike, "_id" | "brand"> {
+  brand: string; // Reference ID only
+}
+
+// ------------------------------
+// Accessories
+// ------------------------------
 export interface Accessory {
   _id: string;
   image: string;
   name: string;
-  brand: string;
+  brand: string | Brand; // Could be string or populated Brand
   price: string;
 }
 
+// ------------------------------
+// Equipment
+// ------------------------------
 export interface Equipment {
   model: string;
   _id: string;
   image: string;
   name: string;
-  brand: string;
+  brand: string | Brand; // Same as Accessory
   price: string;
 }
+
+// ------------------------------
+// Events
+// ------------------------------
 export interface Event {
   _id?: string;
   image: string;
