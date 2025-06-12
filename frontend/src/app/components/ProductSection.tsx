@@ -111,8 +111,11 @@ export const ProductSection = () => {
                 </div>
                 <div className="p-3">
                   <p className="text-gray-400 text-xs sm:text-sm uppercase truncate">
-                    {product.brand}
+                    {typeof product.brand === "string"
+                      ? product.brand
+                      : product.brand?.name}
                   </p>
+
                   <h3 className="text-white font-bold mt-1 text-sm sm:text-base truncate">
                     {product.name}
                     {product.model ? ` ${product.model}` : ""}
