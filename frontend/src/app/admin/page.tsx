@@ -9,7 +9,10 @@ import UsersTab from "../components/UserTab";
 import BrandManager from "../components/BrandManeger";
 import AccessoryManager from "../components/AccessoryManeger";
 import { BikeManager } from "../components/BikeManeger";
-import { EquipmentManager } from "../components/EquipmentManeger";
+import {
+  EquipmentItem,
+  EquipmentManager,
+} from "../components/EquipmentManeger";
 import EventForm from "../components/EventForm";
 import { useRouter } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
@@ -269,6 +272,10 @@ const AdminPanel = () => {
     fetchAccessories,
     fetchEquipment,
   ]);
+  const normalizedEquipment: EquipmentItem[] = equipment.map((eq) => ({
+    ...eq,
+    brand: typeof eq.brand === "string" ? eq.brand : eq.brand.name, // if Brand object, extract name
+  }));
 
   return (
     <div className="p-4 py-32 h-fit ">
@@ -321,7 +328,7 @@ const AdminPanel = () => {
               onUpdateBike={handleUpdateBike}
             />
             <EquipmentManager
-              equipment={equipment}
+              equipment={normalizedEquipment}
               onCreateEquipment={handleCreateEquipment}
               onDeleteEquipment={handleDeleteEquipment}
             />

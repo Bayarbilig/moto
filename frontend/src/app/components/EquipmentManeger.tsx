@@ -2,7 +2,7 @@ import { useState } from "react";
 import { BiTrash } from "react-icons/bi";
 import { CldUploadWidget } from "next-cloudinary";
 
-type EquipmentItem = {
+export type EquipmentItem = {
   _id: string;
   name: string;
   brand?: string;
