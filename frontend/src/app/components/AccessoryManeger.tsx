@@ -136,7 +136,6 @@ const AccessoryManager: React.FC<AccessoryManagerProps> = ({
                     ? item.brand
                     : item.brand?.name}
                 </p>
-
                 <p className="text-[#e15617]">{item.price}₮</p>
               </div>
               <BiTrash className="text-red-500 text-xl hover:scale-110 transition" />
