@@ -130,7 +130,13 @@ const AccessoryManager: React.FC<AccessoryManagerProps> = ({
               />
               <div className="flex-1 text-sm space-y-1">
                 <p className="font-semibold text-white">{item.name}</p>
-                <p className="text-gray-400">Brand: {item.brand}</p>
+                <p className="text-gray-400">
+                  Brand:{" "}
+                  {typeof item.brand === "string"
+                    ? item.brand
+                    : item.brand?.name}
+                </p>
+
                 <p className="text-[#e15617]">{item.price}₮</p>
               </div>
               <BiTrash className="text-red-500 text-xl hover:scale-110 transition" />
