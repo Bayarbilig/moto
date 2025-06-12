@@ -1,31 +1,49 @@
-import { useState } from "react";
-import { BiTrash } from "react-icons/bi";
-import { CldUploadWidget } from "next-cloudinary";
+"use client";
 
-type Brand = { _id: string; name: string };
-type Bike = {
-  brand: string;
-  power: string;
-  cc: string;
-  bikeModel: string;
-  _id: string;
-  title: string;
-  image?: string;
-};
+import { useState } from "react";
+import { CldUploadWidget } from "next-cloudinary";
+import { BiTrash } from "react-icons/bi";
+import { Bike, Brand } from "./Types";
 
 interface BikeManagerProps {
   brands: Brand[];
   bikes: Bike[];
-  onCreateBike: (bike: {
-    brand: string;
-    title: string;
-    bikeModel: string;
-    cc: string;
-    power: string;
-    image: string;
-  }) => Promise<void>;
+  onCreateBike: (bike: Partial<Bike>) => Promise<void>;
   onDeleteBike: (id: string) => void;
+  onUpdateBike: (id: string, data: Partial<Bike>) => Promise<void>;
 }
+
+const InputField = ({
+  id,
+  label,
+  value,
+  onChange,
+  type = "text",
+  required = false,
+  className = "",
+}: {
+  id: string;
+  label: string;
+  value: string;
+  onChange: (val: string) => void;
+  type?: string;
+  required?: boolean;
+  className?: string;
+}) => (
+  <div className={`space-y-1 ${className}`}>
+    <label htmlFor={id} className="text-sm font-medium block">
+      {label}
+    </label>
+    <input
+      id={id}
+      type={type}
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      required={required}
+      className="w-full p-2 rounded bg-[#2a2a2a] border border-gray-600 focus:outline-none focus:ring-2 focus:ring-orange-500"
+    />
+  </div>
+);
 
 export const BikeManager = ({
   brands,
@@ -33,57 +51,81 @@ export const BikeManager = ({
   onCreateBike,
   onDeleteBike,
 }: BikeManagerProps) => {
-  const [brand, setBrand] = useState("");
-  const [title, setTitle] = useState("");
-  const [bikeModel, setBikeModel] = useState("");
-  const [cc, setCc] = useState("");
-  const [power, setPower] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
+  const [form, setForm] = useState({
+    brand: "",
+    title: "",
+    bikeModel: "",
+    cc: "",
+    power: "",
+    image: "",
+    images: "",
+    description: "",
+    variants: "",
+    year: "",
+    price: "",
+    stock: "",
+  });
+
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleChange = (key: string, value: string) =>
+    setForm((prev) => ({ ...prev, [key]: value }));
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
+      const selectedBrand = brands.find((b) => b._id === form.brand);
       await onCreateBike({
-        brand,
-        title,
-        bikeModel,
-        cc,
-        power,
-        image: imageUrl,
+        ...form,
+        brand: selectedBrand || undefined,
+        images: form.images
+          .split(",")
+          .map((url) => url.trim())
+          .filter(Boolean),
+        variants: form.variants
+          .split(",")
+          .map((v) => v.trim())
+          .filter(Boolean),
+        year: form.year ? +form.year : undefined,
+        price: form.price ? +form.price : undefined,
+        stock: form.stock ? +form.stock : undefined,
       });
-      setBrand("");
-      setTitle("");
-      setBikeModel("");
-      setCc("");
-      setPower("");
-      setImageUrl("");
-    } catch (error) {
-      console.error("Error creating bike:", error);
+      setForm({
+        brand: "",
+        title: "",
+        bikeModel: "",
+        cc: "",
+        power: "",
+        image: "",
+        images: "",
+        description: "",
+        variants: "",
+        year: "",
+        price: "",
+        stock: "",
+      });
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="bg-[#1a1a1a] text-white rounded-lg p-6 flex flex-col md:flex-row gap-10">
+    <div className="bg-[#1a1a1a] text-white rounded-lg p-6 flex flex-col md:flex-row gap-10 w-full">
       {/* Create Bike Section */}
       <div className="w-full md:w-1/2">
         <h2 className="text-xl font-semibold mb-4">Create Bike</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Brand Select */}
           <div>
-            <label htmlFor="brand" className="block mb-1 text-sm font-medium">
-              Brand
-            </label>
+            <label className="text-sm font-medium block mb-1">Брэнд</label>
             <select
-              id="brand"
-              value={brand}
-              onChange={(e) => setBrand(e.target.value)}
+              value={form.brand}
+              onChange={(e) => handleChange("brand", e.target.value)}
               required
               className="w-full p-2 rounded bg-[#2a2a2a] border border-gray-600 focus:outline-none focus:ring-2 focus:ring-orange-500"
             >
-              <option value="">Select a brand</option>
+              <option value="">Брэнд сонгох</option>
               {brands.map((b) => (
                 <option key={b._id} value={b._id}>
                   {b.name}
@@ -91,37 +133,76 @@ export const BikeManager = ({
               ))}
             </select>
           </div>
-
           <InputField
             id="title"
-            label="Title"
-            value={title}
-            onChange={setTitle}
+            label="Гарчиг *"
+            value={form.title}
+            onChange={(v) => handleChange("title", v)}
+            required
           />
           <InputField
             id="bikeModel"
-            label="Bike Model"
-            value={bikeModel}
-            onChange={setBikeModel}
+            label="Загвар *"
+            value={form.bikeModel}
+            onChange={(v) => handleChange("bikeModel", v)}
+            required
           />
-          <InputField id="cc" label="CC" value={cc} onChange={setCc} />
+          <InputField
+            id="cc"
+            label="CC *"
+            value={form.cc}
+            onChange={(v) => handleChange("cc", v)}
+            required
+          />
           <InputField
             id="power"
-            label="Power"
-            value={power}
-            onChange={setPower}
+            label="Хүч *"
+            value={form.power}
+            onChange={(v) => handleChange("power", v)}
+            required
+          />
+          <InputField
+            id="year"
+            label="Үйлдвэрлэсэн он"
+            type="number"
+            value={form.year}
+            onChange={(v) => handleChange("year", v)}
+          />
+          <InputField
+            id="price"
+            label="Үнэ"
+            type="number"
+            value={form.price}
+            onChange={(v) => handleChange("price", v)}
+          />
+          <InputField
+            id="stock"
+            label="Нөөц"
+            type="number"
+            value={form.stock}
+            onChange={(v) => handleChange("stock", v)}
+          />
+          <InputField
+            id="variants"
+            label="Хувилбарууд (коммагаар)"
+            value={form.variants}
+            onChange={(v) => handleChange("variants", v)}
+          />
+          <InputField
+            id="images"
+            label="Нэмэлт зурагнууд (коммагаар)"
+            value={form.images}
+            onChange={(v) => handleChange("images", v)}
           />
 
-          {/* Upload Image */}
-          <div>
-            <label className="block mb-2 text-sm font-medium">
-              Upload Image
-            </label>
+          <div className="space-y-2">
+            <label className="text-sm font-medium block">Гол зураг</label>
             <CldUploadWidget
               uploadPreset="idkmyup"
               onSuccess={(result) => {
-                const url = (result.info as any)?.secure_url;
-                if (typeof url === "string") setImageUrl(url);
+                const secureUrl = (result.info as { secure_url?: string })
+                  ?.secure_url;
+                if (secureUrl) handleChange("image", secureUrl);
               }}
             >
               {({ open }) => (
@@ -134,57 +215,66 @@ export const BikeManager = ({
                 </button>
               )}
             </CldUploadWidget>
-
-            {imageUrl && (
-              <div className="mt-3">
-                <img
-                  src={imageUrl}
-                  alt="Uploaded"
-                  className="w-40 h-40 object-cover rounded border border-gray-700"
-                />
-              </div>
+            {form.image && (
+              <img
+                src={form.image}
+                alt="Uploaded"
+                className="mt-3 w-40 h-40 object-cover rounded border border-gray-700"
+              />
             )}
+          </div>
+
+          <div>
+            <label
+              htmlFor="description"
+              className="text-sm font-medium block mb-1"
+            >
+              Тайлбар
+            </label>
+            <textarea
+              id="description"
+              value={form.description}
+              onChange={(e) => handleChange("description", e.target.value)}
+              rows={4}
+              className="w-full p-3 rounded bg-[#2a2a2a] border border-gray-600 focus:outline-none focus:ring-2 focus:ring-orange-500"
+            />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-orange-600 hover:bg-orange-700 text-white py-2 rounded transition disabled:opacity-50"
+            className="w-full bg-orange-600 hover:bg-orange-700 py-2 rounded text-white font-semibold disabled:opacity-50"
           >
-            {loading ? "Creating..." : "Create Bike"}
+            {loading ? "Нэмэгдэж байна..." : "Мотоцикл нэмэх"}
           </button>
         </form>
       </div>
 
-      {/* Delete Bike Section */}
+      {/* Show Created Bikes */}
       <div className="w-full md:w-1/2">
-        <h2 className="text-xl font-semibold mb-4">All Bikes</h2>
-        <div className="max-h-[460px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-orange-600 scrollbar-track-[#222] space-y-4">
-          {bikes.map((item) => (
+        <h2 className="text-xl font-semibold mb-4">Created Bikes</h2>
+        <div className="max-h-[520px] overflow-y-auto pr-2 space-y-4 scrollbar-thin scrollbar-thumb-orange-600 scrollbar-track-[#222]">
+          {bikes.map((bike) => (
             <div
-              key={item._id}
+              key={bike._id}
               onClick={() => {
-                if (confirm(`Delete "${item.title}"?`)) onDeleteBike(item._id);
+                if (confirm(`Delete "${bike.title}"?`)) onDeleteBike(bike._id);
               }}
-              className="group border border-gray-700 rounded-lg overflow-hidden bg-[#2a2a2a] hover:border-orange-600 transition cursor-pointer"
+              className="group border border-gray-700 rounded-lg overflow-hidden bg-[#2a2a2a] hover:border-orange-600 transition cursor-pointer flex items-center gap-4 p-4"
             >
-              <div className="flex gap-4 items-center p-4">
-                {item.image && (
-                  <img
-                    src={item.image}
-                    alt={item.title}
-                    className="w-48 h-48 object-cover rounded border border-gray-600"
-                  />
-                )}
-                <div className="flex-1 text-sm space-y-1">
-                  <p className="font-semibold text-white">{item.title}</p>
-                  <p className="text-gray-400">Model: {item.bikeModel}</p>
-                  <p className="text-gray-400">CC: {item.cc}</p>
-                  <p className="text-gray-400">HorsePower: {item.power}</p>
-                  <p className="text-gray-400">Brand: {item.brand}</p>
-                </div>
-                <BiTrash className="text-red-500 text-xl hover:scale-110 transition" />
+              <img
+                src={bike.image}
+                alt={bike.title}
+                className="w-32 h-32 object-cover rounded border border-gray-600"
+              />
+              <div className="flex-1 text-sm space-y-1">
+                <p className="font-semibold text-white">{bike.title}</p>
+                <p className="text-gray-400">Model: {bike.bikeModel}</p>
+                <p className="text-[#e15617]">
+                  {bike.price?.toLocaleString() ?? "?"} ₮
+                </p>
               </div>
+              <BiTrash className="text-red-500 text-xl hover:scale-110 transition" />
             </div>
           ))}
         </div>
@@ -192,29 +282,3 @@ export const BikeManager = ({
     </div>
   );
 };
-
-const InputField = ({
-  id,
-  label,
-  value,
-  onChange,
-}: {
-  id: string;
-  label: string;
-  value: string;
-  onChange: (val: string) => void;
-}) => (
-  <div>
-    <label htmlFor={id} className="block mb-1 text-sm font-medium">
-      {label}
-    </label>
-    <input
-      id={id}
-      type="text"
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      required
-      className="w-full p-2 rounded bg-[#2a2a2a] border border-gray-600 focus:outline-none focus:ring-2 focus:ring-orange-500"
-    />
-  </div>
-);
