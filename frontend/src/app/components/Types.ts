@@ -46,22 +46,14 @@ export interface Bike {
   power: string;
   image: string;
   images?: string[];
-  description?: string;
   variants?: string[];
   year?: number;
   price?: number;
-  stock?: number;
-  warranty?: string;
-  features?: string[];
-  weight?: string;
-  topSpeed?: string;
-  fuelType?: string;
-  transmission?: string;
-  seatHeight?: string;
-  mileage?: string;
-  videoUrl?: string;
-  isAvailable?: boolean;
+  weight?: number;
+  importedYear?: number;
+  sold?: boolean;
   brand: Brand;
+  features?: string[];
 }
 
 // For creating a bike (brand as ID only)
