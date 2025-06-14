@@ -47,12 +47,13 @@ export interface Bike {
   image: string;
   images?: string[];
   variants?: string[];
+  description?: string;
   year?: number;
   price?: number;
   weight?: number;
   importedYear?: number;
   sold?: boolean;
-  brand: Brand;
+  brand: Brand | string; // Can be populated Brand or just ID
   features?: string[];
 }
 

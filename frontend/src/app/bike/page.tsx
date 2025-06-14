@@ -49,7 +49,7 @@ const BikeDetailModal = ({
         </button>
 
         <div className="grid md:grid-cols-2 gap-6">
-          {/* Image Gallery with Zoom */}
+          {/* Image Gallery */}
           <div>
             <Carousel
               showThumbs
@@ -83,7 +83,10 @@ const BikeDetailModal = ({
             <p className="text-gray-300">{bike.bikeModel}</p>
             <div className="grid grid-cols-2 gap-2 text-sm mt-4 text-gray-300">
               <span>
-                Брэнд: {typeof bike.brand === "object" ? bike.brand.name : "?"}
+                Брэнд:{" "}
+                {typeof bike.brand === "object" && "name" in bike.brand
+                  ? bike.brand.name
+                  : "?"}
               </span>
               <span>Загвар: {bike.bikeModel || "?"}</span>
               <span>CC: {bike.cc || "?"}</span>
@@ -170,7 +173,7 @@ const Page = () => {
     <>
       <div className="min-h-screen bg-black text-white px-4 py-24 max-w-7xl mx-auto">
         <h1 className="text-4xl font-bold text-center mb-10 text-[#F95F19]">
-          Бүх мотоциклууд
+          Бүх мотоцикл
         </h1>
 
         {loading ? (

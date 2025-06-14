@@ -5,13 +5,13 @@ import { CldUploadWidget } from "next-cloudinary";
 import { BiTrash } from "react-icons/bi";
 import { Bike, Brand } from "./Types";
 
-interface BikeManagerProps {
+type BikeManagerProps = {
   brands: Brand[];
   bikes: Bike[];
-  onCreateBike: (bike: Partial<Bike>) => Promise<void>;
-  onDeleteBike: (id: string) => void;
-  // onUpdateBike?: (id: string, data: Partial<Bike>) => Promise<void>;
-}
+  onCreateBike: (bikeData: any) => Promise<void>;
+  onDeleteBike: (id: any) => Promise<void>;
+  onUpdateBike: (id: string, data: Partial<Bike>) => Promise<void>;
+};
 
 const InputField = ({
   id,
@@ -48,7 +48,6 @@ const InputField = ({
 export const BikeManager = ({
   brands,
   bikes,
-  onCreateBike,
   onDeleteBike,
 }: BikeManagerProps) => {
   const [form, setForm] = useState({
@@ -66,7 +65,7 @@ export const BikeManager = ({
     sold: false,
   });
   const [loading, setLoading] = useState(false);
-  const selectedBrand = brands.find((b) => b._id === form.brand);
+
   const handleChange = (key: string, value: string | boolean) =>
     setForm((prev) => ({ ...prev, [key]: value }));
 
@@ -74,23 +73,21 @@ export const BikeManager = ({
     e.preventDefault();
     setLoading(true);
     try {
-      if (!form.brand) throw new Error("Brand is required");
+      if (!form.brand) throw new Error("Брэнд сонгоно уу");
 
-      await onCreateBike({
-        ...form,
-        brand: selectedBrand,
-        title: form.title,
-        bikeModel: form.bikeModel,
-        cc: form.cc,
-        power: form.power,
-        image: form.image,
-        description: form.description,
-        year: form.year ? +form.year : undefined,
-        importedYear: form.importedYear ? +form.importedYear : undefined,
-        price: form.price ? +form.price : undefined,
-        weight: form.weight ? +form.weight : undefined,
-        sold: form.sold,
+      const res = await fetch("/api/bike", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...form,
+          year: form.year ? +form.year : undefined,
+          importedYear: form.importedYear ? +form.importedYear : undefined,
+          price: form.price ? +form.price : undefined,
+          weight: form.weight ? +form.weight : undefined,
+        }),
       });
+
+      if (!res.ok) throw new Error("Мотоцикл нэмэхэд алдаа гарлаа");
 
       setForm({
         brand: "",
@@ -117,7 +114,7 @@ export const BikeManager = ({
     <div className="bg-[#1a1a1a] text-white rounded-lg p-6 flex flex-col md:flex-row gap-10 w-full">
       {/* Create Bike Section */}
       <div className="w-full md:w-1/2">
-        <h2 className="text-xl font-semibold mb-4">Create Bike</h2>
+        <h2 className="text-xl font-semibold mb-4">Мотоцикл нэмэх</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="text-sm font-medium block mb-1">Брэнд</label>
@@ -172,7 +169,7 @@ export const BikeManager = ({
           />
           <InputField
             id="importedYear"
-            label="Импортлогдсон он"
+            label="Импортын он"
             type="number"
             value={form.importedYear}
             onChange={(v) => handleChange("importedYear", v)}
@@ -193,6 +190,7 @@ export const BikeManager = ({
             onChange={(v) => handleChange("weight", v)}
             required
           />
+
           <div className="space-y-2">
             <label className="text-sm font-medium block">Гол зураг</label>
             <CldUploadWidget
@@ -209,7 +207,7 @@ export const BikeManager = ({
                   onClick={() => open?.()}
                   className="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700 transition"
                 >
-                  Upload Image
+                  Зураг оруулах
                 </button>
               )}
             </CldUploadWidget>
@@ -263,7 +261,7 @@ export const BikeManager = ({
 
       {/* Show Created Bikes */}
       <div className="w-full md:w-1/2">
-        <h2 className="text-xl font-semibold mb-4">Created Bikes</h2>
+        <h2 className="text-xl font-semibold mb-4">Оруулсан мотоцикл</h2>
         <div className="max-h-[520px] overflow-y-auto pr-2 space-y-4 scrollbar-thin scrollbar-thumb-orange-600 scrollbar-track-[#222]">
           {bikes.map((bike) => (
             <div
@@ -277,7 +275,7 @@ export const BikeManager = ({
               />
               <div className="flex-1 text-sm space-y-1">
                 <p className="font-semibold text-white">{bike.title}</p>
-                <p className="text-gray-400">Model: {bike.bikeModel}</p>
+                <p className="text-gray-400">Загвар: {bike.bikeModel}</p>
                 <p className="text-[#e15617]">
                   {bike.price?.toLocaleString() ?? "?"} ₮
                 </p>

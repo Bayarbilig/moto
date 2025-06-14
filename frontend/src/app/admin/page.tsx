@@ -326,6 +326,7 @@ const AdminPanel = () => {
               onCreateBike={handleCreateBike}
               onDeleteBike={handleDeleteBike}
               onUpdateBike={handleUpdateBike}
+              
             />
             <EquipmentManager
               equipment={normalizedEquipment}

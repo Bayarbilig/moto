@@ -5,6 +5,7 @@ export const createBikes = async (req: Request, res: Response) => {
   try {
     const bikes = req.body.map((bike: any) => ({
       ...bike,
+      brand: bike.brand, // зөвхөн ID байх ёстой
       sold: bike.sold ?? false,
     }));
     const created = await BikeModel.insertMany(bikes);
@@ -17,7 +18,7 @@ export const createBikes = async (req: Request, res: Response) => {
 // Бүх мотоцикл авах
 export const getAllBikes = async (_req: Request, res: Response) => {
   try {
-    const bikes = await BikeModel.find();
+    const bikes = await BikeModel.find().populate("brand"); // ⬅ populate хийж байна
     res.status(200).json(bikes);
   } catch (error) {
     res.status(500).json({ message: "Error fetching all bikes", error });
