@@ -5,13 +5,13 @@ import { CldUploadWidget } from "next-cloudinary";
 import { BiTrash } from "react-icons/bi";
 import { Bike, Brand } from "./Types";
 
-interface BikeManagerProps {
+type BikeManagerProps = {
   brands: Brand[];
   bikes: Bike[];
-  onCreateBike: (bike: Partial<Bike>) => Promise<void>;
-  onDeleteBike: (id: string) => void;
+  onCreateBike: (bikeData: any) => Promise<void>;
+  onDeleteBike: (id: any) => Promise<void>;
   onUpdateBike: (id: string, data: Partial<Bike>) => Promise<void>;
-}
+};
 
 const InputField = ({
   id,
@@ -24,7 +24,7 @@ const InputField = ({
 }: {
   id: string;
   label: string;
-  value: string;
+  value: string | number;
   onChange: (val: string) => void;
   type?: string;
   required?: boolean;
@@ -48,7 +48,6 @@ const InputField = ({
 export const BikeManager = ({
   brands,
   bikes,
-  onCreateBike,
   onDeleteBike,
 }: BikeManagerProps) => {
   const [form, setForm] = useState({
@@ -58,39 +57,38 @@ export const BikeManager = ({
     cc: "",
     power: "",
     image: "",
-    images: "",
     description: "",
-    variants: "",
     year: "",
+    importedYear: "",
     price: "",
-    stock: "",
+    weight: "",
+    sold: false,
   });
-
   const [loading, setLoading] = useState(false);
 
-  const handleChange = (key: string, value: string) =>
+  const handleChange = (key: string, value: string | boolean) =>
     setForm((prev) => ({ ...prev, [key]: value }));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const selectedBrand = brands.find((b) => b._id === form.brand);
-      await onCreateBike({
-        ...form,
-        brand: selectedBrand || undefined,
-        images: form.images
-          .split(",")
-          .map((url) => url.trim())
-          .filter(Boolean),
-        variants: form.variants
-          .split(",")
-          .map((v) => v.trim())
-          .filter(Boolean),
-        year: form.year ? +form.year : undefined,
-        price: form.price ? +form.price : undefined,
-        stock: form.stock ? +form.stock : undefined,
+      if (!form.brand) throw new Error("Брэнд сонгоно уу");
+
+      const res = await fetch("/api/bike", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...form,
+          year: form.year ? +form.year : undefined,
+          importedYear: form.importedYear ? +form.importedYear : undefined,
+          price: form.price ? +form.price : undefined,
+          weight: form.weight ? +form.weight : undefined,
+        }),
       });
+
+      if (!res.ok) throw new Error("Мотоцикл нэмэхэд алдаа гарлаа");
+
       setForm({
         brand: "",
         title: "",
@@ -98,13 +96,15 @@ export const BikeManager = ({
         cc: "",
         power: "",
         image: "",
-        images: "",
         description: "",
-        variants: "",
         year: "",
+        importedYear: "",
         price: "",
-        stock: "",
+        weight: "",
+        sold: false,
       });
+    } catch (err) {
+      alert((err as Error).message);
     } finally {
       setLoading(false);
     }
@@ -114,9 +114,8 @@ export const BikeManager = ({
     <div className="bg-[#1a1a1a] text-white rounded-lg p-6 flex flex-col md:flex-row gap-10 w-full">
       {/* Create Bike Section */}
       <div className="w-full md:w-1/2">
-        <h2 className="text-xl font-semibold mb-4">Create Bike</h2>
+        <h2 className="text-xl font-semibold mb-4">Мотоцикл нэмэх</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Brand Select */}
           <div>
             <label className="text-sm font-medium block mb-1">Брэнд</label>
             <select
@@ -169,6 +168,14 @@ export const BikeManager = ({
             onChange={(v) => handleChange("year", v)}
           />
           <InputField
+            id="importedYear"
+            label="Импортын он"
+            type="number"
+            value={form.importedYear}
+            onChange={(v) => handleChange("importedYear", v)}
+            required
+          />
+          <InputField
             id="price"
             label="Үнэ"
             type="number"
@@ -176,23 +183,12 @@ export const BikeManager = ({
             onChange={(v) => handleChange("price", v)}
           />
           <InputField
-            id="stock"
-            label="Нөөц"
+            id="weight"
+            label="Жин (кг)"
             type="number"
-            value={form.stock}
-            onChange={(v) => handleChange("stock", v)}
-          />
-          <InputField
-            id="variants"
-            label="Хувилбарууд (коммагаар)"
-            value={form.variants}
-            onChange={(v) => handleChange("variants", v)}
-          />
-          <InputField
-            id="images"
-            label="Нэмэлт зурагнууд (коммагаар)"
-            value={form.images}
-            onChange={(v) => handleChange("images", v)}
+            value={form.weight}
+            onChange={(v) => handleChange("weight", v)}
+            required
           />
 
           <div className="space-y-2">
@@ -211,7 +207,7 @@ export const BikeManager = ({
                   onClick={() => open?.()}
                   className="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700 transition"
                 >
-                  Upload Image
+                  Зураг оруулах
                 </button>
               )}
             </CldUploadWidget>
@@ -240,6 +236,19 @@ export const BikeManager = ({
             />
           </div>
 
+          <div className="flex items-center space-x-2">
+            <input
+              id="sold"
+              type="checkbox"
+              checked={form.sold}
+              onChange={(e) => handleChange("sold", e.target.checked)}
+              className="w-4 h-4 rounded border border-gray-600 focus:outline-none focus:ring-2 focus:ring-orange-500"
+            />
+            <label htmlFor="sold" className="text-sm font-medium">
+              Зарагдсан уу?
+            </label>
+          </div>
+
           <button
             type="submit"
             disabled={loading}
@@ -252,14 +261,11 @@ export const BikeManager = ({
 
       {/* Show Created Bikes */}
       <div className="w-full md:w-1/2">
-        <h2 className="text-xl font-semibold mb-4">Created Bikes</h2>
+        <h2 className="text-xl font-semibold mb-4">Оруулсан мотоцикл</h2>
         <div className="max-h-[520px] overflow-y-auto pr-2 space-y-4 scrollbar-thin scrollbar-thumb-orange-600 scrollbar-track-[#222]">
           {bikes.map((bike) => (
             <div
               key={bike._id}
-              onClick={() => {
-                if (confirm(`Delete "${bike.title}"?`)) onDeleteBike(bike._id);
-              }}
               className="group border border-gray-700 rounded-lg overflow-hidden bg-[#2a2a2a] hover:border-orange-600 transition cursor-pointer flex items-center gap-4 p-4"
             >
               <img
@@ -269,12 +275,15 @@ export const BikeManager = ({
               />
               <div className="flex-1 text-sm space-y-1">
                 <p className="font-semibold text-white">{bike.title}</p>
-                <p className="text-gray-400">Model: {bike.bikeModel}</p>
+                <p className="text-gray-400">Загвар: {bike.bikeModel}</p>
                 <p className="text-[#e15617]">
                   {bike.price?.toLocaleString() ?? "?"} ₮
                 </p>
               </div>
-              <BiTrash className="text-red-500 text-xl hover:scale-110 transition" />
+              <BiTrash
+                onClick={() => onDeleteBike(bike._id)}
+                className="text-red-500 text-xl hover:scale-110 transition cursor-pointer"
+              />
             </div>
           ))}
         </div>
