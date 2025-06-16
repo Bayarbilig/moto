@@ -1,6 +1,9 @@
+// Client wrapper component for interactivity (optional)
+"use client";
+import React from "react";
+
 import { fetchData } from "@/lib/fetchUtils";
 import { ProductGrid } from "../components/ProductGrid";
-
 
 // ProductItem interface
 interface ProductItem {
@@ -24,10 +27,6 @@ interface Accessory {
   model?: string;
   [key: string]: any;
 }
-
-// Client wrapper component for interactivity (optional)
-("use client");
-import React from "react";
 
 interface AccessoriesClientProps {
   data: ProductItem[];

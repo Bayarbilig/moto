@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-
 import BrandManager from "@/app/components/BrandManeger";
 import AccessoryManager from "@/app/components/AccessoryManeger";
 import { BikeManager } from "@/app/components/BikeManeger";
@@ -52,11 +51,17 @@ export default function MotoTab({
   // Normalize equipment brand name
   const normalizedEquipment = equipment.map((eq) => ({
     ...eq,
-    brand: typeof eq.brand === "string" ? eq.brand : eq.brand.name,
+    brand: typeof eq.brand === "string" ? eq.brand : eq.brand?.name || "",
+  }));
+
+  // Normalize bike brand in case it's a populated object instead of just string id
+  const normalizedBikes = bikes.map((bike) => ({
+    ...bike,
+    brand: typeof bike.brand === "string" ? bike.brand : bike.brand?._id || "",
   }));
 
   return (
-    <div className="grid gap-32 w-full px-32">
+    <div className="grid gap-32 w-full px-8 md:px-32">
       <div className="grid gap-20">
         <BrandManager
           brands={brands}
@@ -72,7 +77,7 @@ export default function MotoTab({
       <div className="grid w-full gap-12">
         <BikeManager
           brands={brands}
-          bikes={bikes}
+          bikes={normalizedBikes}
           onCreateBike={onCreateBike}
           onDeleteBike={onDeleteBike}
           onUpdateBike={onUpdateBike}

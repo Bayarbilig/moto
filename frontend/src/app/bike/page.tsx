@@ -2,15 +2,15 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { useTranslation } from "react-i18next";
 import { api } from "@/lib/axios";
 import { FaSearchPlus } from "react-icons/fa";
 import { Carousel } from "react-responsive-carousel";
+import "react-responsive-carousel/lib/styles/carousel.min.css";
 import Zoom from "react-medium-image-zoom";
 import "react-medium-image-zoom/dist/styles.css";
-import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { ProductSection } from "../components/ProductSection";
 import { Bike } from "../components/Types";
+import { useTranslation } from "react-i18next";
 
 const BikeDetailModal = ({
   bike,
@@ -19,11 +19,12 @@ const BikeDetailModal = ({
   bike: Bike;
   onClose: () => void;
 }) => {
-  const { t } = useTranslation("bike");
   const [selectedImage, setSelectedImage] = useState(
     bike.images?.[0] || bike.image
   );
   const [selectedVariant, setSelectedVariant] = useState<string | null>(null);
+  const { t } = useTranslation("bike");
+
   const allImages = [bike.image, ...(bike.images || [])].filter(Boolean);
 
   const handleBuy = () => {
@@ -113,7 +114,7 @@ const BikeDetailModal = ({
               </span>
             </div>
 
-            {!!bike.features?.length && (
+            {bike.features && bike.features.length > 0 && (
               <div>
                 <h4 className="text-sm text-gray-400 mt-2">{t("features")}:</h4>
                 <ul className="list-disc ml-6 text-gray-300 text-sm">
@@ -124,7 +125,7 @@ const BikeDetailModal = ({
               </div>
             )}
 
-            {!!bike.variants?.length && (
+            {bike.variants && bike.variants.length > 0 && (
               <div>
                 <h4 className="text-sm text-gray-400 mb-1">{t("variant")}:</h4>
                 <div className="flex gap-2 flex-wrap">
@@ -161,17 +162,17 @@ const BikeDetailModal = ({
 };
 
 const Page = () => {
-  const { t } = useTranslation("bike");
   const [bikes, setBikes] = useState<Bike[]>([]);
   const [visibleCount, setVisibleCount] = useState(6);
   const [loading, setLoading] = useState(true);
   const [selectedBike, setSelectedBike] = useState<Bike | null>(null);
+  const { t } = useTranslation("bike");
 
   useEffect(() => {
     const fetchBikes = async () => {
       try {
         setLoading(true);
-        const res = await api.get("/api/bike/");
+        const res = await api.get("/api/bikes");
         setBikes(
           res.data.sort((a: Bike, b: Bike) => (b.year || 0) - (a.year || 0))
         );
@@ -259,6 +260,7 @@ const Page = () => {
           onClose={() => setSelectedBike(null)}
         />
       )}
+
       <ProductSection />
     </>
   );

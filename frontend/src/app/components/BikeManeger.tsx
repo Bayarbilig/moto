@@ -9,7 +9,7 @@ type BikeManagerProps = {
   brands: Brand[];
   bikes: Bike[];
   onCreateBike: (bikeData: any) => Promise<void>;
-  onDeleteBike: (id: any) => Promise<void>;
+  onDeleteBike: (id: string) => Promise<void>;
   onUpdateBike: (id: string, data: Partial<Bike>) => Promise<void>;
 };
 
@@ -48,6 +48,7 @@ const InputField = ({
 export const BikeManager = ({
   brands,
   bikes,
+  onCreateBike,
   onDeleteBike,
 }: BikeManagerProps) => {
   const [form, setForm] = useState({
@@ -75,19 +76,15 @@ export const BikeManager = ({
     try {
       if (!form.brand) throw new Error("Брэнд сонгоно уу");
 
-      const res = await fetch("/api/bike", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...form,
-          year: form.year ? +form.year : undefined,
-          importedYear: form.importedYear ? +form.importedYear : undefined,
-          price: form.price ? +form.price : undefined,
-          weight: form.weight ? +form.weight : undefined,
-        }),
-      });
+      const bikeData = {
+        ...form,
+        year: form.year ? +form.year : undefined,
+        importedYear: form.importedYear ? +form.importedYear : undefined,
+        price: form.price ? +form.price : undefined,
+        weight: form.weight ? +form.weight : undefined,
+      };
 
-      if (!res.ok) throw new Error("Мотоцикл нэмэхэд алдаа гарлаа");
+      await onCreateBike(bikeData);
 
       setForm({
         brand: "",
@@ -260,10 +257,9 @@ export const BikeManager = ({
       </div>
 
       {/* Show Created Bikes */}
-      <div className="w-full md:w-1/2">
-        <h2 className="text-xl font-semibold mb-4">Оруулсан мотоцикл</h2>
-        <div className="max-h-[520px] overflow-y-auto pr-2 space-y-4 scrollbar-thin scrollbar-thumb-orange-600 scrollbar-track-[#222]">
-          {bikes.map((bike) => (
+      <div className="max-h-[520px] overflow-y-auto pr-2 space-y-4 scrollbar-thin scrollbar-thumb-orange-600 scrollbar-track-[#222]">
+        {Array.isArray(bikes) && bikes.length > 0 ? (
+          bikes.map((bike) => (
             <div
               key={bike._id}
               className="group border border-gray-700 rounded-lg overflow-hidden bg-[#2a2a2a] hover:border-orange-600 transition cursor-pointer flex items-center gap-4 p-4"
@@ -285,8 +281,10 @@ export const BikeManager = ({
                 className="text-red-500 text-xl hover:scale-110 transition cursor-pointer"
               />
             </div>
-          ))}
-        </div>
+          ))
+        ) : (
+          <p className="text-gray-400">Мотоцикл олдсонгүй</p>
+        )}
       </div>
     </div>
   );
