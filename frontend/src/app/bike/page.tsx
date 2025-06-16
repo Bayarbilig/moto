@@ -167,7 +167,7 @@ const Page = () => {
     const fetchBikes = async () => {
       try {
         setLoading(true);
-        const res = await api.get("/api/bike/bikes");
+        const res = await api.get("/api/bike/");
         setBikes(
           res.data.sort((a: Bike, b: Bike) => (b.year || 0) - (a.year || 0))
         );

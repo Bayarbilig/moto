@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 import { Entry } from "./Types";
 
@@ -5,26 +7,18 @@ interface UsersTabProps {
   data: Entry[];
 }
 
-const UsersTab: React.FC<UsersTabProps> = ({ data }) => {
+export default function UsersTab({ data }: UsersTabProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const entriesPerPage = 10;
 
-  // Calculate pagination values
   const totalPages = Math.ceil(data.length / entriesPerPage);
   const startIndex = (currentPage - 1) * entriesPerPage;
   const currentEntries = data.slice(startIndex, startIndex + entriesPerPage);
 
-  const handlePrev = () => {
-    setCurrentPage((prev) => Math.max(prev - 1, 1));
-  };
-
-  const handleNext = () => {
+  const handlePrev = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
+  const handleNext = () =>
     setCurrentPage((prev) => Math.min(prev + 1, totalPages));
-  };
-
-  const handlePageClick = (page: number) => {
-    setCurrentPage(page);
-  };
+  const handlePageClick = (page: number) => setCurrentPage(page);
 
   return (
     <div className="h-screen px-8 py-6 ">
@@ -98,7 +92,7 @@ const UsersTab: React.FC<UsersTabProps> = ({ data }) => {
         </table>
       </div>
 
-      {/* Pagination Controls */}
+      {/* Pagination */}
       <div className="flex justify-center items-center gap-4 mt-6 text-white">
         <button
           onClick={handlePrev}
@@ -112,7 +106,6 @@ const UsersTab: React.FC<UsersTabProps> = ({ data }) => {
           Өмнөх
         </button>
 
-        {/* Page numbers */}
         <div className="flex gap-2">
           {Array.from({ length: totalPages }, (_, i) => i + 1).map(
             (pageNum) => (
@@ -145,6 +138,4 @@ const UsersTab: React.FC<UsersTabProps> = ({ data }) => {
       </div>
     </div>
   );
-};
-
-export default UsersTab;
+}
