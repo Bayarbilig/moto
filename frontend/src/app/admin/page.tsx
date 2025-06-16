@@ -367,33 +367,22 @@
 
 import dynamic from "next/dynamic";
 import { useState, useEffect, useCallback } from "react";
-import AdminLayout from "./AdminLayout";
-
+import AdminLayout from "@/app/admin/AdminLayout";
 import {
+  Entry,
   Brand,
   Bike,
   Accessory,
   Equipment,
   Event,
-  Entry,
-} from "../components/Types";
-
+} from "@/app/components/Types";
 import { api } from "@/lib/axios";
 import { toast } from "react-toastify";
 
-// Dynamically import tabs with SSR disabled
+// Lazy-load tabs with client-side only
 const UsersTab = dynamic(() => import("./tabs/UsersTab"), {
   ssr: false,
 }) as React.ComponentType<{ data: Entry[] }>;
-
-const EventTab = dynamic(() => import("./tabs/EventTab"), {
-  ssr: false,
-}) as React.ComponentType<{
-  events: Event[];
-  onCreate: (e: Event) => Promise<void>;
-  onDelete: (id: string) => Promise<void>;
-}>;
-
 const MotoTab = dynamic(() => import("./tabs/MotoTab"), {
   ssr: false,
 }) as React.ComponentType<{
@@ -401,19 +390,19 @@ const MotoTab = dynamic(() => import("./tabs/MotoTab"), {
   bikes: Bike[];
   accessories: Accessory[];
   equipment: Equipment[];
-  onCreateBrand: (data: { name: string; slug: string }) => Promise<void>;
+  onCreateBrand: (d: { name: string; slug: string }) => Promise<void>;
   onDeleteBrand: (id: string) => Promise<void>;
-  onCreateAccessory: (data: {
+  onCreateAccessory: (d: {
     image: string;
     price: string;
     brand: string;
     name: string;
   }) => Promise<void>;
   onDeleteAccessory: (id: string) => Promise<void>;
-  onCreateBike: (data: any) => Promise<void>;
+  onCreateBike: (d: any) => Promise<void>;
   onDeleteBike: (id: string) => Promise<void>;
-  onUpdateBike: (id: string, data: Partial<Bike>) => Promise<void>;
-  onCreateEquipment: (data: {
+  onUpdateBike: (id: string, d: Partial<Bike>) => Promise<void>;
+  onCreateEquipment: (d: {
     name: string;
     brand: string;
     price: string;
@@ -421,19 +410,18 @@ const MotoTab = dynamic(() => import("./tabs/MotoTab"), {
   }) => Promise<void>;
   onDeleteEquipment: (id: string) => Promise<void>;
 }>;
-
-const TimeTab = dynamic(() => import("./tabs/TimeTab"), {
+const EventTab = dynamic(() => import("./tabs/EventTab"), {
   ssr: false,
-});
-
-const ServicesTab = dynamic(() => import("./tabs/ServicesTab"), {
-  ssr: false,
-});
+}) as React.ComponentType<{
+  events: Event[];
+  onCreate: (e: Event) => Promise<void>;
+  onDelete: (id: string) => Promise<void>;
+}>;
+const TimeTab = dynamic(() => import("./tabs/TimeTab"), { ssr: false });
+const ServicesTab = dynamic(() => import("./tabs/ServicesTab"), { ssr: false });
 
 export default function AdminPage() {
   const [activeTab, setActiveTab] = useState("Users");
-
-  // Data states
   const [userData, setUserData] = useState<Entry[]>([]);
   const [brands, setBrands] = useState<Brand[]>([]);
   const [bikes, setBikes] = useState<Bike[]>([]);
@@ -441,13 +429,13 @@ export default function AdminPage() {
   const [equipment, setEquipment] = useState<Equipment[]>([]);
   const [events, setEvents] = useState<Event[]>([]);
 
-  // Fetch functions (useCallback for stable references)
+  // Fetch functions
   const fetchUserData = useCallback(async () => {
     try {
       const res = await api.get("/api/register");
       setUserData(res.data);
     } catch {
-      toast.error("Failed to load user data");
+      toast.error("Failed to load users");
     }
   }, []);
 
@@ -462,7 +450,7 @@ export default function AdminPage() {
 
   const fetchBikes = useCallback(async () => {
     try {
-      const res = await api.get("/api/bike/bikes");
+      const res = await api.get("/api/bike");
       setBikes(res.data);
     } catch {
       toast.error("Failed to load bikes");
@@ -496,7 +484,7 @@ export default function AdminPage() {
     }
   }, []);
 
-  // Initial data load
+  // Load once on mount
   useEffect(() => {
     fetchUserData();
     fetchBrands();
@@ -513,133 +501,89 @@ export default function AdminPage() {
     fetchEvents,
   ]);
 
-  // Handlers for Brand
-  const handleCreateBrand = async (data: { name: string; slug: string }) => {
-    try {
-      await api.post("/api/brands", data);
-      toast.success("Brand амжилттай үүслээ");
-      await fetchBrands();
-    } catch {
-      toast.error("Failed to create brand");
-    }
-  };
+  // Handler creators
+  const makeCreate =
+    <T,>(path: string, done: (fn: () => void) => void) =>
+    async (data: T) => {
+      try {
+        await api.post(path, data);
+        toast.success("Создано");
+        done(path.endsWith("brands") ? fetchBrands : () => {});
+      } catch {
+        toast.error("Ошибка создания");
+      }
+    };
 
-  const handleDeleteBrand = async (id: string) => {
-    try {
-      await api.delete(`/api/brands/${id}`);
-      setBrands((prev) => prev.filter((b) => b._id !== id));
-      toast.success("Амжилттай устлаа");
-    } catch {
-      toast.error("Failed to delete brand");
-    }
-  };
-
-  // Handlers for Accessory
-  const handleCreateAccessory = async (data: {
+  const makeDelete =
+    (path: string, setter: any, fetcher?: () => Promise<void>) =>
+    async (id: string) => {
+      try {
+        await api.delete(`${path}/${id}`);
+        setter((prev: any) => prev.filter((x: any) => x._id !== id));
+        if (fetcher) await fetcher();
+        toast.success("Удалено");
+      } catch {
+        toast.error("Ошибка удаления");
+      }
+    };
+  const handleCreateBrand = makeCreate<{ name: string; slug: string }>(
+    "/api/brands",
+    fetchBrands
+  );
+  const handleDeleteBrand = makeDelete("/api/brands", setBrands, fetchBrands);
+  const handleCreateAccessory = makeCreate<{
     image: string;
     price: string;
     brand: string;
     name: string;
-  }) => {
-    try {
-      await api.post("/api/accessories", data);
-      toast.success("Accessory амжилттай үүслээ");
-      await fetchAccessories();
-    } catch {
-      toast.error("Failed to create accessory");
-    }
-  };
-
-  const handleDeleteAccessory = async (id: string) => {
-    try {
-      await api.delete(`/api/accessories/${id}`);
-      setAccessories((prev) => prev.filter((a) => a._id !== id));
-      toast.success("Амжилттай устлаа");
-    } catch {
-      toast.error("Failed to delete accessory");
-    }
-  };
-
-  // Handlers for Bike
-  const handleCreateBike = async (data: any) => {
-    try {
-      await api.post("/api/bike/bikes", data);
-      toast.success("Bike амжилттай үүслээ");
-      await fetchBikes();
-    } catch {
-      toast.error("Failed to create bike");
-    }
-  };
-
-  const handleDeleteBike = async (id: string) => {
-    try {
-      await api.delete(`/api/bike/bikes/${id}`);
-      setBikes((prev) => prev.filter((b) => b._id !== id));
-      toast.success("Амжилттай устлаа");
-    } catch {
-      toast.error("Failed to delete bike");
-    }
-  };
-
+  }>("/api/accessories", fetchAccessories);
+  const handleDeleteAccessory = makeDelete(
+    "/api/accessories",
+    setAccessories,
+    fetchAccessories
+  );
+  const handleCreateBike = makeCreate<any>("/api/bike", fetchBikes);
+  const handleDeleteBike = makeDelete("/api/bike", setBikes, fetchBikes);
   const handleUpdateBike = async (id: string, data: Partial<Bike>) => {
     try {
-      await api.put(`/api/bike/bikes/${id}`, data);
-      toast.success("Амжилттай шинэчлэгдлээ");
+      await api.put(`/api/bike/${id}`, data);
       await fetchBikes();
+      toast.success("Обновлено");
     } catch {
-      toast.error("Failed to update bike");
+      toast.error("Ошибка обновления");
     }
   };
-
-  // Handlers for Event
-  const handleCreateEvent = async (newEvent: Event) => {
+  const handleCreateEquipment = makeCreate<{
+    name: string;
+    brand: string;
+    price: string;
+    image: string;
+  }>("/api/equipment", fetchEquipment);
+  const handleDeleteEquipment = makeDelete(
+    "/api/equipment",
+    setEquipment,
+    fetchEquipment
+  );
+  const handleCreateEvent = async (ev: Event) => {
     try {
-      const res = await api.post("/api/event", newEvent);
-      setEvents((prev) => [...prev, res.data]);
+      const r = await api.post("/api/event", ev);
+      setEvents((prev) => [...prev, r.data]);
       toast.success("Эвэнт үүслээ");
     } catch {
-      toast.error("Эвэнт үүсгэхэд алдаа гарлаа");
+      toast.error("Error");
     }
   };
-
   const handleDeleteEvent = async (id: string) => {
     try {
       await api.delete(`/api/event/${id}`);
       setEvents((prev) => prev.filter((e) => e._id !== id));
-      toast.success("Устлаа");
+      toast.success("Эвэнт устлаа");
     } catch {
-      toast.error("Устгахад алдаа гарлаа");
+      toast.error("Error");
     }
   };
 
-  // Handlers for Equipment
-  const handleCreateEquipment = async (data: {
-    name: string;
-    brand: string;
-    price: string;
-    image: string;
-  }) => {
-    try {
-      await api.post("/api/equipment", data);
-      toast.success("Equipment амжилттай үүслээ");
-      await fetchEquipment();
-    } catch {
-      toast.error("Failed to create equipment");
-    }
-  };
-
-  const handleDeleteEquipment = async (id: string) => {
-    try {
-      await api.delete(`/api/equipment/${id}`);
-      setEquipment((prev) => prev.filter((eq) => eq._id !== id));
-      toast.success("Амжилттай устлаа");
-    } catch {
-      toast.error("Failed to delete equipment");
-    }
-  };
-
-  // Map tabs to their components and props
-  const tabComponents: Record<string, React.ReactNode> = {
+  const TABS: Record<string, React.ReactNode> = {
     Users: <UsersTab data={userData} />,
     Moto: (
       <MotoTab
@@ -671,7 +615,7 @@ export default function AdminPage() {
 
   return (
     <AdminLayout activeTab={activeTab} onTabChange={setActiveTab}>
-      {tabComponents[activeTab]}
+      {TABS[activeTab]}
     </AdminLayout>
   );
 }

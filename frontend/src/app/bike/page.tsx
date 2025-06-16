@@ -113,7 +113,7 @@ const BikeDetailModal = ({
               </span>
             </div>
 
-            {bike.features && bike.features.length > 0 && (
+            {!!bike.features?.length && (
               <div>
                 <h4 className="text-sm text-gray-400 mt-2">{t("features")}:</h4>
                 <ul className="list-disc ml-6 text-gray-300 text-sm">
@@ -124,14 +124,18 @@ const BikeDetailModal = ({
               </div>
             )}
 
-            {bike.variants && bike.variants.length > 0 && (
+            {!!bike.variants?.length && (
               <div>
                 <h4 className="text-sm text-gray-400 mb-1">{t("variant")}:</h4>
                 <div className="flex gap-2 flex-wrap">
                   {bike.variants.map((variant) => (
                     <button
                       key={variant}
-                      className={`px-3 py-1 rounded-full border ${selectedVariant === variant ? "bg-[#F95F19] text-white" : "text-gray-300 border-gray-600"}`}
+                      className={`px-3 py-1 rounded-full border ${
+                        selectedVariant === variant
+                          ? "bg-[#F95F19] text-white"
+                          : "text-gray-300 border-gray-600"
+                      }`}
                       onClick={() => setSelectedVariant(variant)}
                       type="button"
                     >
