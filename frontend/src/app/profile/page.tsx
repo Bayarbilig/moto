@@ -1,8 +1,11 @@
 "use client";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { uploadImageToCloud } from "@/utils/uploadImage";
 import { toast } from "react-toastify";
+import { useTranslation } from "next-i18next";
+import { useEffect } from "react";
 
 interface Profile {
   name: string;
@@ -11,7 +14,9 @@ interface Profile {
 }
 
 const ProfilePage = () => {
+  const { t } = useTranslation("profile");
   const router = useRouter();
+
   const [profile, setProfile] = useState<Profile>({
     name: "",
     email: "",
@@ -25,11 +30,10 @@ const ProfilePage = () => {
     if (!file) return;
 
     try {
-      // Upload the image to Cloud or S3
       const imageUrl = await uploadImageToCloud(file);
       setProfile((prev) => ({ ...prev, avatar: imageUrl }));
     } catch (error) {
-      toast.error("Зураг илгээхэд алдаа гарлаа");
+      toast.error(t("error_upload"));
     }
   };
 
@@ -45,12 +49,12 @@ const ProfilePage = () => {
       const response = await fetch("/api/upload", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(profile), // profile-д URL байж байх ёстой
+        body: JSON.stringify(profile),
       });
 
-      if (!response.ok) throw new Error("Хадгалах явцад алдаа гарлаа");
+      if (!response.ok) throw new Error(t("error_save"));
 
-      toast.success("Профайл амжилттай хадгалагдлаа!");
+      toast.success(t("success_save"));
     } catch (error) {
       toast.error((error as Error).message);
     } finally {
@@ -58,27 +62,32 @@ const ProfilePage = () => {
     }
   };
 
+  const logout = () => {
+    localStorage.removeItem("token");
+    toast.success(t("success_logout"));
+    router.push("/");
+  };
+
   return (
     <div className="max-w-xl mx-auto py-20 px-4">
-      <h1 className="text-2xl font-bold mb-6 text-white">Профайл</h1>
+      <h1 className="text-2xl font-bold mb-6 text-white">{t("title")}</h1>
 
-      {/* Profile Image Upload */}
-      {/* <div className="mb-6 flex items-center gap-4">
+      <div className="mb-6 flex items-center gap-4">
         {profile.avatar ? (
           <Image
             src={profile.avatar}
-            alt="Profile"
+            alt="Avatar"
             width={80}
             height={80}
             className="rounded-full object-cover"
           />
         ) : (
           <div className="w-20 h-20 bg-gray-600 rounded-full flex items-center justify-center text-white text-sm">
-            Зураг
+            {t("no_avatar")}
           </div>
         )}
         <label className="cursor-pointer text-sm text-orange-400">
-          📸 Зураг нэмэх
+          📸 {t("upload_image")}
           <input
             type="file"
             accept="image/*"
@@ -86,11 +95,10 @@ const ProfilePage = () => {
             className="hidden"
           />
         </label>
-      </div> */}
+      </div>
 
-      {/* Profile Inputs */}
       <div className="mb-4">
-        <label className="block text-white mb-1">Нэр</label>
+        <label className="block text-white mb-1">{t("label_name")}</label>
         <input
           type="text"
           name="name"
@@ -101,7 +109,7 @@ const ProfilePage = () => {
       </div>
 
       <div className="mb-6">
-        <label className="block text-white mb-1">Имэйл</label>
+        <label className="block text-white mb-1">{t("label_email")}</label>
         <input
           type="email"
           name="email"
@@ -117,17 +125,13 @@ const ProfilePage = () => {
           disabled={isSaving}
           className="bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded"
         >
-          {isSaving ? "Хадгалж байна..." : "Хадгалах"}
+          {isSaving ? t("saving") : t("save")}
         </button>
         <button
-          onClick={() => {
-            localStorage.removeItem("token");
-            router.push("/");
-            toast.success("Амжилттай гарлаа");
-          }}
+          onClick={logout}
           className="bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded"
         >
-          гарах
+          {t("logout")}
         </button>
       </div>
     </div>

@@ -1,0 +1,22 @@
+{
+  "title": "Sign Up",
+  "name": "Name",
+  "email": "Email",
+  "password": "Password",
+  "submit": "Sign Up",
+  "submitting": "Please wait...",
+  "success": "Signed up successfully!",
+  "error_generic": "Signup failed",
+  "placeholders": {
+    "name": "Enter your name",
+    "email": "Enter your email",
+    "password": "Enter your password"
+  },
+  "errors": {
+    "name_required": "Please enter your name",
+    "email_required": "Please enter your email",
+    "email_invalid": "Please enter a valid email",
+    "password_required": "Please enter your password",
+    "password_short": "Password must be at least 6 characters long"
+  }
+}

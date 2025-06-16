@@ -1,13 +1,15 @@
-// accessories/page.tsx
+// app/accessories/page.tsx
 "use client";
+
 import { useEffect, useState } from "react";
 import { fetchData } from "@/lib/fetchUtils";
 import { ProductGrid } from "../components/ProductGrid";
-
+import { useTranslation } from "react-i18next";
 
 export default function ListAllAccessories() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { t } = useTranslation("accessoryList");
 
   useEffect(() => {
     const getAccessories = async () => {
@@ -20,7 +22,5 @@ export default function ListAllAccessories() {
     getAccessories();
   }, []);
 
-  return (
-    <ProductGrid title="Бүх сэлбэгүүд" items={data} loading={loading} />
-  );
+  return <ProductGrid title={t("title")} items={data} loading={loading} />;
 }

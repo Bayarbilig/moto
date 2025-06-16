@@ -1,0 +1,15 @@
+{
+  "title": "Нэвтрэх",
+  "emailLabel": "Имэйл",
+  "emailPlaceholder": "Е-майл оруулна уу",
+  "emailRequired": "Имэйл оруулна уу",
+  "emailInvalid": "Зөв имэйл оруулна уу",
+  "passwordLabel": "Нууц үг",
+  "passwordPlaceholder": "Нууц үг оруулна уу",
+  "passwordRequired": "Нууц үг оруулна уу",
+  "loginButton": "Нэвтрэх",
+  "loggingIn": "Түр хүлээнэ үү...",
+  "loginSuccess": "Амжилттай нэвтэрлээ!",
+  "loginFailed": "Нэвтрэх үйлдэл амжилтгүй боллоо",
+  "selectLanguage": "Хэл сонгох"
+}

@@ -1,27 +1,41 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { BiMapPin } from "react-icons/bi";
 import { BsInstagram, BsYoutube } from "react-icons/bs";
 import { FaFacebook } from "react-icons/fa";
 import { MdLocalPhone, MdOutlineEmail } from "react-icons/md";
+import { useTranslation } from "react-i18next";
+import { useEffect, useState } from "react";
 
 export const Footer = () => {
-  return (
+  const { t: tFooter, ready: readyFooter } = useTranslation("footer");
+  const { t: tMenu, ready: readyMenu } = useTranslation("menu");
 
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted || !readyFooter || !readyMenu) {
+    return null; // Or a simple loader, or skeleton if you want
+  }
+
+  return (
     <footer className="bg-[#1C1917] text-gray-300 pt-10 w-full">
       <div className="max-w-7xl mx-auto px-6 md:px-12 grid gap-20">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
           {/* Help Links */}
           <nav aria-label="Footer Navigation">
-
-            <h3 className="text-white font-bold mb-4">Тусламж</h3>
+            <h3 className="text-white font-bold mb-4">{tFooter("help")}</h3>
             <ul className="space-y-2">
               <li>
                 <Link
                   href="/bike"
                   className="hover:text-moto-orange transition-colors"
                 >
-                  Худалдаа
+                  {tMenu("shop")}
                 </Link>
               </li>
               <li>
@@ -29,7 +43,7 @@ export const Footer = () => {
                   href="/tournament"
                   className="hover:text-moto-orange transition-colors"
                 >
-                  Тэмцээн
+                  {tMenu("tournament")}
                 </Link>
               </li>
               <li>
@@ -37,7 +51,7 @@ export const Footer = () => {
                   href="/about"
                   className="hover:text-moto-orange transition-colors"
                 >
-                  Бидний тухай
+                  {tMenu("about")}
                 </Link>
               </li>
               <li>
@@ -45,7 +59,7 @@ export const Footer = () => {
                   href="/services"
                   className="hover:text-moto-orange transition-colors"
                 >
-                  Үйлчилгээ
+                  {tMenu("service")}
                 </Link>
               </li>
             </ul>
@@ -53,11 +67,11 @@ export const Footer = () => {
 
           {/* Contact Info */}
           <address className="not-italic">
-            <h3 className="text-white font-bold mb-4">Холбоо барих</h3>
+            <h3 className="text-white font-bold mb-4">{tFooter("contact")}</h3>
             <ul className="space-y-2">
               <li className="flex items-center gap-2">
                 <MdLocalPhone size={18} />
-                <span>Утас: 8957-8282</span>
+                <span>{tFooter("phone")}: 8957-8282</span>
               </li>
               <li className="flex items-center gap-2">
                 <MdOutlineEmail size={18} />
@@ -70,19 +84,16 @@ export const Footer = () => {
               </li>
               <li className="flex items-start gap-2">
                 <BiMapPin size={18} className="mt-1" />
-                <span>
-                  1234 Мото зам, Гудамж урд, <br /> Улаанбаатар хот
-                </span>
+                <span>{tFooter("address")}</span>
               </li>
             </ul>
           </address>
 
           {/* Social Media */}
           <div>
-            <h3 className="text-white font-bold mb-4">Биднийг дагах</h3>
+            <h3 className="text-white font-bold mb-4">{tFooter("follow")}</h3>
             <p className="mb-4 text-sm leading-relaxed">
-              Elite Moto Shop нь мотоциклын худалдаа, засвар үйлчилгээ, дагалдах
-              хэрэгсэл, онлайн захиалга болон түрээсийн үйлчилгээ үзүүлдэг.
+              {tFooter("description")}
             </p>
             <div className="flex gap-4">
               <a
@@ -116,16 +127,13 @@ export const Footer = () => {
           </div>
         </div>
 
-
         {/* Bottom Bar */}
         <div className="border-t border-[#A8A29E] pt-4 flex flex-col md:flex-row justify-between items-center text-sm text-gray-400">
-          <p>© 2025 МОТО. Бүх эрх хуулиар хамгаалагдсан.</p>
-          <p className="mt-2 md:mt-0">Зохиогчийн эрхийн тухай</p>
-
+          <p>© 2025 МОТО. {tFooter("rights")}</p>
+          <p className="mt-2 md:mt-0">{tFooter("copyright")}</p>
         </div>
       </div>
 
-      {/* Decorative Footer Image */}
       <Image
         src="/elitemoto.png"
         alt="Elite Moto Footer Banner"

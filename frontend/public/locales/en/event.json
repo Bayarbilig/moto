@@ -1,0 +1,38 @@
+{
+  "loading": "Loading...",
+  "notFound": "Event not found...",
+  "aboutTitle": "About the Event",
+  "noDescription": "No description available.",
+  "scheduleTitle": "Schedule",
+  "scheduleList": [
+    "08:00 - 09:00: Registration",
+    "09:00 - 09:30: Opening Ceremony",
+    "09:30 - 10:30: Practice",
+    "10:30 - 12:30: Preliminary Round",
+    "12:30 - 13:30: Lunch Break",
+    "13:30 - 16:30: Main Race",
+    "16:30 - 17:00: Award Ceremony"
+  ],
+  "categoriesTitle": "Categories",
+  "categoriesList": [
+    "125cc - Youth",
+    "250cc - Open Class",
+    "450cc - Professional"
+  ],
+  "prizesTitle": "Prizes",
+  "prizesList": [
+    "🥇 1st Place: 10,000,000₮",
+    "🥈 2nd Place: 5,000,000₮",
+    "🥉 3rd Place: 3,000,000₮",
+    "🏅 Special Award: 1,000,000₮"
+  ],
+  "requirementsTitle": "Requirements",
+  "requirementsList": [
+    "Must have a motocross motorcycle",
+    "Protective gear and helmet required",
+    "Must have a driver's license",
+    "Must pass a health check"
+  ],
+  "register": "Register",
+  "participants": "{{count}} participants"
+}

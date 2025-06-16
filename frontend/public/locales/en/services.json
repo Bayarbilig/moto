@@ -1,0 +1,13 @@
+{
+  "booking_list": "Booking List",
+  "name": "Name",
+  "phone": "Phone",
+  "email": "Email",
+  "model": "Model",
+  "date": "Date",
+  "time": "Time",
+  "price": "Price",
+  "notes": "Notes",
+  "services": "Services",
+  "no_bookings": "No bookings yet"
+}

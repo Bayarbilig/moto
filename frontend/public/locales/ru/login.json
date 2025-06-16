@@ -1,0 +1,15 @@
+{
+  "title": "Вход",
+  "emailLabel": "Электронная почта",
+  "emailPlaceholder": "Введите электронную почту",
+  "emailRequired": "Пожалуйста, введите электронную почту",
+  "emailInvalid": "Пожалуйста, введите корректный адрес электронной почты",
+  "passwordLabel": "Пароль",
+  "passwordPlaceholder": "Введите пароль",
+  "passwordRequired": "Пожалуйста, введите пароль",
+  "loginButton": "Войти",
+  "loggingIn": "Пожалуйста, подождите...",
+  "loginSuccess": "Успешный вход!",
+  "loginFailed": "Ошибка входа",
+  "selectLanguage": "Выберите язык"
+}

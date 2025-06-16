@@ -1,13 +1,15 @@
-// equipment/page.tsx
+// app/equipment/page.tsx
 "use client";
+
 import { useEffect, useState } from "react";
 import { fetchData } from "@/lib/fetchUtils";
 import { ProductGrid } from "../components/ProductGrid";
-
+import { useTranslation } from "react-i18next";
 
 export default function ListAllEquipment() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { t } = useTranslation("equipmentList");
 
   useEffect(() => {
     const getEquipment = async () => {
@@ -20,7 +22,5 @@ export default function ListAllEquipment() {
     getEquipment();
   }, []);
 
-  return (
-    <ProductGrid title="Бүх багаж хэрэгсэл" items={data} loading={loading} />
-  );
+  return <ProductGrid title={t("title")} items={data} loading={loading} />;
 }

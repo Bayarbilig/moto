@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { BiTrash } from "react-icons/bi";
 import { api } from "@/lib/axios";
+import { useTranslation } from "react-i18next";
 
 type Service = {
   _id: string;
@@ -19,6 +20,7 @@ type Service = {
 export const Services = () => {
   const [motoservices, setMotoServices] = useState<Service[]>([]);
   const [services, setServices] = useState([]);
+  const { t } = useTranslation("services");
 
   // Fetch services
   useEffect(() => {
@@ -56,7 +58,7 @@ export const Services = () => {
 
   return (
     <div className="flex-1 text-white">
-      <h2 className="text-xl font-semibold mb-4">Захиалгын жагсаалт</h2>
+      <h2 className="text-xl font-semibold mb-4">{t("booking_list")}</h2>
       <div className="max-h-[460px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-[#e15617] scrollbar-track-[#222] space-y-4">
         {motoservices.map((item) => (
           <div
@@ -65,21 +67,30 @@ export const Services = () => {
           >
             <div className="flex gap-4 items-start p-4">
               <div className="flex-1 text-sm space-y-1">
-                <p className="font-semibold">Нэр: {item.name}</p>
-                <p className="text-gray-400">Утас: {item.phone}</p>
-                <p className="text-gray-400">И-мэйл: {item.email}</p>
-                <p className="text-gray-400">
-                  Загвар: {item.motoModel} ({item.motoYear})
+                <p className="font-semibold">
+                  {t("name")}: {item.name}
                 </p>
                 <p className="text-gray-400">
-                  Огноо: {item.date.slice(0, 10)} | Цаг: {item.time}
+                  {t("phone")}: {item.phone}
                 </p>
                 <p className="text-gray-400">
-                  Үнэ: {item.totalPrice.toLocaleString()}₮
+                  {t("email")}: {item.email}
                 </p>
-                <p className="text-gray-400">Тайлбар: {item.notes}</p>
+                <p className="text-gray-400">
+                  {t("model")}: {item.motoModel} ({item.motoYear})
+                </p>
+                <p className="text-gray-400">
+                  {t("date")}: {item.date.slice(0, 10)} | {t("time")}:{" "}
+                  {item.time}
+                </p>
+                <p className="text-gray-400">
+                  {t("price")}: {item.totalPrice.toLocaleString()}₮
+                </p>
+                <p className="text-gray-400">
+                  {t("notes")}: {item.notes}
+                </p>
                 <div className="flex gap-2">
-                  <p className="text-gray-400">Үйлчилгээ:</p>
+                  <p className="text-gray-400">{t("services")}:</p>
                   {item.services.map((service, index) => (
                     <div key={index} className="flex">
                       <p className="text-gray-400">{service.name}--</p>
@@ -95,9 +106,7 @@ export const Services = () => {
           </div>
         ))}
         {motoservices.length === 0 && (
-          <p className="text-gray-500 text-center mt-10">
-            Одоогоор захиалга алга
-          </p>
+          <p className="text-gray-500 text-center mt-10">{t("no_bookings")}</p>
         )}
       </div>
     </div>

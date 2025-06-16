@@ -1,0 +1,15 @@
+{
+  "title": "Login",
+  "emailLabel": "Email",
+  "emailPlaceholder": "Enter your email",
+  "emailRequired": "Please enter your email",
+  "emailInvalid": "Please enter a valid email",
+  "passwordLabel": "Password",
+  "passwordPlaceholder": "Enter your password",
+  "passwordRequired": "Please enter your password",
+  "loginButton": "Login",
+  "loggingIn": "Please wait...",
+  "loginSuccess": "Successfully logged in!",
+  "loginFailed": "Login failed",
+  "selectLanguage": "Select Language"
+}

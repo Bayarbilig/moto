@@ -1,4 +1,5 @@
 "use client";
+
 import { api } from "@/lib/axios";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -7,12 +8,19 @@ import { CgLock } from "react-icons/cg";
 import { FaUserSecret } from "react-icons/fa";
 import { LiaCalendarDaySolid } from "react-icons/lia";
 import { Event } from "@/app/components/Types";
-// Fake data for demonstration (normally fetch from API)
+import { useTranslation } from "react-i18next";
 
 const EventDetailPage = () => {
+  const { t, ready } = useTranslation("event");
   const { id } = useParams();
   const [event, setEvent] = useState<Event | null>(null);
   const router = useRouter();
+
+  // Now returns array of strings or objects
+  const tArray = (key: string): (string | object)[] => {
+    const val = t(key, { returnObjects: true });
+    return Array.isArray(val) ? val : [];
+  };
 
   useEffect(() => {
     if (!id) return;
@@ -23,23 +31,27 @@ const EventDetailPage = () => {
         setEvent(res.data);
       } catch (error) {
         console.error("Event fetch error:", error);
-      } finally {
       }
     };
 
     fetchEvent();
   }, [id]);
 
+  if (!ready) {
+    return null; // or a spinner/loading UI
+  }
+
   if (!event) {
     return (
       <div className="min-h-screen bg-neutral-900 text-white flex items-center justify-center">
-        <p>Тэмцээн олдсонгүй...</p>
+        <p>{t("notFound")}</p>
       </div>
     );
   }
+
   return (
     <div className="min-h-screen bg-neutral-900 text-white">
-      {/* Header Banner */}
+      {/* Header */}
       <div
         className="relative h-[450px] bg-cover bg-center"
         style={{ backgroundImage: `url('${event.image}')` }}
@@ -60,7 +72,7 @@ const EventDetailPage = () => {
               <BiMapPin size={18} /> {event.location}
             </div>
             <div className="flex items-center gap-2">
-              <FaUserSecret size={18} /> 75 оролцогч
+              <FaUserSecret size={18} /> {t("participants")}
             </div>
           </div>
         </div>
@@ -71,44 +83,39 @@ const EventDetailPage = () => {
         {/* Left */}
         <div className="lg:col-span-2 space-y-8">
           <section>
-            <h2 className="text-2xl font-semibold mb-2">Тэмцээний тухай</h2>
-            <p className="text-gray-300">{event.description}</p>
+            <h2 className="text-2xl font-semibold mb-2">{t("aboutTitle")}</h2>
+            <p className="text-gray-300">
+              {event.description || t("noDescription")}
+            </p>
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold mb-4">Хөтөлбөр</h2>
+            <h2 className="text-xl font-semibold mb-4">{t("scheduleTitle")}</h2>
             <ul className="space-y-2 text-gray-200">
-              {[
-                "08:00 - 09:00: Бүртгэл",
-                "09:00 - 09:30: Нээлтийн ёслол",
-                "09:30 - 10:30: Дасгал сургуулилт",
-                "10:30 - 12:30: Урьдчилсан гараа",
-                "12:30 - 13:30: Үдийн завсарлага",
-                "13:30 - 16:30: Үндсэн гараа",
-                "16:30 - 17:00: Шагнал гардуулах ёслол",
-              ].map((item, i) => (
+              {tArray("scheduleList").map((item, i) => (
                 <li key={i} className="flex items-start gap-2">
                   <span className="text-orange-400 font-bold">{i + 1}.</span>
-                  <span>{item}</span>
+                  <span>
+                    {typeof item === "string" ? item : JSON.stringify(item)}{" "}
+                    {/* fallback for objects */}
+                  </span>
                 </li>
               ))}
             </ul>
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold mb-4">Ангилал</h2>
+            <h2 className="text-xl font-semibold mb-4">
+              {t("categoriesTitle")}
+            </h2>
             <div className="space-y-3">
-              {[
-                "125cc - Залуучууд",
-                "250cc - Нээлттэй ангилал",
-                "450cc - Мэргэжлийн",
-              ].map((cat, i) => (
+              {tArray("categoriesList").map((cat, i) => (
                 <div
                   key={i}
                   className="bg-neutral-800 px-4 py-2 rounded flex items-center gap-2"
                 >
                   <span className="text-orange-400">➤</span>
-                  {cat}
+                  {typeof cat === "string" ? cat : JSON.stringify(cat)}
                 </div>
               ))}
             </div>
@@ -118,22 +125,26 @@ const EventDetailPage = () => {
         {/* Right */}
         <div className="space-y-8">
           <section>
-            <h2 className="text-xl font-semibold mb-4">Шагнал</h2>
+            <h2 className="text-xl font-semibold mb-4">{t("prizesTitle")}</h2>
             <ul className="text-gray-200 space-y-2">
-              <li>🥇 1-р байр: 10,000,000₮</li>
-              <li>🥈 2-р байр: 5,000,000₮</li>
-              <li>🥉 3-р байр: 3,000,000₮</li>
-              <li>🏅 Тусгай байр: 1,000,000₮</li>
+              {tArray("prizesList").map((prize, i) => (
+                <li key={i}>
+                  {typeof prize === "string" ? prize : JSON.stringify(prize)}
+                </li>
+              ))}
             </ul>
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold mb-4">Шаардлага</h2>
+            <h2 className="text-xl font-semibold mb-4">
+              {t("requirementsTitle")}
+            </h2>
             <ul className="text-gray-200 space-y-2 list-disc list-inside">
-              <li>Мотокроссын мотоциклтой байх</li>
-              <li>Хамгаалалтын хувцас, дуулга заавал өмсөх</li>
-              <li>Жолооны үнэмлэхтэй байх</li>
-              <li>Эрүүл мэндийн үзлэгт орсон байх</li>
+              {tArray("requirementsList").map((req, i) => (
+                <li key={i}>
+                  {typeof req === "string" ? req : JSON.stringify(req)}
+                </li>
+              ))}
             </ul>
           </section>
 
@@ -141,7 +152,7 @@ const EventDetailPage = () => {
             className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 rounded"
             onClick={() => router.push(`/register/${event._id}`)}
           >
-            Бүртгүүлэх
+            {t("register")}
           </button>
         </div>
       </div>

@@ -6,6 +6,7 @@ import Head from "next/head";
 import axios from "axios";
 import { api } from "@/lib/axios";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 interface Service {
   _id: string;
@@ -50,6 +51,8 @@ export default function Home() {
   const [totalPrice, setTotalPrice] = useState(0);
   const [priceRange, setPriceRange] = useState({ min: 0, max: 0 });
   const [motoservices, setMotoServices] = useState([]);
+
+  const { t } = useTranslation("booking");
 
   useEffect(() => {
     const fetchMotoservices = async () => {
@@ -129,12 +132,10 @@ export default function Home() {
       formData.serviceIds.includes(service._id)
     );
 
-    if (selectedServiceObjects.length === 0) return "Үйлчилгээ сонгох";
+    if (selectedServiceObjects.length === 0) return t("select_service");
     if (selectedServiceObjects.length === 1)
       return selectedServiceObjects[0].name;
-    return `${selectedServiceObjects[0].name} +${
-      selectedServiceObjects.length - 1
-    }`;
+    return `${selectedServiceObjects[0].name} +${selectedServiceObjects.length - 1}`;
   };
 
   const toggleServiceDropdown = () => {
@@ -200,7 +201,7 @@ export default function Home() {
       !formData.time ||
       formData.serviceIds.length === 0
     ) {
-      toast.error("Бүх талбарийг бөглөнө уу");
+      toast.error(t("booking_error"));
       return;
     }
 
@@ -210,7 +211,7 @@ export default function Home() {
       const response = await api.post(`/api/motoservices`, formData);
 
       if (response.data.success) {
-        toast.success("Амжилттай захиалга үүслээ");
+        toast.success(t("booking_success"));
 
         setFormData({
           name: "",
@@ -267,19 +268,14 @@ export default function Home() {
       </Head>
 
       <div className="w-full max-w-lg px-4">
-        <h1 className="text-2xl font-medium text-center mb-4">
-          Мото үйлчилгээ
-        </h1>
+        <h1 className="text-2xl font-medium text-center mb-4">{t("title")}</h1>
 
-        <p className="text-center text-sm mb-8">
-          Та манай мэргэжлийн баг хамт олны үйлчилгээг авахыг хүсвэл доорх
-          төхөөрөг дээрх цаг захиална уу.
-        </p>
+        <p className="text-center text-sm mb-8">{t("description")}</p>
 
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block mb-1 text-sm" htmlFor="name">
-              Нэр
+              {t("name")}
             </label>
             <input
               type="text"
@@ -293,7 +289,7 @@ export default function Home() {
 
           <div className="mb-4">
             <label className="block mb-1 text-sm" htmlFor="phone">
-              Утасны дугаар
+              {t("phone")}
             </label>
             <input
               type="tel"
@@ -307,7 +303,7 @@ export default function Home() {
 
           <div className="mb-4">
             <label className="block mb-1 text-sm" htmlFor="email">
-              И-мэйл
+              {t("email")}
             </label>
             <input
               type="email"
@@ -321,7 +317,7 @@ export default function Home() {
 
           <div className="mb-4">
             <label className="block mb-1 text-sm" htmlFor="motoModel">
-              Мотоциклын модел
+              {t("moto_model")}
             </label>
             <input
               type="text"
@@ -334,17 +330,16 @@ export default function Home() {
           </div>
 
           <div className="mb-4">
-            <label className="block mb-1 text-sm">
-              Мотоциклын үйлдвэрлэсэн он
-            </label>
+            <label className="block mb-1 text-sm">{t("moto_year")}</label>
             <div className="relative" ref={yearDropdownRef}>
               <div
                 className="w-full bg-[#262626] border border-[#404040] rounded px-3 py-2 text-white flex justify-between items-center cursor-pointer"
                 onClick={() => setIsYearDropdownOpen(!isYearDropdownOpen)}
               >
                 <span className="bg-[#262626]">
-                  {formData.motoYear || "Он сонгох"}
+                  {formData.motoYear || t("select_year")}
                 </span>
+
                 <svg
                   className={`w-4 h-4 text-gray-400 transition-transform ${
                     isYearDropdownOpen ? "transform rotate-180" : ""
@@ -377,7 +372,8 @@ export default function Home() {
           </div>
 
           <div className="mb-4">
-            <label className="block mb-1 text-sm">Өдрөө сонгох</label>
+            <label className="block mb-1 text-sm">{t("select_date")}</label>
+
             <div className="mb-4">
               <div className="flex items-center border border-gray-700 rounded px-3 py-2 w-full sm:w-1/2">
                 <input
@@ -390,7 +386,7 @@ export default function Home() {
               </div>
               {selectedDate && (
                 <p className="text-sm text-gray-400 mt-1">
-                  Сонгосон өдөр: {formatDate(selectedDate)}
+                  {t("selected_date")}: {formatDate(selectedDate)}
                 </p>
               )}
             </div>
@@ -409,8 +405,8 @@ export default function Home() {
                       isPicked
                         ? "bg-gray-600 cursor-not-allowed"
                         : isSelected
-                        ? "bg-blue-600"
-                        : "bg-gray-800 hover:bg-gray-700"
+                          ? "bg-blue-600"
+                          : "bg-gray-800 hover:bg-gray-700"
                     }`}
                     onClick={() => handleTimeSlotSelect(time)}
                   >
@@ -422,7 +418,8 @@ export default function Home() {
           </div>
 
           <div className="mb-4">
-            <label className="block mb-1 text-sm">Үйлчилгээ</label>
+            <label className="block mb-1 text-sm">{t("select_service")}</label>
+
             <div className="relative" ref={serviceDropdownRef}>
               <button
                 type="button"
@@ -430,6 +427,7 @@ export default function Home() {
                 onClick={toggleServiceDropdown}
               >
                 <span>{getSelectedServicesText()}</span>
+
                 <svg
                   className={`w-4 h-4 transform ${
                     isServiceDropdownOpen ? "rotate-180" : ""
@@ -475,24 +473,25 @@ export default function Home() {
 
           <div className="mb-6 bg-blue-900 bg-opacity-20 rounded p-4">
             <div className="text-center text-lg font-medium mb-1">
-              Үйлчилгээний үнэ: {totalPrice.toLocaleString()}₮
+              {t("service_price")}
+              {totalPrice.toLocaleString()}₮
             </div>
             {totalPrice > 0 && (
-              <div className="text-center text-sm text-gray-400">
-                *Үнийн хэлбэлзэлт: {priceRange.min.toLocaleString()}₮ -{" "}
-                {priceRange.max.toLocaleString()}₮
-              </div>
+              <p className="text-sm text-gray-300 mt-2">
+                {t("service_price")}: {priceRange.min}₮ – {priceRange.max}₮
+                <br />
+                <em className="text-gray-500">{t("price_range")}</em>
+              </p>
             )}
           </div>
 
           <div className="mb-6">
             <label className="block mb-1 text-sm" htmlFor="notes">
-              Нэмэлт тэмдэглэл
+              {t("notes")}
             </label>
             <textarea
               id="notes"
               className="w-full bg-black border border-gray-700 rounded px-3 py-2 h-32 focus:outline-none focus:border-gray-500"
-              placeholder="Нэмэлт мэдээлэл оруулах"
               value={formData.notes}
               onChange={handleInputChange}
             ></textarea>
@@ -504,7 +503,7 @@ export default function Home() {
               className="bg-white text-black px-6 py-2 rounded hover:bg-gray-200 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={isSubmitting}
             >
-              {isSubmitting ? "Захиалж байна..." : "Захиалах"}
+              {t("submit")}
             </button>
           </div>
         </form>

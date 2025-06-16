@@ -1,0 +1,19 @@
+{
+  "title": "Moto Service",
+  "description": "Book a motorcycle service",
+  "name": "Name",
+  "phone": "Phone number",
+  "email": "Email",
+  "moto_model": "Motorcycle model",
+  "moto_year": "Year of manufacture",
+  "select_year": "Select year",
+  "select_date": "Select a date",
+  "selected_date": "Selected date",
+  "select_service": "Select service",
+  "booking_success": "Booking successfully created",
+  "booking_error": "Please fill out all fields",
+  "service_price": "Service Price",
+  "price_range": "*Price may vary",
+  "notes": "Additional information",
+  "submit": "Book now"
+}

@@ -1,0 +1,18 @@
+{
+  "all_bikes": "All Bikes",
+  "cc": "CC",
+  "power": "Power",
+  "load_more": "Load More",
+  "sold": "Sold",
+  "available": "Available",
+  "buy": "Buy",
+  "selected_bike": "You selected the bike",
+  "brand": "Brand",
+  "model": "Model",
+  "price": "Price",
+  "weight": "Weight",
+  "year": "Year",
+  "imported": "Imported Year",
+  "features": "Features",
+  "variant": "Color / Variant"
+}

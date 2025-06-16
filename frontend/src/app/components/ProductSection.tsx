@@ -6,12 +6,13 @@ import { api } from "@/lib/axios";
 import { Equipment } from "./Types";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useTranslation } from "react-i18next";
 
 interface Access {
-  model: string;
-  brand: string;
+  model?: string;
+  brand: string | { name: string };
   price: string;
-  id: null | undefined;
+  id?: string;
   image: string;
   _id: string;
   name: string;
@@ -21,6 +22,7 @@ export const ProductSection = () => {
   const accessoriesRef = useRef<HTMLDivElement>(null);
   const equipmentRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const { t } = useTranslation("products");
 
   const [accessories, setAccessories] = useState<Access[]>([]);
   const [equipment, setEquipment] = useState<Equipment[]>([]);
@@ -50,7 +52,7 @@ export const ProductSection = () => {
       setAccessories(accessoryRes.data);
       setEquipment(equipmentRes.data);
     } catch (error) {
-      console.error("Алдаа:", error);
+      console.error("Fetch error:", error);
     } finally {
       setIsLoading(false);
     }
@@ -83,7 +85,7 @@ export const ProductSection = () => {
         </div>
       ) : items.length === 0 ? (
         <p className="text-white py-6 text-sm sm:text-base">
-          No products found.
+          {t("noProducts")}
         </p>
       ) : (
         <>
@@ -102,6 +104,7 @@ export const ProductSection = () => {
                     src={product.image}
                     alt={product.name}
                     className="w-full h-full object-cover"
+                    loading="lazy"
                   />
                   <div className="absolute top-0 left-2 bg-[#F95F19] w-fit transform -skew-x-12">
                     <span className="product-price text-white py-1 px-2 text-sm">
@@ -162,7 +165,7 @@ export const ProductSection = () => {
             }
             className="text-[#F95F19] hover:underline text-sm sm:text-base"
           >
-            Бүгдийг харах →
+            {t("viewAll")} →
           </button>
         </div>
       )}
@@ -176,14 +179,14 @@ export const ProductSection = () => {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12">
         <h2 className="text-base sm:text-lg md:text-xl font-bold mb-6 text-white">
-          Мотоциклийн сэлбэг
+          {t("accessoriesTitle")}
         </h2>
         {renderProducts(accessories, "accessory")}
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12">
         <h2 className="text-base sm:text-lg md:text-xl font-bold mb-6 text-white">
-          Мотоциклийн багаж хэрэгсэл
+          {t("equipmentTitle")}
         </h2>
         {renderProducts(equipment, "equipment")}
       </div>

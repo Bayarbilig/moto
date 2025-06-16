@@ -1,0 +1,14 @@
+{
+  "title": "Profile",
+  "label_name": "Name",
+  "label_email": "Email",
+  "save": "Save",
+  "saving": "Saving...",
+  "logout": "Logout",
+  "upload_image": "Upload Image",
+  "no_avatar": "No Image",
+  "success_save": "Profile saved successfully!",
+  "error_save": "Error saving profile",
+  "error_upload": "Failed to upload image",
+  "success_logout": "Logged out successfully"
+}

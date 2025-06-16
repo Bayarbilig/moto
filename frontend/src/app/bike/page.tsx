@@ -2,12 +2,13 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { useTranslation } from "react-i18next";
 import { api } from "@/lib/axios";
 import { FaSearchPlus } from "react-icons/fa";
 import { Carousel } from "react-responsive-carousel";
-import "react-responsive-carousel/lib/styles/carousel.min.css";
 import Zoom from "react-medium-image-zoom";
 import "react-medium-image-zoom/dist/styles.css";
+import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { ProductSection } from "../components/ProductSection";
 import { Bike } from "../components/Types";
 
@@ -18,16 +19,16 @@ const BikeDetailModal = ({
   bike: Bike;
   onClose: () => void;
 }) => {
+  const { t } = useTranslation("bike");
   const [selectedImage, setSelectedImage] = useState(
     bike.images?.[0] || bike.image
   );
   const [selectedVariant, setSelectedVariant] = useState<string | null>(null);
-
   const allImages = [bike.image, ...(bike.images || [])].filter(Boolean);
 
   const handleBuy = () => {
     alert(
-      `Та "${bike.title}" (${selectedVariant || "анхан хувилбар"}) мотоциклийг сонголоо.`
+      `${t("selected_bike")}: "${bike.title}" (${selectedVariant || "Default"})`
     );
   };
 
@@ -49,7 +50,6 @@ const BikeDetailModal = ({
         </button>
 
         <div className="grid md:grid-cols-2 gap-6">
-          {/* Image Gallery */}
           <div>
             <Carousel
               showThumbs
@@ -77,30 +77,45 @@ const BikeDetailModal = ({
             </Carousel>
           </div>
 
-          {/* Bike Info */}
           <div className="space-y-4">
             <h2 className="text-3xl font-bold text-[#F95F19]">{bike.title}</h2>
             <p className="text-gray-300">{bike.bikeModel}</p>
             <div className="grid grid-cols-2 gap-2 text-sm mt-4 text-gray-300">
               <span>
-                Брэнд:{" "}
+                {t("brand")}:{" "}
                 {typeof bike.brand === "object" && "name" in bike.brand
                   ? bike.brand.name
                   : "?"}
               </span>
-              <span>Загвар: {bike.bikeModel || "?"}</span>
-              <span>CC: {bike.cc || "?"}</span>
-              <span>Хүч: {bike.power || "?"}</span>
-              <span>Үнэ: {bike.price?.toLocaleString() ?? "?"} ₮</span>
-              <span>Жин: {bike.weight || "?"} кг</span>
-              <span>Үйлдвэрлэсэн он: {bike.year || "?"}</span>
-              <span>Импортын он: {bike.importedYear || "?"}</span>
-              <span>Статус: {bike.sold ? "Зарагдсан" : "Байгаа"}</span>
+              <span>
+                {t("model")}: {bike.bikeModel || "?"}
+              </span>
+              <span>
+                {t("cc")}: {bike.cc || "?"}
+              </span>
+              <span>
+                {t("power")}: {bike.power || "?"}
+              </span>
+              <span>
+                {t("price")}: {bike.price?.toLocaleString() ?? "?"} ₮
+              </span>
+              <span>
+                {t("weight")}: {bike.weight || "?"} кг
+              </span>
+              <span>
+                {t("year")}: {bike.year || "?"}
+              </span>
+              <span>
+                {t("imported")}: {bike.importedYear || "?"}
+              </span>
+              <span>
+                {t("sold")}: {bike.sold ? t("sold") : t("available")}
+              </span>
             </div>
 
             {bike.features && bike.features.length > 0 && (
               <div>
-                <h4 className="text-sm text-gray-400 mt-2">Онцлог шинжүүд:</h4>
+                <h4 className="text-sm text-gray-400 mt-2">{t("features")}:</h4>
                 <ul className="list-disc ml-6 text-gray-300 text-sm">
                   {bike.features.map((feature, idx) => (
                     <li key={idx}>{feature}</li>
@@ -111,16 +126,12 @@ const BikeDetailModal = ({
 
             {bike.variants && bike.variants.length > 0 && (
               <div>
-                <h4 className="text-sm text-gray-400 mb-1">Өнгө / хувилбар:</h4>
+                <h4 className="text-sm text-gray-400 mb-1">{t("variant")}:</h4>
                 <div className="flex gap-2 flex-wrap">
                   {bike.variants.map((variant) => (
                     <button
                       key={variant}
-                      className={`px-3 py-1 rounded-full border ${
-                        selectedVariant === variant
-                          ? "bg-[#F95F19] text-white"
-                          : "text-gray-300 border-gray-600"
-                      }`}
+                      className={`px-3 py-1 rounded-full border ${selectedVariant === variant ? "bg-[#F95F19] text-white" : "text-gray-300 border-gray-600"}`}
                       onClick={() => setSelectedVariant(variant)}
                       type="button"
                     >
@@ -136,7 +147,7 @@ const BikeDetailModal = ({
               className="mt-6 w-full bg-[#F95F19] hover:bg-[#e94d0f] text-white font-semibold py-2 rounded-full"
               type="button"
             >
-              Худалдан авах
+              {t("buy")}
             </button>
           </div>
         </div>
@@ -146,6 +157,7 @@ const BikeDetailModal = ({
 };
 
 const Page = () => {
+  const { t } = useTranslation("bike");
   const [bikes, setBikes] = useState<Bike[]>([]);
   const [visibleCount, setVisibleCount] = useState(6);
   const [loading, setLoading] = useState(true);
@@ -160,7 +172,7 @@ const Page = () => {
           res.data.sort((a: Bike, b: Bike) => (b.year || 0) - (a.year || 0))
         );
       } catch (error) {
-        console.error("Мотоцикл татахад алдаа гарлаа:", error);
+        console.error("Error fetching bikes:", error);
       } finally {
         setLoading(false);
       }
@@ -173,7 +185,7 @@ const Page = () => {
     <>
       <div className="min-h-screen bg-black text-white px-4 py-24 max-w-7xl mx-auto">
         <h1 className="text-4xl font-bold text-center mb-10 text-[#F95F19]">
-          Бүх мотоцикл
+          {t("all_bikes")}
         </h1>
 
         {loading ? (
@@ -211,8 +223,12 @@ const Page = () => {
                   </h2>
                   <p className="text-sm text-gray-400">{bike.bikeModel}</p>
                   <div className="flex justify-between text-sm text-gray-300">
-                    <span>CC: {bike.cc}</span>
-                    <span>Хүч: {bike.power}</span>
+                    <span>
+                      {t("cc")}: {bike.cc}
+                    </span>
+                    <span>
+                      {t("power")}: {bike.power}
+                    </span>
                   </div>
                 </div>
               ))}
@@ -225,7 +241,7 @@ const Page = () => {
                   className="px-6 py-2 bg-[#F95F19] hover:bg-[#e94d0f] text-white rounded-full font-semibold transition"
                   type="button"
                 >
-                  Цааш үзэх
+                  {t("load_more")}
                 </button>
               </div>
             )}
@@ -239,7 +255,6 @@ const Page = () => {
           onClose={() => setSelectedBike(null)}
         />
       )}
-
       <ProductSection />
     </>
   );

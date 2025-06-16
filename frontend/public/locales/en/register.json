@@ -1,0 +1,34 @@
+{
+  "title": "Motorcycle Tournament Registration",
+  "steps": {
+    "personal": "Personal Info",
+    "motorcycle": "Motorcycle Info",
+    "completion": "Completion"
+  },
+  "personal": {
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "phone": "Phone",
+    "identityNumber": "Identity Number",
+    "emergencyContact": "Emergency Contact"
+  },
+  "motorcycle": {
+    "engineCapacity": "Engine Capacity",
+    "registrationNumber": "Registration Number",
+    "chassisCapacity": "Chassis Capacity",
+    "experience": "Riding Experience",
+    "agreeToTerms": "I agree to the terms and conditions"
+  },
+  "completion": {
+    "thanks": "Thank you for registering!",
+    "message": "You have successfully registered for {{name}}."
+  },
+  "buttons": {
+    "back": "Back",
+    "next": "Next",
+    "submit": "Submit"
+  },
+  "fillAllRequired": "Please fill in all required fields correctly.",
+  "submissionError": "Failed to submit the registration."
+}

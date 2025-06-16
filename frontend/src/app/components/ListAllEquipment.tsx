@@ -1,6 +1,8 @@
 "use client";
+
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useTranslation } from "react-i18next";
+import { useParams } from "next/navigation";
 import { api } from "@/lib/axios";
 import BackButton from "./BackButton";
 
@@ -15,7 +17,7 @@ interface Equipment {
 export default function ListAllEquipment() {
   const [equipment, setEquipment] = useState<Equipment[]>([]);
   const [loading, setLoading] = useState(true);
-  const router = useRouter();
+  const { t } = useTranslation("equipmentList");
 
   useEffect(() => {
     const fetchEquipment = async () => {
@@ -24,7 +26,7 @@ export default function ListAllEquipment() {
         const response = await api.get("/api/equipment");
         setEquipment(response.data);
       } catch (error) {
-        console.error("Багаж хэрэгсэл татахад алдаа:", error);
+        console.error("Error fetching equipment:", error);
       } finally {
         setLoading(false);
       }
@@ -37,7 +39,7 @@ export default function ListAllEquipment() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 py-12">
       <BackButton />
       <h1 className="text-2xl md:text-3xl font-bold text-white mb-8">
-        Бүх багаж хэрэгсэл 123
+        {t("title")}
       </h1>
 
       {loading ? (
@@ -70,7 +72,7 @@ export default function ListAllEquipment() {
                 <p className="text-gray-400 text-xs">{item.brand}</p>
                 <h2 className="text-white font-bold text-sm">{item.name}</h2>
                 <p className="text-[#F95F19] font-semibold mt-1">
-                  {item.price}
+                  {item.price}₮
                 </p>
               </div>
             </div>

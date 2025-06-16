@@ -1,15 +1,27 @@
 "use client";
+
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/axios";
 import { toast } from "react-toastify";
 import { jwtDecode } from "jwt-decode";
+import { useTranslation } from "next-i18next";
+import { usePathname, useSearchParams } from "next/navigation";
 
 type TokenPayload = {
   role: string;
 };
+
 const LoginPage = () => {
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  // get current locale from path, e.g. "/en/login"
+  const currentLocale = pathname?.split("/")[1] || "en";
+
+  const { t } = useTranslation("login");
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -20,11 +32,21 @@ const LoginPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loginError, setLoginError] = useState("");
 
+  // Change language by routing to same page with new locale prefix
+  const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedLang = e.target.value;
+    // Rebuild path with new locale, keep the rest of the path and query params
+    const restOfPath = pathname?.split("/").slice(2).join("/") || "";
+    const query = searchParams?.toString();
+    const newPath = `/${selectedLang}/${restOfPath}${query ? "?" + query : ""}`;
+    router.push(newPath);
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData((prev) => ({ ...prev, [name]: value }));
     if (errors[name as keyof typeof errors]) {
-      setErrors({ ...errors, [name]: "" });
+      setErrors((prev) => ({ ...prev, [name]: "" }));
     }
     if (loginError) {
       setLoginError("");
@@ -35,13 +57,13 @@ const LoginPage = () => {
     const newErrors: { email?: string; password?: string } = {};
 
     if (!formData.email.trim()) {
-      newErrors.email = "Имэйл оруулна уу";
+      newErrors.email = t("emailRequired");
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = "Зөв имэйл оруулна уу";
+      newErrors.email = t("emailInvalid");
     }
 
     if (!formData.password) {
-      newErrors.password = "Нууц үг оруулна уу";
+      newErrors.password = t("passwordRequired");
     }
 
     setErrors(newErrors);
@@ -56,22 +78,21 @@ const LoginPage = () => {
 
     try {
       const response = await api.post("/api/users/login", formData);
-
       const { token } = response.data;
-      // if (typeof window === "undefined") return;
+
       localStorage.setItem("token", token);
+
       const decoded = jwtDecode<TokenPayload>(token);
 
-      toast.success("Амжилттай нэвтэрлээ!");
+      toast.success(t("loginSuccess"));
 
       if (decoded.role === "admin") {
-        router.push("/admin");
+        router.push(`/${currentLocale}/admin`);
       } else {
-        router.push("/");
+        router.push(`/${currentLocale}/`);
       }
     } catch (error: any) {
-      const errorMessage =
-        error.response?.data?.message || "Нэвтрэх үйлдэл амжилтгүй боллоо";
+      const errorMessage = error.response?.data?.message || t("loginFailed");
       setLoginError(errorMessage);
       toast.error(errorMessage);
     } finally {
@@ -91,16 +112,19 @@ const LoginPage = () => {
       <div className="max-w-md w-full space-y-8 bg-[#1a1a1a]/80 p-8 rounded-lg shadow-lg backdrop-blur-md z-50">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
-            Нэвтрэх
+            {t("title")}
           </h2>
         </div>
 
         <div className="mb-6">
-          <label className="block text-white mb-1">Имэйл</label>
+          <label className="block text-white mb-1" htmlFor="email">
+            {t("emailLabel")}
+          </label>
           <input
+            id="email"
             type="email"
             name="email"
-            placeholder="Е-майл оруулна уу"
+            placeholder={t("emailPlaceholder")}
             value={formData.email}
             onChange={handleChange}
             className={`w-full p-2 rounded bg-transparent text-white border ${
@@ -113,11 +137,14 @@ const LoginPage = () => {
         </div>
 
         <div className="mb-4">
-          <label className="block text-white mb-1">Нууц үг</label>
+          <label className="block text-white mb-1" htmlFor="password">
+            {t("passwordLabel")}
+          </label>
           <input
+            id="password"
             type="password"
             name="password"
-            placeholder="Нууц үг оруулна уу"
+            placeholder={t("passwordPlaceholder")}
             value={formData.password}
             onChange={handleChange}
             className={`w-full p-2 rounded bg-transparent text-white border ${
@@ -136,8 +163,14 @@ const LoginPage = () => {
             isSubmitting ? "opacity-70 cursor-not-allowed" : ""
           }`}
         >
-          {isSubmitting ? "Түр хүлээнэ үү..." : "Нэвтрэх"}
+          {isSubmitting ? t("loggingIn") : t("loginButton")}
         </button>
+
+        {loginError && (
+          <p className="text-red-500 mt-4 text-center font-semibold">
+            {loginError}
+          </p>
+        )}
       </div>
     </div>
   );
