@@ -1,16 +1,22 @@
+// routes/BikeRoute.ts
 import { Router } from "express";
 import {
   createBikes,
-  getBikesByBrand,
   getAllBikes,
+  getBikeById,
+  getBikesByBrand,
+  updateBike,
   deleteBikeById,
 } from "../controllers/BikeController";
 
-const bikeRouter = Router();
+const router = Router();
 
-bikeRouter.post("/bikes", createBikes);
-bikeRouter.get("/bikes", getAllBikes);
-bikeRouter.get("/bikes/:brand", getBikesByBrand);
-bikeRouter.delete("/bikes/:id", deleteBikeById);
+// 👉 энд "/bikes" биш шууд root path ашиглана. Учир нь index.ts дээр app.use("/api/bikes", router) гэж байгаа.
+router.post("/bikes", createBikes);
+router.get("/bikes", getAllBikes);
+router.get("/brand/:brand", getBikesByBrand);
+router.get("/bikes/:id", getBikeById);
+router.put("/bikes/:id", updateBike);
+router.delete("/bikes/:id", deleteBikeById);
 
-export default bikeRouter;
+export default router;

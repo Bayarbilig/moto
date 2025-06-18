@@ -1,42 +1,54 @@
-import express from "express";
-import cors from "cors";
-import { connectToDatabase } from "./database/mongoDB";
-import dotenv from "dotenv";
-import bikeRouter from "./routes/BikeRoute";
-import toolRouter from "./routes/ToolRoute";
-import router from "./routes/RegistrationRoute";
-import userRouter from "./routes/UserRoutes";
-import BrandRoute from "./routes/BrandRoute";
-import accessRoute from "./routes/AccessoryRoute";
-import equipRoute from "./routes/EquipmentRoute";
-import eventRouter from "./routes/EventRoute";
-import workerRoute from "./routes/WorkerRoute";
-import bookingRouter from "./routes/BookingRoute";
-import serviceRouter from "./routes/ServiceRoute";
-import motoServiceRouter from "./routes/MotoServiceRoute";
+  // index.ts
+  import express from "express";
+  import cors from "cors";
+  import dotenv from "dotenv";
+  import { connectToDatabase } from "./database/mongoDB";
 
-dotenv.config();
+  // Route imports
+  import bikeRouter from "./routes/BikeRoute";
+  import toolRouter from "./routes/ToolRoute";
+  import registerRouter from "./routes/RegistrationRoute";
+  import userRouter from "./routes/UserRoutes";
+  import brandRouter from "./routes/BrandRoute";
+  import accessoryRouter from "./routes/AccessoryRoute";
+  import equipmentRouter from "./routes/EquipmentRoute";
+  import eventRouter from "./routes/EventRoute";
+  import workerRouter from "./routes/WorkerRoute";
+  import bookingRouter from "./routes/BookingRoute";
+  import serviceRouter from "./routes/ServiceRoute";
+  import motoServiceRouter from "./routes/MotoServiceRoute";
 
-const app = express();
-const port = 5000;
+  dotenv.config();
 
-connectToDatabase();
+  const app = express();
+  const PORT = process.env.PORT || 5000;
 
-app.use(express.json());
-app.use(cors());
-app.use("/api/bike", bikeRouter);
-app.use("/api/tools", toolRouter);
-app.use("/api/register", router);
-app.use("/api/users", userRouter);
-app.use("/api/brands", BrandRoute);
-app.use("/api/accessories", accessRoute);
-app.use("/api/equipment", equipRoute);
-app.use("/api/event", eventRouter);
-app.use("/api/worker", workerRoute);
-app.use("/api/booking", bookingRouter);
-app.use("/api/services", serviceRouter);
-app.use("/api/motoservices", motoServiceRouter);
+  // DB connect
+  connectToDatabase();
 
-app.listen(port, () => {
-  console.log(`Сервер ${port} порт дээр ажиллаж байна`);
-});
+  // Middlewares
+  app.use(cors());
+  app.use(express.json());
+
+  // Routes
+  app.use("/api/bikes", bikeRouter);
+  app.use("/api/tools", toolRouter);
+  app.use("/api/register", registerRouter);
+  app.use("/api/users", userRouter);
+  app.use("/api/brands", brandRouter);
+  app.use("/api/accessories", accessoryRouter);
+  app.use("/api/equipment", equipmentRouter);
+  app.use("/api/events", eventRouter);
+  app.use("/api/workers", workerRouter);
+  app.use("/api/bookings", bookingRouter);
+  app.use("/api/services", serviceRouter);
+  app.use("/api/motoservices", motoServiceRouter);
+
+  // Fallback route
+  app.use("*", (_req, res) => {
+    res.status(404).json({ message: "Route not found" });
+  });
+
+  app.listen(PORT, () => {
+    console.log(`🚀 Сервер ${PORT} порт дээр амжилттай ажиллаж байна`);
+  });
