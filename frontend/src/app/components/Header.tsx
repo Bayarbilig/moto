@@ -30,7 +30,7 @@ export const Header = () => {
   }
 
   const navLinks = [
-    { label: "Худалдаа", path: "/bike" },
+    { label: "Худалдаа", path: "/bikes" },
     { label: "Тэмцээн", path: "/tournament" },
     { label: "Бидний тухай", path: "/about" },
     { label: "Үйлчилгээ", path: "/service" },
