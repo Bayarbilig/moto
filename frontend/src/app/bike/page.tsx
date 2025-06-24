@@ -154,8 +154,8 @@ const Page = () => {
     const fetchBikes = async () => {
       try {
         setLoading(true);
-        const res = await api.get("/api/bike/bikes");
-        setBikes(res.data);
+        const res = await api.get("/api/bikes/bikes");
+        setBikes(res.data.data);
       } catch (error) {
         console.error("Мотоцикл татахад алдаа гарлаа:", error);
       } finally {
