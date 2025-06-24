@@ -40,29 +40,23 @@ export interface Brand {
 // ------------------------------
 export interface Bike {
   _id: string;
+  brand: string;
   title: string;
   bikeModel: string;
-  cc: string;
-  power: string;
+  cc: number;
+  power: number;
   image: string;
-  images?: string[];
-  description?: string;
-  variants?: string[];
-  year?: number;
+  images?: string[]
   price?: number;
-  stock?: number;
-  warranty?: string;
-  features?: string[];
-  weight?: string;
-  topSpeed?: string;
-  fuelType?: string;
-  transmission?: string;
-  seatHeight?: string;
-  mileage?: string;
-  videoUrl?: string;
-  isAvailable?: boolean;
-  brand: Brand;
+  mileage?: number; // Suggest changing from string to number
+  status: "available" | "sold" | "reserved";
+  originCountry?: string;
+  soldDate?: string; // ISO date string (e.g. from MongoDB)
+fuelType?: string;
+views?: number;
+likes?: number;
 }
+
 
 // For creating a bike (brand as ID only)
 export interface CreateBikeDto extends Omit<Bike, "_id" | "brand"> {

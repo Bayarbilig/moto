@@ -8,7 +8,7 @@ import { Event, Brand, Bike, Accessory, Equipment } from "../components/Types";
 import UsersTab from "../components/UserTab";
 import BrandManager from "../components/BrandManeger";
 import AccessoryManager from "../components/AccessoryManeger";
-import { BikeManager } from "../components/BikeManeger";
+// import { BikeManager } from "../components/BikeManeger";
 import {
   EquipmentItem,
   EquipmentManager,
@@ -320,13 +320,13 @@ const AdminPanel = () => {
           </div>
 
           <div className="grid w-full gap-12">
-            <BikeManager
+            {/* <BikeManager
               brands={brands}
               bikes={bikes}
               onCreateBike={handleCreateBike}
               onDeleteBike={handleDeleteBike}
               onUpdateBike={handleUpdateBike}
-            />
+            /> */}
             <EquipmentManager
               equipment={normalizedEquipment}
               onCreateEquipment={handleCreateEquipment}

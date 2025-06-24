@@ -1,8 +1,26 @@
 {
-  "title": "Мотоциклийн жагсаалт",
+  "allBikes": "Бүх мотоциклууд",
+  "searchPlaceholder": "Мотоцикл хайх...",
+  "cc": "CC",
+  "power": "Хүч",
   "price": "Үнэ",
-  "engineSize": "Хөдөлгүүрийн багтаамж",
-  "mileage": "Гүйлт",
-  "color": "Өнгө",
-  "error": "Мотоцикл ачааллахад алдаа гарлаа"
+  "mileage": "Майл",
+  "originCountry": "Гарал",
+  "fuelType": "Шатахуун",
+  "status": "Төлөв",
+  "soldDate": "Зарагдсан огноо",
+  "views": "Үзсэн",
+  "likes": "Лайк",
+  "loading": "Ачааллаж байна...",
+  "fuel": {
+    "gasoline": "Бензин",
+    "diesel": "Дизель",
+    "electric": "Цахилгаан",
+    "hybrid": "Хосолсон"
+  },
+  "statusLabels": {
+    "available": "Бэлэн",
+    "sold": "Зарагдсан",
+    "reserved": "Захиалгатай"
+  }
 }
