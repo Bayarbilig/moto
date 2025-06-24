@@ -108,25 +108,26 @@ export const Header = () => {
       </div>
 
       {/* Mobile Menu */}
-      {menuOpen && (
-        <div className="md:hidden bg-moto-gray/95 backdrop-blur-sm px-6 py-4 space-y-4">
-          {navLinks.map(({ label, path }) => (
-            <p
-              key={path}
-              className="text-white text-lg hover:text-[#F95F19] transition-colors cursor-pointer"
-              onClick={() => navigate(path)}
-            >
-              {label}
-            </p>
-          ))}
-          <p
-            className="text-white text-lg hover:text-[#F95F19] cursor-pointer"
-            onClick={() => navigate("/profile")}
-          >
-            Миний хуудас
-          </p>
-        </div>
-      )}
+{menuOpen && (
+  <div className="md:hidden bg-moto-gray/95 backdrop-blur-sm px-6 py-4 space-y-4">
+    {navLinks.map(({ label, path }) => (
+      <p
+        key={path}
+        className="text-white text-lg font-bold hover:text-[#F95F19] transition-colors cursor-pointer"
+        onClick={() => navigate(path)}
+      >
+        {label}
+      </p>
+    ))}
+    <p
+      className="text-white text-lg font-bold hover:text-[#F95F19] cursor-pointer"
+      onClick={() => navigate("/profile")}
+    >
+      Миний хуудас
+    </p>
+  </div>
+)}
+
     </header>
   );
 };
