@@ -1,5 +1,3 @@
 {
-  "redirects": [
-    { "source": "/", "destination": "/HeroSection", "permanent": true }
-  ]
+  "redirects": []
 }
