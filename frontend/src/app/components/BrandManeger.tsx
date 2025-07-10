@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { BiTrash } from "react-icons/bi";
-import { Brand } from "./types";
+import { Brand } from "./Types";
 
 interface BrandManagerProps {
   brands: Brand[];

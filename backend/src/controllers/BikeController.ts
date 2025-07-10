@@ -44,3 +44,18 @@ export const deleteBikeById = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Error deleting bike", error });
   }
 };
+export const getBikeById = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const bike = await BikeModel.findById(id);
+
+    if (!bike) {
+      res.status(404).json({ message: "Bike not found" });
+      return;
+    }
+
+    res.status(200).json(bike);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching bike by ID", error });
+  }
+};

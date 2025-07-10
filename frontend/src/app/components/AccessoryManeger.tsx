@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { CldUploadWidget } from "next-cloudinary";
 import { BiTrash } from "react-icons/bi";
-import { Accessory } from "./types";
+import { Accessory } from "./Types";
 
 interface AccessoryManagerProps {
   accessories: Accessory[];

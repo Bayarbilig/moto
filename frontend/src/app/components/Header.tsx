@@ -30,10 +30,9 @@ export const Header = () => {
   }
 
   const navLinks = [
-    { label: "Худалдаа", path: "/bike" },
-    { label: "Тэмцээн", path: "/tournament" },
-    { label: "Бидний тухай", path: "/about" },
-    { label: "Үйлчилгээ", path: "/service" },
+    { label: "Showroom", path: "/bike" },
+    { label: "Tournament", path: "/tournament" },
+    { label: "Service", path: "/service" },
   ];
 
   return (
@@ -53,7 +52,11 @@ export const Header = () => {
           {navLinks.map(({ label, path }) => (
             <p
               key={path}
-              className="text-white hover:text-[#F95F19] transition-colors duration-300 cursor-pointer"
+              className={`cursor-pointer transition-colors duration-300 ${
+                pathname === path
+                  ? "text-[#F95F19]"
+                  : "text-white hover:text-[#F95F19]"
+              }`}
               onClick={() => navigate(path)}
             >
               {label}
@@ -112,17 +115,25 @@ export const Header = () => {
           {navLinks.map(({ label, path }) => (
             <p
               key={path}
-              className="text-white text-lg hover:text-[#F95F19] transition-colors cursor-pointer"
+              className={`text-lg cursor-pointer transition-colors ${
+                pathname === path
+                  ? "text-[#F95F19]"
+                  : "text-white hover:text-[#F95F19]"
+              }`}
               onClick={() => navigate(path)}
             >
               {label}
             </p>
           ))}
           <p
-            className="text-white text-lg hover:text-[#F95F19] cursor-pointer"
+            className={`text-lg cursor-pointer ${
+              pathname === "/profile"
+                ? "text-[#F95F19]"
+                : "text-white hover:text-[#F95F19]"
+            }`}
             onClick={() => navigate("/profile")}
           >
-            Миний хуудас
+            Profile
           </p>
         </div>
       )}

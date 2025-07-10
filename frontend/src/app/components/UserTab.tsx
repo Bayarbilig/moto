@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Entry } from "./types";
+import { Entry } from "./Types";
 
 interface UsersTabProps {
   data: Entry[];

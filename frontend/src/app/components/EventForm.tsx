@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Event } from "./types";
+import { Event } from "./Types";
 import { CldUploadWidget } from "next-cloudinary";
 
 interface Props {

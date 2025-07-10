@@ -2,7 +2,7 @@
 import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { api } from "@/lib/axios";
-import { Equipment } from "./types";
+import { Equipment } from "./Types";
 interface Access {
   model: string;
   brand: string;
@@ -61,10 +61,7 @@ export const ProductSection = () => {
     fetchAccessories();
   }, [fetchEquipment, fetchAccessories]);
   return (
-    <section
-      className="py-16 bg-moto-dark bg-cover gap-32 grid "
-      style={{ backgroundImage: "url('/section2.png')" }}
-    >
+    <section className="py-16 bg-moto-dark bg-cover gap-32 grid ">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         <h2 className="text-xl md:text-2xl font-bold mb-8 text-white">
           Мотоциклийн сэлбэг
@@ -79,9 +76,9 @@ export const ProductSection = () => {
             {accessories.map((product, index) => (
               <div
                 key={index}
-                className="min-w-[260px] max-w-[260px]  bg-moto-gray rounded-md overflow-hidden flex-shrink-0"
+                className="min-w-[260px] max-w-[260px]  bg-[#2f2e2e] rounded-md overflow-hidden flex-shrink-0 h-fit"
               >
-                <div className="relative h-48 overflow-hidden border-b mb-2 border-gray-300">
+                <div className="relative h-48 overflow-hidden ">
                   <img
                     src={product.image}
                     alt={product.name}
@@ -89,11 +86,11 @@ export const ProductSection = () => {
                   />
                   <div className="absolute top-0 left-3 bg-[#F95F19] w-fit transform -skew-x-12">
                     <span className="product-price text-white py-2 px-3">
-                      {product.price}
+                      {product.price}₮
                     </span>
                   </div>
                 </div>
-                <div className="p-4">
+                <div className="p-4 bg-black">
                   <p className="text-gray-400 text-xs md:text-sm uppercase">
                     {product.brand}
                   </p>
@@ -111,13 +108,13 @@ export const ProductSection = () => {
             <>
               <button
                 onClick={() => scrollAccessories("left")}
-                className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-4 p-2 bg-[#F95F19] rounded-full hidden md:block"
+                className="absolute -left-6 top-1/2 transform -translate-y-1/2 -translate-x-4 p-2 bg-[#F95F19] rounded-full hidden md:block"
               >
                 <BiChevronLeft size={24} className="text-white" />
               </button>
               <button
                 onClick={() => scrollAccessories("right")}
-                className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-4 p-2 bg-[#F95F19] rounded-full hidden md:block"
+                className="absolute -right-6 top-1/2 transform -translate-y-1/2 translate-x-4 p-2 bg-[#F95F19] rounded-full hidden md:block"
               >
                 <BiChevronRight size={24} className="text-white" />
               </button>
@@ -140,9 +137,9 @@ export const ProductSection = () => {
             {equipment.map((product, index) => (
               <div
                 key={index}
-                className="min-w-[260px] max-w-[260px]  bg-moto-gray rounded-md overflow-hidden flex-shrink-0"
+                className="min-w-[260px] max-w-[260px]  bg-[#2f2e2e] rounded-md overflow-hidden flex-shrink-0 h-fit"
               >
-                <div className="relative h-48 overflow-hidden border-b mb-2 border-gray-300">
+                <div className="relative h-48 overflow-hidden">
                   <img
                     src={product.image}
                     alt={product.name}
@@ -150,11 +147,11 @@ export const ProductSection = () => {
                   />
                   <div className="absolute top-0 left-3 bg-[#F95F19] w-fit transform -skew-x-12">
                     <span className="product-price text-white py-2 px-3">
-                      {product.price}
+                      {product.price}₮
                     </span>
                   </div>
                 </div>
-                <div className="p-4">
+                <div className="p-4 bg-black">
                   <p className="text-gray-400 text-xs md:text-sm uppercase">
                     {product.brand}
                   </p>
@@ -172,13 +169,13 @@ export const ProductSection = () => {
             <>
               <button
                 onClick={() => scrollEquipment("left")}
-                className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-4 p-2 bg-[#F95F19] rounded-full hidden md:block"
+                className="absolute -left-6 top-1/2 transform -translate-y-1/2 -translate-x-4 p-2 bg-[#F95F19] rounded-full hidden md:block"
               >
                 <BiChevronLeft size={24} className="text-white" />
               </button>
               <button
                 onClick={() => scrollEquipment("right")}
-                className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-4 p-2 bg-[#F95F19] rounded-full hidden md:block"
+                className="absolute -right-6 top-1/2 transform -translate-y-1/2 translate-x-4 p-2 bg-[#F95F19] rounded-full hidden md:block"
               >
                 <BiChevronRight size={24} className="text-white" />
               </button>

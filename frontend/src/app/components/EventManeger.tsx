@@ -1,6 +1,6 @@
 import React from "react";
 import { BiTrash } from "react-icons/bi";
-import { Event } from "./types";
+import { Event } from "./Types";
 
 type EventManagerProps = {
   events: Event[];

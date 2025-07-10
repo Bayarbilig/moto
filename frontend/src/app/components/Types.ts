@@ -31,12 +31,14 @@ export interface Brand {
 
 export interface Bike {
   _id: string;
-  image: string;
+  images: string[];
   title: string;
   brand: string;
   bikeModel: string;
   cc: string;
   power: string;
+  details: string;
+  price: number;
 }
 
 export interface Accessory {
