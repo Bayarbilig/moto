@@ -4,6 +4,7 @@ interface TeamMemberProps {
   name: string;
   role: string;
   image: string;
+  phone?: string;
   isGuide?: boolean;
 }
 
@@ -11,6 +12,7 @@ const TeamMember = ({
   name,
   role,
   image,
+  phone,
   isGuide = false,
 }: TeamMemberProps) => {
   return (
@@ -24,6 +26,14 @@ const TeamMember = ({
       </div>
       <h3 className="text-white text-lg font-medium">{name}</h3>
       <p className="text-white text-base font-light">{role}</p>
+      {phone && (
+        <a
+          href={`tel:${phone}`}
+          className="text-blue-400 text-sm mt-1 hover:underline"
+        >
+          {phone}
+        </a>
+      )}
       {isGuide && (
         <div className="flex items-center mt-1 text-white">
           <span className="text-sm">→</span>
@@ -39,75 +49,43 @@ const About = () => {
       name: "Dorj",
       role: "Founder",
       image: "dorj.jpg",
+      phone: "+976 8957-8282",
     },
     {
       name: "Bat-erdene",
       role: "CEO",
       image: "Bat-erdene.jpg",
+      phone: "+976 9910-1857",
     },
     {
       name: "Tuguldur",
       role: "Manager",
       image: "Tuguldur.jpg",
+      phone: "+976 9191-3934",
     },
     {
       name: "Tselmeg",
       role: "Mechanic and welder",
       image: "Tselmeg.jpg",
+      phone: "+976 8512-9593",
     },
     {
       name: "Bilguun",
       role: "Mechanic",
       image: "u.bilguun.jpg",
+      phone: "+976 9577-9159",
     },
     {
       name: "Radnaabazar",
       role: "Mechanic",
       image: "radnaa.jpg",
-    },
-  ];
-
-  const guides = [
-    {
-      name: "Arthur Wright",
-      role: "Tour guide",
-      image:
-        "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8bWFufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
-    },
-    {
-      name: "Brandon George",
-      role: "Tour guide",
-      image:
-        "https://images.unsplash.com/photo-1555952517-2e8e729e0b44?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTZ8fG1hbnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60",
-    },
-    {
-      name: "Philip Freeman",
-      role: "Tour guide",
-      image:
-        "https://images.unsplash.com/photo-1480429370139-e0132c086e2a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8bWFufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
-    },
-    {
-      name: "Davis Williams",
-      role: "Tour guide",
-      image:
-        "https://images.unsplash.com/photo-1600486913747-55e5470d6f40?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTh8fG1hbnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60",
-    },
-    {
-      name: "John Anderson",
-      role: "Tour guide",
-      image:
-        "https://images.unsplash.com/photo-1564564321837-a57b7070ac4f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8OHx8bWFufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
-    },
-    {
-      name: "Daniel Miller",
-      role: "Tour guide",
-      image:
-        "https://images.unsplash.com/photo-1615109398623-88346a601842?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTR8fG1hbnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60",
+      phone: "+976 9478-6311"
     },
   ];
 
   return (
     <div className="min-h-screen bg-black">
+      {/* Intro Section */}
       <section className="pt-32 pb-20 px-6 md:px-12">
         <div className="container mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
@@ -116,6 +94,17 @@ const About = () => {
                 "Мотоцикл сонирхогч та бүхэндээ хамгийн чанартай барааг хүргэх
                 болно"
               </h1>
+              <div className="mt-4 text-white text-lg">
+                <p>
+                  Холбоо барих:{" "}
+                  <a
+                    href="tel:+97689578282"
+                    className="text-blue-400 underline hover:text-blue-300"
+                  >
+                    +976 8957-8282
+                  </a>
+                </p>
+              </div>
             </div>
             <div>
               <p className="text-white text-lg">
@@ -174,31 +163,12 @@ const About = () => {
                 name={member.name}
                 role={member.role}
                 image={member.image}
+                phone={member.phone}
               />
             ))}
           </div>
         </div>
       </section>
-
-      {/* Guides Section */}
-      {/* <section className="py-16 px-6 md:px-12">
-        <div className="container mx-auto">
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-12">
-            ТУРШЛАГАТАЙ ГАЙД НАР
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-            {guides.map((guide, index) => (
-              <TeamMember
-                key={index}
-                name={guide.name}
-                role={guide.role}
-                image={guide.image}
-                isGuide={true}
-              />
-            ))}
-          </div>
-        </div>
-      </section> */}
     </div>
   );
 };

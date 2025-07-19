@@ -68,3 +68,9 @@ export interface Event {
   viewButtonText: string;
   applyButtonText: string;
 }
+export interface MotoOil {
+  name: string;
+  description: string;
+  usage: string;
+  images: string[];
+}

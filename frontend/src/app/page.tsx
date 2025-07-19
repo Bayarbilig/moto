@@ -2,6 +2,7 @@ import About from "./components/About";
 import { BrandTabs } from "./components/BrandTabs";
 import { CountdownSection } from "./components/CountDown";
 import { HeroSection } from "./components/HeroSection";
+import { OilSection } from "./components/OilSection";
 import { ProductSection } from "./components/ProductSection";
 
 export default function Home() {
@@ -10,6 +11,7 @@ export default function Home() {
       <HeroSection />
       <About />
       <BrandTabs />
+      <OilSection/>
       <ProductSection />
       <CountdownSection />
     </div>

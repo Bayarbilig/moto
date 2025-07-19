@@ -43,7 +43,7 @@ export const Header = () => {
           className="flex items-center gap-2 cursor-pointer"
           onClick={() => navigate("/")}
         >
-          <Image width={100} height={45} alt="logo" src="/logo.png" />
+          <Image width={130} height={55} alt="logo" src="/logo.png" />
           <span className="text-white text-xl font-bold">Elite Moto</span>
         </div>
 
