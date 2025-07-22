@@ -21,7 +21,7 @@ export const Footer = () => {
                   href="/bike"
                   className="hover:text-moto-orange transition-colors"
                 >
-                  Худалдаа
+                  Showroom
                 </Link>
               </li>
               <li>
@@ -29,15 +29,7 @@ export const Footer = () => {
                   href="/tournament"
                   className="hover:text-moto-orange transition-colors"
                 >
-                  Тэмцээн
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/about"
-                  className="hover:text-moto-orange transition-colors"
-                >
-                  Бидний тухай
+                  Tournament
                 </Link>
               </li>
               <li>
@@ -45,7 +37,7 @@ export const Footer = () => {
                   href="/services"
                   className="hover:text-moto-orange transition-colors"
                 >
-                  Үйлчилгээ
+                  Service
                 </Link>
               </li>
             </ul>
@@ -71,7 +63,7 @@ export const Footer = () => {
               <li className="flex items-start gap-2">
                 <BiMapPin size={18} className="mt-1" />
                 <span>
-                  1234 Мото зам, Гудамж урд, <br /> Улаанбаатар хот
+                  Сансрын аюулгүйн тойрог,<br /> эвтэй 4 амьтны чанх ард Auto <br /> Undral Service-н 2 давхарт, Ulaanbaatar, Mongolia
                 </span>
               </li>
             </ul>
@@ -86,7 +78,7 @@ export const Footer = () => {
             </p>
             <div className="flex gap-4">
               <a
-                href="https://facebook.com"
+                href="https://www.facebook.com/EliteMotoShop1"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Facebook"
