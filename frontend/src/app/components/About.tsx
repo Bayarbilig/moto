@@ -60,13 +60,13 @@ const About = () => {
     {
       name: "Tuguldur",
       role: "Manager",
-      image: "Tuguldur.jpg",
+      image: "tuguldur.jpg",
       phone: "+976 9191-3934",
     },
     {
       name: "Tselmeg",
       role: "Mechanic and welder",
-      image: "Tselmeg.jpg",
+      image: "tselmeg.jpg",
       phone: "+976 8512-9593",
     },
     {
