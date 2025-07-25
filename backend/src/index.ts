@@ -1,7 +1,9 @@
+// src/index.ts
 import express from "express";
 import cors from "cors";
-import { connectToDatabase } from "./database/mongoDB";
 import dotenv from "dotenv";
+import { connectToDatabase } from "./database/mongoDB";
+
 import bikeRouter from "./routes/BikeRoute";
 import toolRouter from "./routes/ToolRoute";
 import router from "./routes/RegistrationRoute";
@@ -16,14 +18,13 @@ import serviceRouter from "./routes/ServiceRoute";
 import motoServiceRouter from "./routes/MotoServiceRoute";
 
 dotenv.config();
+connectToDatabase();
 
 const app = express();
-const port = 5000;
-
-connectToDatabase();
 
 app.use(express.json());
 app.use(cors());
+
 app.use("/api/bike", bikeRouter);
 app.use("/api/tools", toolRouter);
 app.use("/api/register", router);
@@ -36,7 +37,8 @@ app.use("/api/worker", workerRoute);
 app.use("/api/booking", bookingRouter);
 app.use("/api/services", serviceRouter);
 app.use("/api/motoservices", motoServiceRouter);
-
-app.listen(port, () => {
-  console.log(`Сервер ${port} порт дээр ажиллаж байна`);
+app.listen( () => {
+  console.log(`Сервер 5000 порт дээр ажиллаж байна`);
 });
+
+export default app;
