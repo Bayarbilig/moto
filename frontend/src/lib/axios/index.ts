@@ -1,8 +1,7 @@
 import axios from "axios";
 
 export const api = axios.create({
-  baseURL: "https://elite-moto-backend.vercel.app/",
-    // baseURL: "http://localhost:5000",
+  baseURL: "https://moto-backend-rv02.onrender.com",
   headers: {
     "Content-Type": "application/json",
   },
