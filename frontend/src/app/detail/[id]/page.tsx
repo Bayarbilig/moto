@@ -99,9 +99,15 @@ const EventDetailPage = () => {
             <h2 className="text-xl font-semibold mb-4">Ангилал</h2>
             <div className="space-y-3">
               {[
-                "125cc - Залуучууд",
-                "250cc - Нээлттэй ангилал",
-                "450cc - Мэргэжлийн",
+                "MotoGP Bike 125–500cc",
+                "MotoGP Bike 600–954cc",
+                "MotoGP Bike 1000–1400cc",
+                "Эмэгтэйчүүдийн ангилал",
+                "Stunt Moto (үзүүлбэрийн мото)",
+                "SuperMoto",
+                "Naked Bike",
+                "Duel буюу халз тулаанууд",
+                
               ].map((cat, i) => (
                 <div
                   key={i}
