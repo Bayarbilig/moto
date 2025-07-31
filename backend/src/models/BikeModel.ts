@@ -9,6 +9,7 @@ export interface IBike extends Document {
   images: string[];
   details: string;
   price: number;
+  bikeType: string;
 }
 
 const BikeSchema = new Schema<IBike>(
@@ -21,6 +22,10 @@ const BikeSchema = new Schema<IBike>(
     images: [{ type: String, required: true }],
     details: { type: String, required: true },
     price: { type: Number, required: true },
+    bikeType: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true }
 );

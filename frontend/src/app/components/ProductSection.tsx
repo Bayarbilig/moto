@@ -3,7 +3,8 @@ import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { api } from "@/lib/axios";
 import { Equipment } from "./Types";
-interface Access {
+import { useRouter } from "next/navigation";
+export interface Access {
   model: string;
   brand: string;
   price: string;
@@ -17,6 +18,7 @@ export const ProductSection = () => {
   const equipmentRef = useRef<HTMLDivElement>(null);
   const [accessories, setAccessories] = useState<Access[]>([]);
   const [equipment, setEquipment] = useState<Equipment[]>([]);
+  const router = useRouter();
 
   const scrollAccessories = (direction: "left" | "right") => {
     const container = accessoriesRef.current;
@@ -60,12 +62,30 @@ export const ProductSection = () => {
     fetchEquipment();
     fetchAccessories();
   }, [fetchEquipment, fetchAccessories]);
+  const handleClickAccessories = () => {
+    router.push("/showroom?type=accessories");
+  };
+  const handleClickEquipment = () => {
+    router.push("/showroom?type=equipment");
+  };
+  const handleClickAccessoriesId = (id: string) => {
+    router.push(`/showroom/${id}?type=accessories`);
+  };
+  const handleClickEquipmentId = (id: string) => {
+    router.push(`/showroom/${id}?type=equipment`);
+  };
+
   return (
     <section className="py-16 bg-moto-dark bg-cover gap-32 grid ">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
-        <h2 className="text-xl md:text-2xl font-bold mb-8 text-white">
-          Мотоциклийн сэлбэг
-        </h2>
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl md:text-2xl font-bold mb-8 text-white">
+            Мотоциклийн сэлбэг
+          </h2>
+          <button onClick={handleClickAccessories} className="text-[#F95F19]">
+            Бүгдийг харах
+          </button>
+        </div>
 
         {/* Accessories Section */}
         <div className="relative">
@@ -74,7 +94,8 @@ export const ProductSection = () => {
             className="flex space-x-6 overflow-x-auto scroll-smooth scrollbar-hide pb-6"
           >
             {accessories.map((product, index) => (
-              <div
+              <button
+                onClick={() => handleClickAccessoriesId(product._id)}
                 key={index}
                 className="min-w-[260px] max-w-[260px]  bg-[#2f2e2e] rounded-md overflow-hidden flex-shrink-0 h-fit"
               >
@@ -99,7 +120,7 @@ export const ProductSection = () => {
                     {product.model && ` ${product.model}`}
                   </h3>
                 </div>
-              </div>
+              </button>
             ))}
           </div>
 
@@ -125,17 +146,22 @@ export const ProductSection = () => {
 
       {/* Equipment Section */}
       <div className="max-w-7xl mx-auto px-6 md:px-12">
-        <h2 className="text-xl md:text-xl font-bold mb-8 text-white">
-          Мотоциклийн багаж хэрэгсэл
-        </h2>
-
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl md:text-xl font-bold mb-8 text-white">
+            Мотоциклийн багаж хэрэгсэл
+          </h2>
+          <button onClick={handleClickEquipment} className="text-[#F95F19]">
+            Бүгдийг харах
+          </button>
+        </div>
         <div className="relative">
           <div
             ref={equipmentRef}
             className="flex space-x-6 overflow-x-auto scroll-smooth scrollbar-hide pb-6"
           >
             {equipment.map((product, index) => (
-              <div
+              <button
+                onClick={() => handleClickEquipmentId(product._id)}
                 key={index}
                 className="min-w-[260px] max-w-[260px]  bg-[#2f2e2e] rounded-md overflow-hidden flex-shrink-0 h-fit"
               >
@@ -160,7 +186,7 @@ export const ProductSection = () => {
                     {product.model && ` ${product.model}`}
                   </h3>
                 </div>
-              </div>
+              </button>
             ))}
           </div>
 
