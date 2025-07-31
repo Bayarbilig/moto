@@ -237,7 +237,7 @@ export const BrandTabs = () => {
 
           <div
             className="absolute right-32 bottom-12 text-[#F95F19] cursor-pointer hover:text-orange-500 transition duration-300"
-            onClick={() => router.push("/bike")}
+            onClick={() => router.push("/shworoom/bike")}
           >
             Бүгдийг үзэх
           </div>

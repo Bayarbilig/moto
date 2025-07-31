@@ -59,3 +59,23 @@ export const getBikeById = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Error fetching bike by ID", error });
   }
 };
+export const updateBikeById = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const updateData = req.body;
+
+    const updatedBike = await BikeModel.findByIdAndUpdate(id, updateData, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!updatedBike) {
+      res.status(404).json({ message: "Bike not found" });
+      return;
+    }
+
+    res.status(200).json({ message: "Bike updated successfully", updatedBike });
+  } catch (error) {
+    res.status(500).json({ message: "Error updating bike", error });
+  }
+};

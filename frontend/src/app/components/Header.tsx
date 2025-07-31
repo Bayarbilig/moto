@@ -30,7 +30,7 @@ export const Header = () => {
   }
 
   const navLinks = [
-    { label: "Showroom", path: "/bike" },
+    { label: "Showroom", path: "/showroom" },
     { label: "Tournament", path: "/tournament" },
     { label: "Service", path: "/service" },
   ];

@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { CldUploadWidget } from "next-cloudinary";
 import { BiTrash } from "react-icons/bi";
 import { Accessory } from "./Types";
+import { api } from "@/lib/axios";
 
 interface AccessoryManagerProps {
   accessories: Accessory[];
@@ -19,6 +20,19 @@ const AccessoryManager: React.FC<AccessoryManagerProps> = ({
   onCreateAccessory,
   onDeleteAccessory,
 }) => {
+  const [accessoriesById, setAccessoriesById] = useState<string>("");
+  const [choosedAccessory, setChoosedAccessory] = useState<Accessory | null>(
+    null
+  );
+
+  useCallback(async () => {
+    try {
+      const res = await api.get(`/api/accessories/${accessoriesById}`);
+      setChoosedAccessory(res.data);
+    } catch (error) {
+      console.error("Failed to fetch accessories:", error);
+    }
+  }, [accessoriesById]);
   // Тус бүр state-үүдийг тусдаа хадгална
   const [name, setName] = useState("");
   const [brand, setBrand] = useState("");
@@ -116,12 +130,11 @@ const AccessoryManager: React.FC<AccessoryManagerProps> = ({
         <div className="max-h-[460px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-orange-600 scrollbar-track-[#222] space-y-4 rounded border border-gray-700 divide-y divide-gray-700">
           {accessories.map((item) => (
             <div
+              onClick={() => setChoosedAccessory(item)}
               key={item._id}
-              onClick={() => {
-                if (confirm(`Delete "${item.name}"?`))
-                  onDeleteAccessory(item._id);
-              }}
-              className="group border border-gray-700 rounded-lg overflow-hidden bg-[#2a2a2a] hover:border-orange-600 transition cursor-pointer flex items-center gap-4 p-4"
+              className={`group border border-gray-700 rounded-lg overflow-hidden bg-[#2a2a2a] hover:border-orange-600 ${
+                choosedAccessory?._id === item._id ? "border-orange-600" : ""
+              } transition cursor-pointer flex items-center gap-4 p-4`}
             >
               <img
                 src={item.image}
@@ -133,7 +146,13 @@ const AccessoryManager: React.FC<AccessoryManagerProps> = ({
                 <p className="text-gray-400">Brand: {item.brand}</p>
                 <p className="text-[#e15617]">{item.price}₮</p>
               </div>
-              <BiTrash className="text-red-500 text-xl hover:scale-110 transition" />
+              <BiTrash
+                className="text-red-500 text-xl hover:scale-110 transition"
+                onClick={() => {
+                  if (confirm(`Delete "${item.name}"?`))
+                    onDeleteAccessory(item._id);
+                }}
+              />
             </div>
           ))}
         </div>

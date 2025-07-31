@@ -91,6 +91,7 @@ const AdminPanel = () => {
       console.error("Failed to fetch accessories:", error);
     }
   }, []);
+ 
   const fetchEvents = useCallback(async () => {
     try {
       const res = await api.get("/api/event");
@@ -155,6 +156,17 @@ const AdminPanel = () => {
     } catch (error) {
       toast.error("Failed to delete accessory");
       console.error("Failed to delete accessory:", error);
+    }
+  };
+  // Update accessory
+  const handleUpdateAccessory = async (id: string, updatedData: any) => {
+    try {
+      await api.put(`/api/accessories/${id}`, updatedData);
+      toast.success("Accessory амжилттай шинэчлэгдлээ");
+      fetchAccessories();
+    } catch (error) {
+      toast.error("Failed to update accessory");
+      console.error("Failed to update accessory:", error);
     }
   };
 
