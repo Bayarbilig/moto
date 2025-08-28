@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { RiUser3Line } from "react-icons/ri";
 import { HiOutlineMenu, HiOutlineX } from "react-icons/hi";
 
@@ -9,25 +9,37 @@ export const Header = () => {
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
-
-  const navigate = (path: string) => {
-    router.push(path);
-    setMenuOpen(false);
-  };
   const [token, setToken] = useState<boolean | null>(null);
+
+  // scroll state
+  const [showHeader, setShowHeader] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
 
   useEffect(() => {
     const myToken = localStorage.getItem("token");
-    if (myToken) {
-      setToken(true);
-    } else {
-      setToken(false);
-    }
+    if (myToken) setToken(true);
+    else setToken(false);
   }, []);
 
-  if (token === null) {
-    return null;
-  }
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      if (currentScrollY > lastScrollY && currentScrollY > 50) {
+        // scrolling down
+        setShowHeader(false);
+      } else {
+        // scrolling up
+        setShowHeader(true);
+      }
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollY]);
+
+  if (token === null) return null;
 
   const navLinks = [
     { label: "Showroom", path: "/showroom" },
@@ -35,8 +47,17 @@ export const Header = () => {
     { label: "Service", path: "/service" },
   ];
 
+  const navigate = (path: string) => {
+    router.push(path);
+    setMenuOpen(false);
+  };
+
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-moto-gray/80 backdrop-blur-sm shadow-md">
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 bg-moto-gray/80 backdrop-blur-sm shadow-md transition-transform duration-300 ${
+        showHeader ? "translate-y-0" : "-translate-y-full"
+      }`}
+    >
       <div className="max-w-7xl mx-auto px-6 md:px-12 py-4 flex items-center justify-between">
         {/* Logo + Brand */}
         <div

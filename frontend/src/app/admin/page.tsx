@@ -91,7 +91,7 @@ const AdminPanel = () => {
       console.error("Failed to fetch accessories:", error);
     }
   }, []);
- 
+
   const fetchEvents = useCallback(async () => {
     try {
       const res = await api.get("/api/event");
@@ -193,6 +193,16 @@ const AdminPanel = () => {
       console.error("Failed to delete bike:", error);
     }
   };
+  const handleUpdateBike = async (id: string, updatedData: any) => {
+    try {
+      await api.put(`/api/bike/bikes/${id}`, updatedData);
+      toast.success("Bike амжилттай шинэчлэгдлээ");
+      fetchBikes();
+    } catch (error) {
+      toast.error("Failed to update bike");
+      console.error("Failed to update bike:", error);
+    }
+  };
 
   // Create equipment
   const handleCreateEquipment = async (equipmentData: any) => {
@@ -215,6 +225,16 @@ const AdminPanel = () => {
     } catch (error) {
       toast.error("Failed to delete equipment");
       console.error("Failed to delete equipment:", error);
+    }
+  };
+  const handleUpdateEquipment = async (id: string, updatedData: any) => {
+    try {
+      await api.put(`/api/equipment/${id}`, updatedData);
+      toast.success("Equipment амжилттай шинэчлэгдлээ");
+      fetchEquipment();
+    } catch (error) {
+      toast.error("Failed to update equipment");
+      console.error("Failed to update equipment:", error);
     }
   };
   const handleDeleteEvent = async (id: any) => {
@@ -298,6 +318,7 @@ const AdminPanel = () => {
               accessories={accessories}
               onCreateAccessory={handleCreateAccessory}
               onDeleteAccessory={handleDeleteAccessory}
+              onUpdateAccessory={handleUpdateAccessory}
             />
           </div>
 
@@ -307,12 +328,14 @@ const AdminPanel = () => {
               bikes={bikes}
               onCreateBike={handleCreateBike}
               onDeleteBike={handleDeleteBike}
+              onUpdateBike={handleUpdateBike}
             />
 
             <EquipmentManager
               equipment={equipment}
               onCreateEquipment={handleCreateEquipment}
               onDeleteEquipment={handleDeleteEquipment}
+              onUpdateEquipment={handleUpdateEquipment}
             />
           </div>
         </div>

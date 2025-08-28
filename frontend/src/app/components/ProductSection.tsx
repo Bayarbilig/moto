@@ -12,6 +12,7 @@ export interface Access {
   image: string;
   _id: string;
   name: string;
+  discount?: string;
 }
 export const ProductSection = () => {
   const accessoriesRef = useRef<HTMLDivElement>(null);

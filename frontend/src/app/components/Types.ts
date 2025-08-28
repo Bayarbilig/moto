@@ -47,6 +47,8 @@ export interface Accessory {
   name: string;
   brand: string;
   price: string;
+  details?: string;
+  discount?: string;
 }
 
 export interface Equipment {
@@ -56,6 +58,7 @@ export interface Equipment {
   name: string;
   brand: string;
   price: string;
+  discount?: string;
 }
 export interface Event {
   _id?: string;

@@ -1,7 +1,9 @@
+// app/showroom/page.tsx
 "use client";
+
 import { api } from "@/lib/axios";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Equipment } from "../components/Types";
 import { Access } from "../components/ProductSection";
@@ -14,13 +16,19 @@ type Bike = {
   power: string;
   price: number;
   images: string[];
+  discount?: string;
+  saled: boolean;
 };
 
-const Page = () => {
+// Extract the component that uses useSearchParams into a separate component
+const ShowroomContent = () => {
   const [bike, setBike] = useState<Bike[]>([]);
   const [accessories, setAccessories] = useState<Access[]>([]);
   const [equipment, setEquipment] = useState<Equipment[]>([]);
+
   const searchParams = useSearchParams();
+  const router = useRouter();
+
   const typeParam = searchParams.get("type");
   const initialType =
     typeParam === "bike" ||
@@ -28,14 +36,15 @@ const Page = () => {
     typeParam === "equipment"
       ? typeParam
       : "bike";
+
   const [selectedType, setSelectedType] = useState<
     "bike" | "accessories" | "equipment"
   >(initialType);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 9;
-  const router = useRouter();
 
+  // Fetch data
   useEffect(() => {
     api
       .get("/api/bike/bikes")
@@ -51,17 +60,10 @@ const Page = () => {
       .catch(console.error);
   }, []);
 
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [selectedType, searchQuery]);
+  // Reset page when type or search changes
+  useEffect(() => setCurrentPage(1), [selectedType, searchQuery]);
 
-  const handleClickAccessories = (id: string) =>
-    router.push(`/showroom/${id}?type=accessories`);
-  const handleClickEquipment = (id: string) =>
-    router.push(`/showroom/${id}?type=equipment`);
-  const handleClickBike = (id: string) =>
-    router.push(`/showroom/${id}?type=bike`);
-
+  // Filtered items
   const filteredItems = {
     bike: bike.filter((item) =>
       item.title.toLowerCase().includes(searchQuery.toLowerCase())
@@ -96,13 +98,15 @@ const Page = () => {
   };
 
   const handlePageChange = (page: number) => {
-    if (page >= 1 && page <= totalPages[selectedType]) {
-      setCurrentPage(page);
-    }
+    if (page >= 1 && page <= totalPages[selectedType]) setCurrentPage(page);
   };
+
+  const handleClickItem = (id: string, type: string) =>
+    router.push(`/showroom/${id}?type=${type}`);
 
   return (
     <div className="min-h-screen bg-black text-white px-4 py-32">
+      {/* Search & Type Select */}
       <div className="max-w-7xl mx-auto mb-10 flex flex-col sm:flex-row items-center gap-4">
         <input
           type="search"
@@ -142,94 +146,114 @@ const Page = () => {
       {/* Items Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 max-w-7xl mx-auto">
         {selectedType === "bike" &&
-          paginatedItems.bike.map((bike, index) => (
-            <div
-              key={index}
-              onClick={() => handleClickBike(bike._id)}
-              className="cursor-pointer group bg-gradient-to-br from-[#1a1a1a] to-[#111] border border-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300"
-            >
-              <div className="relative w-full h-56 bg-[#0f0f0f]">
-                <Image
-                  src={bike.images[0]}
-                  alt={bike.title}
-                  layout="fill"
-                  objectFit="cover"
-                  className="transition-transform duration-300"
-                />
-              </div>
-              <div className="p-5">
-                <h2 className="text-xl font-semibold text-[#F95F19] mb-2 tracking-wide max-w-[400px] truncate">
-                  {bike.title}
-                </h2>
-                <p className="text-gray-400 text-sm mb-1">{bike.bikeModel}</p>
-                <p className="text-[#F95F19] font-semibold text-sm mb-3">
-                  {bike.price.toLocaleString()}₮
-                </p>
-                <div className="flex justify-between text-sm text-gray-300 border-t border-gray-700 pt-3">
-                  <span>Багтаамж: {bike.cc}</span>
-                  <span>Хүч: {bike.power}</span>
+          paginatedItems.bike.map((bike, index) => {
+            const discountedPrice =
+              bike.discount && bike.discount !== "0"
+                ? bike.price - (bike.price * Number(bike.discount)) / 100
+                : bike.price;
+
+            return (
+              <div
+                key={index}
+                onClick={() => handleClickItem(bike._id, "bike")}
+                className="cursor-pointer relative group bg-gradient-to-br from-[#1a1a1a] to-[#111] border border-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300"
+              >
+                {bike.saled && (
+                  <span className="absolute top-3 left-3 bg-red-600 text-white text-xs font-bold px-3 py-1 rounded z-10">
+                    Sold out
+                  </span>
+                )}
+
+                <div className="relative w-full h-56 bg-[#0f0f0f]">
+                  <Image
+                    src={bike.images[0]}
+                    alt={bike.title}
+                    layout="fill"
+                    objectFit="cover"
+                    className="transition-transform duration-300 group-hover:scale-105"
+                  />
+                </div>
+
+                <div className="p-5">
+                  <h2 className="text-xl font-semibold text-[#F95F19] mb-2 tracking-wide max-w-[400px] truncate">
+                    {bike.title}
+                  </h2>
+                  <p className="text-gray-400 text-sm mb-1">{bike.bikeModel}</p>
+                  <p className="text-[#F95F19] font-semibold text-sm mb-3">
+                    {bike.discount && bike.discount !== "0" ? (
+                      <>
+                        <span className="line-through text-gray-500 mr-2">
+                          {bike.price.toLocaleString()}₮
+                        </span>
+                        <span>{discountedPrice.toLocaleString()}₮</span>
+                      </>
+                    ) : (
+                      <span>{bike.price.toLocaleString()}₮</span>
+                    )}
+                  </p>
+
+                  <div className="flex justify-between text-sm text-gray-300 border-t border-gray-700 pt-3">
+                    <span>Багтаамж: {bike.cc} cc</span>
+                    <span>Хүч: {bike.power} hp</span>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
 
-        {selectedType === "accessories" &&
-          paginatedItems.accessories.map((item, index) => (
-            <div
-              onClick={() => handleClickAccessories(item._id)}
-              key={index}
-              className="cursor-pointer group bg-gradient-to-br from-[#1a1a1a] to-[#111] border border-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300"
-            >
-              <div className="relative w-full h-56 bg-[#0f0f0f]">
-                <Image
-                  src={item.image}
-                  alt={item.name}
-                  layout="fill"
-                  objectFit="contain"
-                  className="transition-transform duration-300"
-                />
-              </div>
-              <div className="p-5">
-                <h2 className="text-xl font-semibold text-[#F95F19] mb-2 tracking-wide max-w-[400px] truncate">
-                  {item.name}
-                </h2>
-                <p className="text-gray-400 text-sm mb-1">{item.brand}</p>
-                <p className="text-[#F95F19] font-semibold text-sm mb-3">
-                  {item.price.toLocaleString()}₮
-                </p>
-              </div>
-            </div>
-          ))}
+        {/* Accessories and Equipment */}
+        {["accessories", "equipment"].map(
+          (type) =>
+            selectedType === type &&
+            paginatedItems[type as "accessories" | "equipment"].map(
+              (item, index) => {
+                const discountedPrice =
+                  item.discount && item.discount !== "0"
+                    ? Number(item.price) -
+                      (Number(item.price) * Number(item.discount)) / 100
+                    : Number(item.price);
 
-        {selectedType === "equipment" &&
-          paginatedItems.equipment.map((item, index) => (
-            <div
-              key={index}
-              onClick={() => handleClickEquipment(item._id)}
-              className="cursor-pointer group bg-gradient-to-br from-[#1a1a1a] to-[#111] border border-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300"
-            >
-              <div className="relative w-full h-56 bg-[#0f0f0f]">
-                <Image
-                  src={item.image}
-                  alt={item.name}
-                  layout="fill"
-                  objectFit="contain"
-                  className="transition-transform duration-300"
-                />
-              </div>
-              <div className="p-5">
-                <h2 className="text-xl font-semibold text-[#F95F19] mb-2 tracking-wide max-w-[400px] truncate">
-                  {item.name}
-                </h2>
-                <p className="text-gray-400 text-sm mb-1">{item.brand}</p>
-                <p className="text-[#F95F19] font-semibold text-sm mb-3">
-                  {item.price.toLocaleString()}₮
-                </p>
-              </div>
-            </div>
-          ))}
+                return (
+                  <div
+                    key={index}
+                    onClick={() => handleClickItem(item._id, type)}
+                    className="cursor-pointer group bg-gradient-to-br from-[#1a1a1a] to-[#111] border border-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300"
+                  >
+                    <div className="relative w-full h-56 bg-[#0f0f0f]">
+                      <Image
+                        src={item.image}
+                        alt={item.name}
+                        layout="fill"
+                        objectFit="contain"
+                        className="transition-transform duration-300"
+                      />
+                    </div>
+                    <div className="p-5">
+                      <h2 className="text-xl font-semibold text-[#F95F19] mb-2 tracking-wide max-w-[400px] truncate">
+                        {item.name}
+                      </h2>
+                      <p className="text-gray-400 text-sm mb-1">{item.brand}</p>
+                      <p className="text-[#F95F19] font-semibold text-sm mb-3">
+                        {item.discount && item.discount !== "0" ? (
+                          <>
+                            <span className="line-through text-gray-500 mr-2">
+                              {item.price.toLocaleString()}₮
+                            </span>
+                            <span>{discountedPrice.toLocaleString()}₮</span>
+                          </>
+                        ) : (
+                          <span>{item.price.toLocaleString()}₮</span>
+                        )}
+                      </p>
+                    </div>
+                  </div>
+                );
+              }
+            )
+        )}
       </div>
 
+      {/* Pagination */}
       {filteredItems[selectedType].length > itemsPerPage && (
         <div className="flex justify-center mt-10 gap-2">
           <button
@@ -267,4 +291,22 @@ const Page = () => {
   );
 };
 
-export default Page;
+// Loading component for Suspense fallback
+const ShowroomLoading = () => (
+  <div className="min-h-screen bg-black text-white px-4 py-32 flex items-center justify-center">
+    <div className="text-center">
+      <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-[#F95F19] mx-auto mb-4"></div>
+      <p className="text-gray-400">Loading showroom...</p>
+    </div>
+  </div>
+);
+
+const ShowroomPage = () => {
+  return (
+    <Suspense fallback={<ShowroomLoading />}>
+      <ShowroomContent />
+    </Suspense>
+  );
+};
+
+export default ShowroomPage;

@@ -14,7 +14,6 @@ import workerRoute from "./routes/WorkerRoute";
 import bookingRouter from "./routes/BookingRoute";
 import serviceRouter from "./routes/ServiceRoute";
 import motoServiceRouter from "./routes/MotoServiceRoute";
-
 dotenv.config();
 
 const app = express();
@@ -22,8 +21,17 @@ const port = 5000;
 
 connectToDatabase();
 
+app.use(
+  cors({
+    origin: ["http://192.168.1.10:3000"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
+//add your wifi IPv4 address change this 192.168.10
 app.use(express.json());
-app.use(cors());
+
+// Routes
 app.use("/api/bike", bikeRouter);
 app.use("/api/tools", toolRouter);
 app.use("/api/register", router);
