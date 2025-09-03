@@ -7,6 +7,7 @@ import { CgLock } from "react-icons/cg";
 import { FaUserSecret } from "react-icons/fa";
 import { LiaCalendarDaySolid } from "react-icons/lia";
 import { Event } from "@/app/components/Types";
+import { section } from "framer-motion/client";
 // Fake data for demonstration (normally fetch from API)
 
 const EventDetailPage = () => {
@@ -42,7 +43,7 @@ const EventDetailPage = () => {
       {/* Header Banner */}
       <div
         className="relative h-[450px] bg-cover bg-center"
-        style={{ backgroundImage: `url('${event.image}')` }}
+        style={{ backgroundImage: `url('/tournament.jpg')` }}
       >
         <div className="absolute inset-0 bg-black bg-opacity-60 flex flex-col justify-end p-8">
           <span className="bg-orange-500 text-xs px-2 py-1 rounded w-fit">
@@ -54,14 +55,14 @@ const EventDetailPage = () => {
               <LiaCalendarDaySolid size={18} /> {event.date}
             </div>
             <div className="flex items-center gap-2">
-              <CgLock size={18} /> 09:00 - 17:00
+              <CgLock size={18} /> 08:00 - 17:30
             </div>
             <div className="flex items-center gap-2">
               <BiMapPin size={18} /> {event.location}
             </div>
-            <div className="flex items-center gap-2">
+            {/* <div className="flex items-center gap-2">
               <FaUserSecret size={18} /> 75 оролцогч
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
@@ -79,13 +80,23 @@ const EventDetailPage = () => {
             <h2 className="text-xl font-semibold mb-4">Хөтөлбөр</h2>
             <ul className="space-y-2 text-gray-200">
               {[
-                "08:00 - 09:00: Бүртгэл",
-                "09:00 - 09:30: Нээлтийн ёслол",
-                "09:30 - 10:30: Дасгал сургуулилт",
-                "10:30 - 12:30: Урьдчилсан гараа",
-                "12:30 - 13:30: Үдийн завсарлага",
-                "13:30 - 16:30: Үндсэн гараа",
-                "16:30 - 17:00: Шагнал гардуулах ёслол",
+                "08:00 - Бүртгэл эхэлнэ",
+                "08:00 - 09:30 - Зам үзнэ",
+                "09:30 - 10:00 - Сонирхогчдын ангилал",
+                "10:00 - 10:30 - 400cc",
+                "10:30 - 11:00 - 600cc",
+                "11:00 - 11:30 - 1000cc",
+                "11:30 - 12:00 - Super moto naked",
+                "12:00 - 12:30 - Stunt",
+                "12:30 - 13:30 - Нээлт (Тамирчны алдар, Limit king, Ginjin, Moon dance, хөтлөгч, Drift car үзүүлбэр, Солиут)",
+                "13:30 - 14:00 - Сонирхогчдын ангилал",
+                "14:00 - 14:30 - 400cc",
+                "14:30 - 15:00 - 600cc",
+                "15:00 - 15:30 - 1000cc",
+                "15:30 - 16:00 - Super moto naked",
+                "16:00 - 16:30 - Stunt",
+                "16:30 - 17:00 - Эмэгтэй ангилал",
+                "17:00 - 17:30 - Хаалт",
               ].map((item, i) => (
                 <li key={i} className="flex items-start gap-2">
                   <span className="text-orange-400 font-bold">{i + 1}.</span>
@@ -94,14 +105,28 @@ const EventDetailPage = () => {
               ))}
             </ul>
           </section>
-
+          <section>
+            <h2 className="text-xl font-semibold mb-4">Замын дэлгэрэнгүй</h2>
+            <div className="overflow-x-auto">
+              <img
+                src={"/road.jpg"}
+                alt="Road Detail"
+                className="w-full rounded"
+              />
+            </div>
+          </section>
           <section>
             <h2 className="text-xl font-semibold mb-4">Ангилал</h2>
             <div className="space-y-3">
               {[
-                "125cc - Залуучууд",
-                "250cc - Нээлттэй ангилал",
-                "450cc - Мэргэжлийн",
+                "MotoGP bike 1000cc-1400cc",
+                "MotoGP bike 600cc-954cc",
+                "MotoGP bike 125cc-594cc",
+                "Эмэгтэй",
+                "Naked Bike / Supermoto",
+                "Сонирхогчид",
+                "Stunt Moto",
+                "18-аас доош насны тамирчид",
               ].map((cat, i) => (
                 <div
                   key={i}
@@ -120,29 +145,96 @@ const EventDetailPage = () => {
           <section>
             <h2 className="text-xl font-semibold mb-4">Шагнал</h2>
             <ul className="text-gray-200 space-y-2">
-              <li>🥇 1-р байр: 10,000,000₮</li>
-              <li>🥈 2-р байр: 5,000,000₮</li>
-              <li>🥉 3-р байр: 3,000,000₮</li>
-              <li>🏅 Тусгай байр: 1,000,000₮</li>
+              {/* MotoGP bike 1000cc-1400cc */}
+              <li className="font-semibold text-white">
+                MotoGP bike 1000cc-1400cc
+                <ul className="pl-5 space-y-1 font-normal text-gray-300">
+                  <li>🥇 1-р байр: 2,000,000₮</li>
+                  <li>🥈 2-р байр: 1,000,000₮</li>
+                  <li>🥉 3-р байр: 700,000₮</li>
+                </ul>
+              </li>
+
+              {/* MotoGP bike 600cc-954cc */}
+              <li className="font-semibold text-white">
+                MotoGP bike 600cc-954cc
+                <ul className="pl-5 space-y-1 font-normal text-gray-300">
+                  <li>🥇 1-р байр: 2,000,000₮</li>
+                  <li>🥈 2-р байр: 1,000,000₮</li>
+                  <li>🥉 3-р байр: 700,000₮</li>
+                </ul>
+              </li>
+
+              {/* MotoGP bike 125cc-556cc */}
+              <li className="font-semibold text-white">
+                MotoGP bike 125cc-556cc
+                <ul className="pl-5 space-y-1 font-normal text-gray-300">
+                  <li>🥇 1-р байр: 2,000,000₮</li>
+                  <li>🥈 2-р байр: 1,000,000₮</li>
+                  <li>🥉 3-р байр: 700,000₮</li>
+                </ul>
+              </li>
+
+              {/* Эмэгтэй */}
+              <li className="font-semibold text-white">
+                Эмэгтэй
+                <ul className="pl-5 space-y-1 font-normal text-gray-300">
+                  <li>🥇 1-р байр: 2,000,000₮</li>
+                  <li>🥈 2-р байр: 1,000,000₮</li>
+                  <li>🥉 3-р байр: 700,000₮</li>
+                </ul>
+              </li>
+
+              {/* Naked Bike & Supermoto */}
+              <li className="font-semibold text-white">
+                Naked Bike & Supermoto
+                <ul className="pl-5 space-y-1 font-normal text-gray-300">
+                  <li>🥇 1-р байр: 2,000,000₮</li>
+                  <li>🥈 2-р байр: 1,000,000₮</li>
+                  <li>🥉 3-р байр: 700,000₮</li>
+                </ul>
+              </li>
+
+              {/* Stunt Moto */}
+              <li className="font-semibold text-white">
+                Stunt Moto
+                <ul className="pl-5 space-y-1 font-normal text-gray-300">
+                  <li>🥇 1-р байр: 2,000,000₮</li>
+                  <li>🥈 2-р байр: 1,000,000₮</li>
+                  <li>🥉 3-р байр: 700,000₮</li>
+                </ul>
+              </li>
+
+              {/* Анхлан сонирхогчид */}
+              <li className="font-semibold text-white">
+                Анхлан сонирхогчид
+                <ul className="pl-5 space-y-1 font-normal text-gray-300">
+                  <li>🥇 1-р байр: Motocycle 125cc</li>
+                  <li>🥈 2-р байр: 1,000,000₮</li>
+                  <li>🥉 3-р байр: 700,000₮</li>
+                </ul>
+              </li>
             </ul>
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold mb-4">Шаардлага</h2>
+            <h2 className="text-xl font-semibold mb-4">
+              Бүртгүүлэх холбоос болон Taкс
+            </h2>
             <ul className="text-gray-200 space-y-2 list-disc list-inside">
-              <li>Мотокроссын мотоциклтой байх</li>
-              <li>Хамгаалалтын хувцас, дуулга заавал өмсөх</li>
-              <li>Жолооны үнэмлэхтэй байх</li>
-              <li>Эрүүл мэндийн үзлэгт орсон байх</li>
+              <li>Утас: 91113371, 89528282</li>
+              <li>Такс: 200,000₮</li>
+              {/* <li>Жолооны үнэмлэхтэй байх</li>
+              <li>Эрүүл мэндийн үзлэгт орсон байх</li> */}
             </ul>
           </section>
 
-          <button
+          {/* <button
             className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 rounded"
             onClick={() => router.push(`/register/${event._id}`)}
           >
             Бүртгүүлэх
-          </button>
+          </button> */}
         </div>
       </div>
     </div>

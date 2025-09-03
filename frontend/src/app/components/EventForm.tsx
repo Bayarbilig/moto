@@ -96,14 +96,14 @@ const EventForm: React.FC<Props> = ({ onCreate, loading = false }) => {
 
       <div>
         <label htmlFor="date" className="block mb-1 font-medium">
-          Огноо (2025-06-15)
+          Огноо
         </label>
         <input
           id="date"
           name="date"
           value={form.date}
           onChange={handleChange}
-          placeholder="Огноо (2025-06-15)"
+          placeholder="Огноо оруулна уу"
           required
           className="w-full p-2 rounded bg-[#2a2a2a] border border-gray-600 focus:outline-none focus:ring-2 focus:ring-orange-500"
         />

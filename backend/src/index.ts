@@ -14,6 +14,7 @@ import workerRoute from "./routes/WorkerRoute";
 import bookingRouter from "./routes/BookingRoute";
 import serviceRouter from "./routes/ServiceRoute";
 import motoServiceRouter from "./routes/MotoServiceRoute";
+import showAlertRoute from "./routes/ShowAlertRoute";
 dotenv.config();
 
 const app = express();
@@ -23,7 +24,7 @@ connectToDatabase();
 
 app.use(
   cors({
-    origin: ["http://192.168.1.10:3000"],
+    origin: ["https://www.elitemoto.mn"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
@@ -44,6 +45,7 @@ app.use("/api/worker", workerRoute);
 app.use("/api/booking", bookingRouter);
 app.use("/api/services", serviceRouter);
 app.use("/api/motoservices", motoServiceRouter);
+app.use("/api/showAlert", showAlertRoute);
 
 app.listen(port, () => {
   console.log(`Сервер ${port} порт дээр ажиллаж байна`);

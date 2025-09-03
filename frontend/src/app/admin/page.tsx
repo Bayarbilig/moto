@@ -15,6 +15,7 @@ import { jwtDecode } from "jwt-decode";
 import { EventManager } from "../components/EventManeger";
 import { CreateService } from "../components/CreateService";
 import { Services } from "../components/Services";
+import AlertTab from "../components/Alert";
 
 const AdminPanel = () => {
   const [activeTab, setActiveTab] = useState("Users");
@@ -282,7 +283,7 @@ const AdminPanel = () => {
   return (
     <div className="p-4 py-32 h-fit ">
       <div className="flex gap-12 py-12 px-32">
-        {["Users", "Moto", "Event", "Time", "Service"].map((tab) => (
+        {["Users", "Moto", "Event", "Time", "Service", "Alert"].map((tab) => (
           <p
             key={tab}
             className={`cursor-pointer ${
@@ -298,7 +299,9 @@ const AdminPanel = () => {
               ? "Үйлчилгээ үүсгэх"
               : tab === "Service"
               ? "Үйлчилгээ Харах"
-              : "Эвэнт харах"}
+              : tab === "Alert"
+              ? "Сануулга үзүүлэх"
+              : "Эвэнт Харах "}
           </p>
         ))}
       </div>
@@ -356,6 +359,11 @@ const AdminPanel = () => {
       {activeTab === "Service" && (
         <div className="px-32 flex items-start gap-12">
           <Services />
+        </div>
+      )}
+      {activeTab === "Alert" && (
+        <div className="px-32 flex items-start gap-12">
+          <AlertTab />
         </div>
       )}
     </div>
