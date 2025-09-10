@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const api = axios.create({
-  baseURL: "https://moto-backend-rv02.onrender.com",
+  baseURL: "https://moto-backend-rv02.onrender.com", 
   // baseURL: "http://192.168.1.99:5000",
   // baseURL: "http://localhost:5000",
   headers: {
