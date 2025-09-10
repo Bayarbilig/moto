@@ -79,10 +79,17 @@ const About = () => {
       name: "Radnaabazar",
       role: "Mechanic",
       image: "radnaa.jpg",
-      phone: "+976 9478-6311"
+      phone: "+976 9478-6311",
     },
   ];
-
+  const partners = [
+    { img: "/net.jpg", name: "NetCapital" },
+    { img: "/ylguun.jpg", name: "Ялгуун дизайн" },
+    { img: "/msk.jpg", name: "Мөнх-Орших капитал ББСБ" },
+    { img: "/net.jpg", name: "NetCapital" },
+    { img: "/ylguun.jpg", name: "Ялгуун дизайн" },
+    { img: "/msk.jpg", name: "Мөнх-Орших капитал ББСБ" },
+  ];
   return (
     <div className="min-h-screen bg-black">
       {/* Intro Section */}
@@ -149,6 +156,27 @@ const About = () => {
           </div>
         </div>
       </section>
+      <div className="relative py-8">
+        <div className="overflow-hidden">
+          <div className="flex animate-marquee whitespace-nowrap gap-12">
+            {partners.concat(partners).map((partner, index) => (
+              <div
+                key={index}
+                className="flex-shrink-0 flex flex-col items-center"
+              >
+                <img
+                  src={partner.img}
+                  alt={partner.name}
+                  className="h-16 md:h-20 object-contain transition-transform duration-300 hover:scale-110"
+                />
+                <span className="mt-2 text-gray-300 text-sm md:text-base">
+                  {partner.name}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
 
       {/* Team Section */}
       <section className="py-16 px-6 md:px-12">

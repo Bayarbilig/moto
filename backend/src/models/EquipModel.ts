@@ -6,6 +6,9 @@ export interface IEquipment extends Document {
   brand: string;
   name: string;
   modelName?: string;
+  details: string;
+  saled: boolean;
+  discount?: string;
 }
 
 const equipmentSchema = new Schema<IEquipment>(
@@ -15,6 +18,9 @@ const equipmentSchema = new Schema<IEquipment>(
     brand: { type: String, required: true },
     name: { type: String, required: true },
     modelName: { type: String },
+    details: { type: String, required: true },
+    discount: { type: String },
+    saled: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

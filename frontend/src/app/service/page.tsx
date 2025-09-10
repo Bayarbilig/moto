@@ -6,6 +6,7 @@ import Head from "next/head";
 import axios from "axios";
 import { api } from "@/lib/axios";
 import { toast } from "react-toastify";
+import { IoClose } from "react-icons/io5";
 
 interface Service {
   _id: string;
@@ -42,6 +43,7 @@ export default function Home() {
   const [isServiceDropdownOpen, setIsServiceDropdownOpen] = useState(false);
   const [isYearDropdownOpen, setIsYearDropdownOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showAlert, setShowAlert] = useState(true);
 
   const serviceDropdownRef = useRef<HTMLDivElement>(null);
   const yearDropdownRef = useRef<HTMLDivElement>(null);
@@ -260,7 +262,32 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-black text-white flex justify-center py-48">
+    <div className="min-h-screen bg-black text-white flex justify-center py-48 relative">
+      {showAlert && (
+        <>
+          {/* Background overlay */}
+          <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40"></div>
+
+          {/* Alert */}
+          <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-lg bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded shadow-md flex justify-between items-start z-50">
+            <div>
+              <strong className="font-bold">Анхаар!</strong>
+              <p className="mt-1 text-sm">
+                Та дараах үйлчилгээнүүдээс цаг авах шаардлагагүй: угаалга,
+                наклад солих, тоормосны шингэн солих, мото асаалгах, гинж
+                тослох, моторын тос солих, компьютер оншилгоо.
+              </p>
+            </div>
+            <button
+              onClick={() => setShowAlert(false)}
+              className="ml-4 text-yellow-700 hover:text-yellow-900 font-bold"
+            >
+              <IoClose />
+            </button>
+          </div>
+        </>
+      )}
+
       <Head>
         <title>Мото үйлчилгээ</title>
         <meta name="description" content="Мото үйлчилгээний захиалга" />

@@ -6,6 +6,9 @@ export interface IAccessory extends Document {
   brand: string;
   name: string;
   modelName?: string;
+  details: string;
+  discount?: string;
+  saled: boolean;
 }
 
 const accessorySchema = new Schema<IAccessory>(
@@ -14,7 +17,10 @@ const accessorySchema = new Schema<IAccessory>(
     price: { type: String, required: true },
     brand: { type: String, required: true },
     name: { type: String, required: true },
+    details: { type: String, required: true },
     modelName: { type: String },
+    discount: { type: String },
+    saled: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

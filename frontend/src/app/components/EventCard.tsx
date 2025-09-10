@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import React from "react";
 import { BiCalendar, BiMapPin } from "react-icons/bi";
 import { BsArrowRight } from "react-icons/bs";
@@ -11,9 +12,9 @@ interface EventCardProps {
   date: string;
   location: string;
   viewButtonText: string;
-  applyButtonText: string;
+  // applyButtonText: string;
   onView?: () => void;
-  onApply?: () => void;
+  // onApply?: () => void;
 }
 
 const EventCard = ({
@@ -24,15 +25,22 @@ const EventCard = ({
   date,
   location,
   viewButtonText,
-  applyButtonText,
+  // applyButtonText,
   onView,
-  onApply,
-}: EventCardProps) => {
+}: // onApply,
+EventCardProps) => {
   return (
     <div className="flex flex-col md:flex-row w-full overflow-hidden rounded-lg bg-[#1E1E1E] text-white shadow-md">
       {/* Image Section */}
       <div className="w-full md:w-[340px] h-52 md:h-auto relative">
-        <img src={image} alt={title} className="w-full h-full object-cover" />
+        <Image
+          src={"/tournament.jpg"}
+          alt={title}
+          fill
+          className="object-cover rounded-xl"
+          quality={100}
+          sizes="(max-width: 768px) 100vw, 340px"
+        />
       </div>
 
       {/* Content Section */}
@@ -65,13 +73,13 @@ const EventCard = ({
           >
             {viewButtonText}
           </button>
-          <button
+          {/* <button
             className="w-full sm:w-auto bg-[#F95F19] hover:bg-[#e25515] text-white flex items-center justify-center gap-2 px-4 py-2 rounded text-sm"
             onClick={onApply}
           >
             {applyButtonText}
             <BsArrowRight className="w-4 h-4" />
-          </button>
+          </button> */}
         </div>
       </div>
     </div>

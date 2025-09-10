@@ -14,7 +14,7 @@ import workerRoute from "./routes/WorkerRoute";
 import bookingRouter from "./routes/BookingRoute";
 import serviceRouter from "./routes/ServiceRoute";
 import motoServiceRouter from "./routes/MotoServiceRoute";
-
+import showAlertRoute from "./routes/ShowAlertRoute";
 dotenv.config();
 
 const app = express();
@@ -22,8 +22,17 @@ const port = 5000;
 
 connectToDatabase();
 
+app.use(
+  cors({
+    origin: ["https://www.elitemoto.mn"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
+//add your wifi IPv4 address change this 192.168.10
 app.use(express.json());
-app.use(cors());
+
+// Routes
 app.use("/api/bike", bikeRouter);
 app.use("/api/tools", toolRouter);
 app.use("/api/register", router);
@@ -36,6 +45,7 @@ app.use("/api/worker", workerRoute);
 app.use("/api/booking", bookingRouter);
 app.use("/api/services", serviceRouter);
 app.use("/api/motoservices", motoServiceRouter);
+app.use("/api/showAlert", showAlertRoute);
 
 app.listen(port, () => {
   console.log(`Сервер ${port} порт дээр ажиллаж байна`);
