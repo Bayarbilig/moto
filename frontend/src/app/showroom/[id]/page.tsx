@@ -7,6 +7,7 @@ import "react-image-lightbox/style.css";
 import Lightbox from "react-image-lightbox";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { MdAdsClick } from "react-icons/md";
+import { useTranslation } from "next-i18next";
 
 type Bike = {
   _id: string;
@@ -44,6 +45,7 @@ const BikeDetailContent = () => {
       setType("bike");
     }
   }, [searchParams]);
+  const { t } = useTranslation("common");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -101,7 +103,7 @@ const BikeDetailContent = () => {
           className="mb-6 text-xl text-[#F95F19] flex items-center gap-1"
         >
           <IoMdArrowRoundBack className="h-full" />
-          Буцах
+          {t("back")}
         </button>
 
         <div className="grid md:grid-cols-2 gap-10 items-start bg-[#1a1a1a] p-6 rounded-xl shadow-xl border border-gray-800">
@@ -167,23 +169,27 @@ const BikeDetailContent = () => {
                 <>
                   <p>
                     <span className="font-semibold text-white">
-                      Моторын багтаамж:
+                      {t("capacity")}:
                     </span>{" "}
                     {(item as Bike).cc}cc
                   </p>
                   <p>
-                    <span className="font-semibold text-white">Хүч:</span>{" "}
+                    <span className="font-semibold text-white">
+                      {t("power")}:
+                    </span>{" "}
                     {(item as Bike).power} hp
                   </p>
                 </>
               )}
               <p>
-                <span className="font-semibold text-white">Үнэ:</span>{" "}
+                <span className="font-semibold text-white">{t("price")}:</span>{" "}
                 {item.price?.toLocaleString()}₮
               </p>
               {item.details && (
                 <p>
-                  <span className="font-semibold text-white">Тайлбар:</span>{" "}
+                  <span className="font-semibold text-white">
+                    {t("description")}:
+                  </span>{" "}
                   {item.details}
                 </p>
               )}
@@ -194,7 +200,7 @@ const BikeDetailContent = () => {
         {related.length > 0 && (
           <div className="mt-16">
             <h2 className="text-2xl font-bold text-[#F95F19] mb-6">
-              Төстэй бүтээгдэхүүнүүд
+              {t("similar_products")}
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               {related.map((p: Item) => (
@@ -243,11 +249,14 @@ const BikeDetailContent = () => {
   );
 };
 
-const LoadingFallback = () => (
-  <div className="min-h-screen bg-black text-white flex items-center justify-center">
-    <div className="text-white text-center py-40">Уншиж байна...</div>
-  </div>
-);
+const LoadingFallback = () => {
+  const { t } = useTranslation("common");
+  return (
+    <div className="min-h-screen bg-black text-white flex items-center justify-center">
+      <div className="text-white text-center py-40">{t("loading")}</div>
+    </div>
+  );
+};
 
 const BikeDetailPage = () => {
   return (

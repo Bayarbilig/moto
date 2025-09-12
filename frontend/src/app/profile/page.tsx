@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { uploadImageToCloud } from "@/utils/uploadImage";
 import { toast } from "react-toastify";
+import { useTranslation } from "next-i18next";
 
 interface Profile {
   name: string;
@@ -17,6 +18,7 @@ const ProfilePage = () => {
     email: "",
     avatar: "",
   });
+  const { t } = useTranslation("common");
 
   const [isSaving, setIsSaving] = useState(false);
 
@@ -60,7 +62,7 @@ const ProfilePage = () => {
 
   return (
     <div className="max-w-xl mx-auto py-20 px-4">
-      <h1 className="text-2xl font-bold mb-6 text-white">Профайл</h1>
+      <h1 className="text-2xl font-bold mb-6 text-white">{t("profile")}</h1>
 
       {/* Profile Image Upload */}
       {/* <div className="mb-6 flex items-center gap-4">
@@ -90,7 +92,7 @@ const ProfilePage = () => {
 
       {/* Profile Inputs */}
       <div className="mb-4">
-        <label className="block text-white mb-1">Нэр</label>
+        <label className="block text-white mb-1">{t("username")}</label>
         <input
           type="text"
           name="name"
@@ -101,7 +103,7 @@ const ProfilePage = () => {
       </div>
 
       <div className="mb-6">
-        <label className="block text-white mb-1">Имэйл</label>
+        <label className="block text-white mb-1">{t("mail")}</label>
         <input
           type="email"
           name="email"
@@ -117,7 +119,7 @@ const ProfilePage = () => {
           disabled={isSaving}
           className="bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded"
         >
-          {isSaving ? "Хадгалж байна..." : "Хадгалах"}
+          {isSaving ? "Хадгалж байна..." : t("save")}
         </button>
         <button
           onClick={() => {
@@ -127,7 +129,7 @@ const ProfilePage = () => {
           }}
           className="bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded"
         >
-          гарах
+          {t("exit")}
         </button>
       </div>
     </div>

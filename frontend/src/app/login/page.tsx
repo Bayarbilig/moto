@@ -1,9 +1,10 @@
 "use client";
-import { useState } from "react";
+import { use, useState } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/axios";
 import { toast } from "react-toastify";
 import { jwtDecode } from "jwt-decode";
+import { useTranslation } from "next-i18next";
 
 type TokenPayload = {
   role: string;
@@ -19,7 +20,7 @@ const LoginPage = () => {
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loginError, setLoginError] = useState("");
-
+  const { t } = useTranslation("common");
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -35,13 +36,13 @@ const LoginPage = () => {
     const newErrors: { email?: string; password?: string } = {};
 
     if (!formData.email.trim()) {
-      newErrors.email = "Имэйл оруулна уу";
+      newErrors.email = t("email_attention");
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = "Зөв имэйл оруулна уу";
+      newErrors.email = t("email_required");
     }
 
     if (!formData.password) {
-      newErrors.password = "Нууц үг оруулна уу";
+      newErrors.password = t("password_attention");
     }
 
     setErrors(newErrors);
@@ -62,7 +63,7 @@ const LoginPage = () => {
       localStorage.setItem("token", token);
       const decoded = jwtDecode<TokenPayload>(token);
 
-      toast.success("Амжилттай нэвтэрлээ!");
+      toast.success(t("loginsucces"));
 
       if (decoded.role === "admin") {
         router.push("/admin");
@@ -70,8 +71,7 @@ const LoginPage = () => {
         router.push("/");
       }
     } catch (error: any) {
-      const errorMessage =
-        error.response?.data?.message || "Нэвтрэх үйлдэл амжилтгүй боллоо";
+      const errorMessage = error.response?.data?.message || "500";
       setLoginError(errorMessage);
       toast.error(errorMessage);
     } finally {
@@ -80,27 +80,20 @@ const LoginPage = () => {
   };
 
   return (
-    <div
-      className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8"
-      style={{
-        backgroundImage: "url('/honda.jpg')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
-    >
+    <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-black">
       <div className="max-w-md w-full space-y-8 bg-[#1a1a1a]/80 p-8 rounded-lg shadow-lg backdrop-blur-md z-50">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
-            Нэвтрэх
+            {t("login")}
           </h2>
         </div>
 
         <div className="mb-6">
-          <label className="block text-white mb-1">Имэйл</label>
+          <label className="block text-white mb-1">{t("mail")}</label>
           <input
             type="email"
             name="email"
-            placeholder="Е-майл оруулна уу"
+            placeholder={t("email_attention")}
             value={formData.email}
             onChange={handleChange}
             className={`w-full p-2 rounded bg-transparent text-white border ${
@@ -113,11 +106,11 @@ const LoginPage = () => {
         </div>
 
         <div className="mb-4">
-          <label className="block text-white mb-1">Нууц үг</label>
+          <label className="block text-white mb-1">{t("password")}</label>
           <input
             type="password"
             name="password"
-            placeholder="Нууц үг оруулна уу"
+            placeholder={t("password_attention")}
             value={formData.password}
             onChange={handleChange}
             className={`w-full p-2 rounded bg-transparent text-white border ${
@@ -136,7 +129,7 @@ const LoginPage = () => {
             isSubmitting ? "opacity-70 cursor-not-allowed" : ""
           }`}
         >
-          {isSubmitting ? "Түр хүлээнэ үү..." : "Нэвтрэх"}
+          {isSubmitting ? t("wait") : t("login")}
         </button>
       </div>
     </div>

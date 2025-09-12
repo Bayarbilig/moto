@@ -3,10 +3,10 @@
 
 import { useState, useEffect, useRef } from "react";
 import Head from "next/head";
-import axios from "axios";
 import { api } from "@/lib/axios";
 import { toast } from "react-toastify";
 import { IoClose } from "react-icons/io5";
+import { useTranslation } from "next-i18next";
 
 interface Service {
   _id: string;
@@ -52,7 +52,7 @@ export default function Home() {
   const [totalPrice, setTotalPrice] = useState(0);
   const [priceRange, setPriceRange] = useState({ min: 0, max: 0 });
   const [motoservices, setMotoServices] = useState([]);
-
+  const { t } = useTranslation("common");
   useEffect(() => {
     const fetchMotoservices = async () => {
       try {
@@ -271,12 +271,8 @@ export default function Home() {
           {/* Alert */}
           <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-lg bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded shadow-md flex justify-between items-start z-50">
             <div>
-              <strong className="font-bold">Анхаар!</strong>
-              <p className="mt-1 text-sm">
-                Та дараах үйлчилгээнүүдээс цаг авах шаардлагагүй: угаалга,
-                наклад солих, тоормосны шингэн солих, мото асаалгах, гинж
-                тослох, моторын тос солих, компьютер оншилгоо.
-              </p>
+              <strong className="font-bold">{t("attention")}</strong>
+              <p className="mt-1 text-sm">{t("attention_detail")}</p>
             </div>
             <button
               onClick={() => setShowAlert(false)}

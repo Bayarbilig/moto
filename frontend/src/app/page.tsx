@@ -10,7 +10,6 @@ import Image from "next/image";
 import { IoClose } from "react-icons/io5";
 import { useRouter } from "next/navigation";
 import { MdAdsClick } from "react-icons/md";
-
 interface ShowAlertType {
   alertImage: string;
   duration: number; // in milliseconds

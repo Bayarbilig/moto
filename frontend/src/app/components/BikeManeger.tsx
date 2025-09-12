@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { BiTrash } from "react-icons/bi";
 import { CldUploadWidget } from "next-cloudinary";
+import { api } from "@/lib/axios";
 
 type Brand = { _id: string; name: string };
 
@@ -16,6 +17,7 @@ type Bike = {
   price: number;
   discount?: string;
   saled?: boolean;
+  biketype?: string;
 };
 
 interface BikeData {
@@ -29,6 +31,12 @@ interface BikeData {
   price: number;
   discount: string;
   saled: boolean;
+  biketype: string; // ✅ нэмсэн
+}
+
+interface BikeCategory {
+  name: string;
+  _id: string;
 }
 
 interface BikeManagerProps {
@@ -58,6 +66,7 @@ export const BikeManager = ({
     price: 0,
     discount: "",
     saled: false,
+    biketype: "", // ✅ нэмсэн
   });
 
   // UI state
@@ -67,7 +76,7 @@ export const BikeManager = ({
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
+  const [bikeCategory, setBikeCategory] = useState<BikeCategory[]>([]);
   const itemsPerPage = 5;
 
   // Update form when bike is selected
@@ -84,9 +93,23 @@ export const BikeManager = ({
         price: selectedBike.price,
         discount: selectedBike.discount || "",
         saled: selectedBike.saled || false,
+        biketype: selectedBike.biketype || "", // ✅ populate хийж байна
       });
     }
   }, [selectedBike]);
+
+  // Fetch categories
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await api.get("/api/bikeCategory");
+        setBikeCategory(res.data);
+      } catch (err) {
+        console.error("Error fetching bike categories:", err);
+      }
+    };
+    fetchCategories();
+  }, []);
 
   const resetForm = useCallback(() => {
     setFormData({
@@ -100,6 +123,7 @@ export const BikeManager = ({
       price: 0,
       discount: "",
       saled: false,
+      biketype: "", // ✅ reset хийх үед
     });
     setSelectedBike(null);
     setError(null);
@@ -120,7 +144,8 @@ export const BikeManager = ({
       !formData.bikeModel ||
       !formData.cc ||
       !formData.power ||
-      !formData.details
+      !formData.details ||
+      !formData.biketype // ✅ заавал бөглөх
     ) {
       setError("Please fill in all required fields");
       return false;
@@ -134,7 +159,6 @@ export const BikeManager = ({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     if (!validateForm()) return;
 
     setLoading(true);
@@ -276,6 +300,19 @@ export const BikeManager = ({
             required={false}
           />
 
+          {/* ✅ Bike Category Select */}
+          <SelectField
+            id="bikeCategory"
+            label="Bike Category"
+            value={formData.biketype}
+            onChange={(value) => updateFormField("biketype", value)}
+            options={bikeCategory.map((b) => ({
+              value: b._id,
+              label: b.name,
+            }))}
+            placeholder="Select a category"
+          />
+
           <CheckboxField
             id="saled"
             label="Saled"
@@ -372,7 +409,7 @@ export const BikeManager = ({
   );
 };
 
-// Reusable Components
+/* ----------------------- Reusable Components -------------------- */
 const InputField = ({
   id,
   label,
@@ -574,26 +611,27 @@ const ImageUploadSection = ({
       )}
     </CldUploadWidget>
 
-    {images.length > 0 && (
-      <div className="mt-3 flex flex-wrap gap-4">
-        {images.map((url, index) => (
-          <div key={index} className="relative group">
-            <img
-              src={url}
-              alt={`Upload ${index + 1}`}
-              className="w-32 h-32 object-cover rounded border border-gray-700"
-            />
-            <button
-              type="button"
-              onClick={() => onRemoveImage(index)}
-              className="absolute top-1 right-1 bg-black bg-opacity-50 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm opacity-0 group-hover:opacity-100 transition"
-            >
-              ×
-            </button>
-          </div>
-        ))}
-      </div>
-    )}
+    <div className="mt-3 grid grid-cols-2 gap-3">
+      {images.map((url, index) => (
+        <div
+          key={index}
+          className="relative group rounded overflow-hidden border border-gray-600"
+        >
+          <img
+            src={url}
+            alt={`Bike ${index + 1}`}
+            className="w-full h-32 object-cover"
+          />
+          <button
+            type="button"
+            onClick={() => onRemoveImage(index)}
+            className="absolute top-2 right-2 bg-red-600 p-1 rounded opacity-0 group-hover:opacity-100 transition"
+          >
+            <BiTrash size={18} />
+          </button>
+        </div>
+      ))}
+    </div>
   </div>
 );
 
@@ -613,35 +651,27 @@ const BikeCard = ({
   onDelete: (e: React.MouseEvent) => void;
 }) => (
   <div
-    onClick={onSelect}
-    className={`border border-gray-700 rounded-lg overflow-hidden bg-[#2a2a2a] hover:border-orange-600 transition cursor-pointer ${
-      isSelected ? "border-orange-600" : ""
+    className={`p-4 rounded-lg border cursor-pointer transition ${
+      isSelected
+        ? "bg-orange-700 border-orange-500"
+        : "bg-[#2a2a2a] border-gray-600 hover:border-orange-400"
     }`}
+    onClick={onSelect}
   >
-    <div className="flex gap-4 items-center p-4">
-      {bike.images?.[0] && (
-        <img
-          src={bike.images[0]}
-          alt={bike.title}
-          className="w-24 h-24 object-cover rounded border border-gray-600"
-        />
-      )}
-      <div className="flex-1 text-sm space-y-1">
-        <p className="font-semibold text-white">{bike.title}</p>
-        <p className="text-gray-400">Model: {bike.bikeModel}</p>
-        <p className="text-gray-400">CC: {bike.cc}</p>
-        <p className="text-gray-400">Power: {bike.power}</p>
-        <p className="text-gray-400">Brand: {brandName}</p>
-        <p className="text-[#e15617]">{formatPrice(bike.price)}</p>
-        {bike.discount && (
-          <p className="text-green-400">Discount: {bike.discount}%</p>
-        )}
-        {bike.saled && <p className="text-red-400 font-semibold">Sold</p>}
+    <div className="flex justify-between items-start">
+      <div>
+        <h3 className="font-semibold text-lg">{bike.title}</h3>
+        <p className="text-sm text-gray-400">
+          {brandName} • {bike.bikeModel} • {bike.cc}cc • {bike.power}
+        </p>
+        <p className="text-orange-400 font-medium">{formatPrice(bike.price)}</p>
       </div>
-      <BiTrash
-        className="text-red-500 text-xl hover:scale-110 transition"
+      <button
         onClick={onDelete}
-      />
+        className="text-red-400 hover:text-red-600 p-1 rounded transition"
+      >
+        <BiTrash size={18} />
+      </button>
     </div>
   </div>
 );
@@ -657,19 +687,19 @@ const PaginationControls = ({
 }) => (
   <div className="flex justify-center items-center gap-2 mt-4">
     <button
-      onClick={() => onPageChange(Math.max(currentPage - 1, 1))}
       disabled={currentPage === 1}
-      className="px-3 py-1 bg-gray-700 rounded hover:bg-gray-600 disabled:opacity-50"
+      onClick={() => onPageChange(currentPage - 1)}
+      className="px-3 py-1 bg-gray-700 rounded disabled:opacity-50"
     >
       Prev
     </button>
-    <span>
-      {currentPage} / {totalPages}
+    <span className="text-sm">
+      Page {currentPage} of {totalPages}
     </span>
     <button
-      onClick={() => onPageChange(Math.min(currentPage + 1, totalPages))}
       disabled={currentPage === totalPages}
-      className="px-3 py-1 bg-gray-700 rounded hover:bg-gray-600 disabled:opacity-50"
+      onClick={() => onPageChange(currentPage + 1)}
+      className="px-3 py-1 bg-gray-700 rounded disabled:opacity-50"
     >
       Next
     </button>

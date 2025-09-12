@@ -15,6 +15,7 @@ import bookingRouter from "./routes/BookingRoute";
 import serviceRouter from "./routes/ServiceRoute";
 import motoServiceRouter from "./routes/MotoServiceRoute";
 import showAlertRoute from "./routes/ShowAlertRoute";
+import bikeCategoryRoute from "./routes/BikeCategoryRoute";
 dotenv.config();
 
 const app = express();
@@ -24,7 +25,7 @@ connectToDatabase();
 
 app.use(
   cors({
-    origin: ["https://www.elitemoto.mn"],
+    origin: ["http://192.168.0.101:3000"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
@@ -46,6 +47,7 @@ app.use("/api/booking", bookingRouter);
 app.use("/api/services", serviceRouter);
 app.use("/api/motoservices", motoServiceRouter);
 app.use("/api/showAlert", showAlertRoute);
+app.use("/api/bikeCategory",bikeCategoryRoute)
 
 app.listen(port, () => {
   console.log(`Сервер ${port} порт дээр ажиллаж байна`);

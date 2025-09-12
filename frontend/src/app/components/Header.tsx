@@ -4,16 +4,21 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { RiUser3Line } from "react-icons/ri";
 import { HiOutlineMenu, HiOutlineX } from "react-icons/hi";
+import { useTranslation } from "next-i18next";
+import i18n from "../../../i18n";
 
 export const Header = () => {
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
   const [token, setToken] = useState<boolean | null>(null);
-
+  const { t } = useTranslation("common");
   // scroll state
   const [showHeader, setShowHeader] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    i18n.changeLanguage(e.target.value);
+  };
 
   useEffect(() => {
     const myToken = localStorage.getItem("token");
@@ -42,9 +47,9 @@ export const Header = () => {
   if (token === null) return null;
 
   const navLinks = [
-    { label: "Showroom", path: "/showroom" },
-    { label: "Tournament", path: "/tournament" },
-    { label: "Service", path: "/service" },
+    { label: t("showroom"), path: "/showroom" },
+    { label: t("tournament"), path: "/tournament" },
+    { label: t("services"), path: "/service" },
   ];
 
   const navigate = (path: string) => {
@@ -54,7 +59,7 @@ export const Header = () => {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 bg-moto-gray/80 backdrop-blur-sm shadow-md transition-transform duration-300 ${
+      className={`fixed bg-black top-0 left-0 right-0 z-50 bg-moto-gray/80 backdrop-blur-sm shadow-md transition-transform duration-300 ${
         showHeader ? "translate-y-0" : "-translate-y-full"
       }`}
     >
@@ -64,8 +69,16 @@ export const Header = () => {
           className="flex items-center gap-2 cursor-pointer"
           onClick={() => navigate("/")}
         >
-          <Image width={130} height={55} alt="logo" src="/logo.png" />
-          <span className="text-white text-xl font-bold">Elite Moto</span>
+          <Image
+            width={130}
+            height={55}
+            alt="logo"
+            src="/logo.png"
+            className="lg:h-[55px]  lg:w-[130px] h-[30px] w-[80px]"
+          />
+          <span className="text-white lg:text-xl text-md font-bold">
+            {t("name")}
+          </span>
         </div>
 
         {/* Desktop Nav */}
@@ -86,14 +99,14 @@ export const Header = () => {
         </nav>
 
         {!token ? (
-          <div className="hidden md:flex gap-4 ">
+          <div className="hidden md:flex gap-4 items-center">
             <div
               className={`flex items-center justify-center cursor-pointer border border-[#F95F19] px-4 py-2 rounded-sm duration-700 ${
                 pathname === "/login" ? "bg-[#F95F19]/90" : "hover:bg-[#f95f19]"
               }`}
               onClick={() => navigate("/login")}
             >
-              <p className="text-white">Нэвтрэх</p>
+              <p className="text-white">{t("login")}</p>
             </div>
             <div
               className={`flex items-center justify-center border border-[#F95F19] cursor-pointer px-4 py-2 rounded-sm duration-700 ${
@@ -103,20 +116,103 @@ export const Header = () => {
               }`}
               onClick={() => navigate("/signup")}
             >
-              <p className="text-white">Бүртгүүлэх</p>
+              <p className="text-white">{t("signup")}</p>
+            </div>
+            <div
+              className="
+            text-white"
+            >
+              {/* <h1>{t("welcome")}</h1> */}
+              <select
+                value={i18n.language}
+                onChange={handleChange}
+                className="bg-transparent outline-none"
+              >
+                <option value="en" className="bg-black">
+                  EN
+                </option>
+                <option className="bg-black" value="mn">
+                  MN
+                </option>
+                <option className="bg-black" value="ru">
+                  RU
+                </option>
+                <option className="bg-black" value="ko">
+                  KO
+                </option>
+                <option className="bg-black" value="ja">
+                  JA
+                </option>
+              </select>
             </div>
           </div>
         ) : (
-          <div
-            onClick={() => navigate("/profile")}
-            className="hidden md:flex items-center justify-center w-10 h-10 rounded-full bg-[#F95F19]/90 hover:bg-[#f95f19] cursor-pointer transition-colors"
-          >
-            <RiUser3Line className="text-white text-xl" />
+          <div className="flex  gap-2  items-center">
+            <div
+              onClick={() => navigate("/profile")}
+              className="hidden md:flex items-center justify-center w-10 h-10 rounded-full bg-[#F95F19]/90 hover:bg-[#f95f19] cursor-pointer transition-colors"
+            >
+              <RiUser3Line className="text-white text-xl" />
+            </div>
+            <div
+              className="
+            text-white"
+            >
+              {/* <h1>{t("welcome")}</h1> */}
+              <select
+                value={i18n.language}
+                onChange={handleChange}
+                className="bg-transparent outline-none"
+              >
+                <option value="en" className="bg-black">
+                  EN
+                </option>
+                <option className="bg-black" value="mn">
+                  MN
+                </option>
+                <option className="bg-black" value="ru">
+                  RU
+                </option>
+                <option className="bg-black" value="ko">
+                  KO
+                </option>
+                <option className="bg-black" value="ja">
+                  JA
+                </option>
+              </select>
+            </div>
           </div>
         )}
 
         {/* Mobile Menu Toggle */}
-        <div className="md:hidden flex items-center">
+        <div className="md:hidden flex items-center gap-2">
+          <div
+            className="
+            text-white"
+          >
+            {/* <h1>{t("welcome")}</h1> */}
+            <select
+              value={i18n.language}
+              onChange={handleChange}
+              className="bg-transparent outline-none"
+            >
+              <option value="en" className="bg-black">
+                EN
+              </option>
+              <option className="bg-black" value="mn">
+                MN
+              </option>
+              <option className="bg-black" value="ru">
+                RU
+              </option>
+              <option className="bg-black" value="ko">
+                KO
+              </option>
+              <option className="bg-black" value="ja">
+                JA
+              </option>
+            </select>
+          </div>
           <button
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label="Toggle menu"
@@ -154,7 +250,7 @@ export const Header = () => {
             }`}
             onClick={() => navigate("/profile")}
           >
-            Profile
+            {t("profile")}
           </p>
         </div>
       )}
