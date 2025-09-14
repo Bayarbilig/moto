@@ -9,7 +9,7 @@ export interface IBike extends Document {
   images: string[];
   details: string;
   price: number;
-  bikeType: string;
+  biketype: string;
   discount?: string;
   saled: boolean;
 }
@@ -26,7 +26,7 @@ const BikeSchema = new Schema<IBike>(
     price: { type: Number, required: true },
     discount: { type: String },
     saled: { type: Boolean, default: false },
-    bikeType: {
+    biketype: {
       type: String,
       required: true,
     },

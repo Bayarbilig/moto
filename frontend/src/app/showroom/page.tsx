@@ -1,12 +1,12 @@
-// app/showroom/page.tsx
 "use client";
 
 import { api } from "@/lib/axios";
 import Image from "next/image";
 import { useEffect, useState, Suspense } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { Equipment } from "../components/Types";
 import { Access } from "../components/ProductSection";
+import { useTranslation } from "next-i18next";
 
 type Bike = {
   _id: string;
@@ -15,34 +15,41 @@ type Bike = {
   cc: string;
   power: string;
   price: number;
+  biketype?: string;
   images: string[];
   discount?: string;
   saled: boolean;
 };
 
-// Extract the component that uses useSearchParams into a separate component
 const ShowroomContent = () => {
+  const { t } = useTranslation("common");
+  const params = useParams();
+  const router = useRouter();
+
+  const typeParam = params.type; // motorcycles, accessories, equipments
+  const [selectedType, setSelectedType] = useState<
+    "bike" | "accessories" | "equipment"
+  >("bike");
+
   const [bike, setBike] = useState<Bike[]>([]);
   const [accessories, setAccessories] = useState<Access[]>([]);
   const [equipment, setEquipment] = useState<Equipment[]>([]);
+  const [bikeCategory, setBikeCategory] = useState<
+    { _id: string; name: string }[]
+  >([]);
 
-  const searchParams = useSearchParams();
-  const router = useRouter();
-
-  const typeParam = searchParams.get("type");
-  const initialType =
-    typeParam === "bike" ||
-    typeParam === "accessories" ||
-    typeParam === "equipment"
-      ? typeParam
-      : "bike";
-
-  const [selectedType, setSelectedType] = useState<
-    "bike" | "accessories" | "equipment"
-  >(initialType);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [biketypeFilter, setBiketypeFilter] = useState<string>("");
   const itemsPerPage = 9;
+
+  // Set selectedType based on dynamic route
+  useEffect(() => {
+    if (typeParam === "motorcycles") setSelectedType("bike");
+    else if (typeParam === "accessories") setSelectedType("accessories");
+    else if (typeParam === "equipments") setSelectedType("equipment");
+    else setSelectedType("bike");
+  }, [typeParam]);
 
   // Fetch data
   useEffect(() => {
@@ -58,16 +65,27 @@ const ShowroomContent = () => {
       .get("/api/equipment")
       .then((res) => setEquipment(res.data))
       .catch(console.error);
+    api
+      .get("/api/bikeCategory")
+      .then((res) => setBikeCategory(res.data))
+      .catch(console.error);
   }, []);
 
-  // Reset page when type or search changes
-  useEffect(() => setCurrentPage(1), [selectedType, searchQuery]);
+  // Reset page when filter/search changes
+  useEffect(
+    () => setCurrentPage(1),
+    [selectedType, searchQuery, biketypeFilter]
+  );
 
   // Filtered items
   const filteredItems = {
-    bike: bike.filter((item) =>
-      item.title.toLowerCase().includes(searchQuery.toLowerCase())
-    ),
+    bike: bike
+      .filter((item) =>
+        item.title.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+      .filter((item) =>
+        biketypeFilter ? item.biketype === biketypeFilter : true
+      ),
     accessories: accessories.filter((item) =>
       item.name.toLowerCase().includes(searchQuery.toLowerCase())
     ),
@@ -110,11 +128,13 @@ const ShowroomContent = () => {
       <div className="max-w-7xl mx-auto mb-10 flex flex-col sm:flex-row items-center gap-4">
         <input
           type="search"
-          placeholder="Хайлт..."
+          placeholder={t("search")}
           className="w-[300px] px-4 py-2 rounded bg-[#1a1a1a] text-white border border-gray-700"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
+
+        {/* Item Type */}
         <div className="relative inline-block w-[300px]">
           <select
             value={selectedType}
@@ -125,9 +145,9 @@ const ShowroomContent = () => {
             }
             className="w-full appearance-none px-4 py-2 rounded bg-[#1a1a1a] text-white border border-gray-700"
           >
-            <option value="bike">Motorcycles</option>
-            <option value="accessories">Accessories</option>
-            <option value="equipment">Equipments</option>
+            <option value="bike">{t("motorcycle")}</option>
+            <option value="accessories">{t("accessories")}</option>
+            <option value="equipment">{t("equipments")}</option>
           </select>
           <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center">
             <svg
@@ -141,6 +161,35 @@ const ShowroomContent = () => {
             </svg>
           </div>
         </div>
+
+        {/* Bike Category Filter */}
+        {selectedType === "bike" && (
+          <div className="relative inline-block w-[300px]">
+            <select
+              value={biketypeFilter}
+              onChange={(e) => setBiketypeFilter(e.target.value)}
+              className="w-full appearance-none px-4 py-2 rounded bg-[#1a1a1a] text-white border border-gray-700"
+            >
+              <option value="">{t("all_categories")}</option>
+              {bikeCategory.map((cat) => (
+                <option key={cat._id} value={cat._id}>
+                  {t(cat.name)}
+                </option>
+              ))}
+            </select>
+            <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center">
+              <svg
+                className="w-4 h-4 text-white"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+              >
+                <path d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Items Grid */}
@@ -160,7 +209,7 @@ const ShowroomContent = () => {
               >
                 {bike.saled && (
                   <span className="absolute top-3 left-3 bg-red-600 text-white text-xs font-bold px-3 py-1 rounded z-10">
-                    Sold out
+                    {t("sold_out")}
                   </span>
                 )}
 
@@ -168,8 +217,8 @@ const ShowroomContent = () => {
                   <Image
                     src={bike.images[0]}
                     alt={bike.title}
-                    layout="fill"
-                    objectFit="cover"
+                    fill
+                    style={{ objectFit: "cover" }}
                     className="transition-transform duration-300 group-hover:scale-105"
                   />
                 </div>
@@ -193,15 +242,18 @@ const ShowroomContent = () => {
                   </p>
 
                   <div className="flex justify-between text-sm text-gray-300 border-t border-gray-700 pt-3">
-                    <span>Багтаамж: {bike.cc} cc</span>
-                    <span>Хүч: {bike.power} hp</span>
+                    <span>
+                      {t("capacity")}: {bike.cc} cc
+                    </span>
+                    <span>
+                      {t("power")}: {bike.power} hp
+                    </span>
                   </div>
                 </div>
               </div>
             );
           })}
 
-        {/* Accessories and Equipment */}
         {["accessories", "equipment"].map(
           (type) =>
             selectedType === type &&
@@ -223,8 +275,8 @@ const ShowroomContent = () => {
                       <Image
                         src={item.image}
                         alt={item.name}
-                        layout="fill"
-                        objectFit="contain"
+                        fill
+                        style={{ objectFit: "contain" }}
                         className="transition-transform duration-300"
                       />
                     </div>
@@ -261,7 +313,7 @@ const ShowroomContent = () => {
             disabled={currentPage === 1}
             className="px-4 py-2 bg-[#1a1a1a] border border-gray-600 rounded text-white disabled:opacity-50"
           >
-            Өмнөх
+            {t("previous")}
           </button>
 
           {[...Array(totalPages[selectedType])].map((_, i) => (
@@ -283,7 +335,7 @@ const ShowroomContent = () => {
             disabled={currentPage === totalPages[selectedType]}
             className="px-4 py-2 bg-[#1a1a1a] border border-gray-600 rounded text-white disabled:opacity-50"
           >
-            Дараах
+            {t("next")}
           </button>
         </div>
       )}
@@ -291,15 +343,18 @@ const ShowroomContent = () => {
   );
 };
 
-// Loading component for Suspense fallback
-const ShowroomLoading = () => (
-  <div className="min-h-screen bg-black text-white px-4 py-32 flex items-center justify-center">
-    <div className="text-center">
-      <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-[#F95F19] mx-auto mb-4"></div>
-      <p className="text-gray-400">Loading showroom...</p>
+const ShowroomLoading = () => {
+  const { t } = useTranslation("common");
+
+  return (
+    <div className="min-h-screen bg-black text-white px-4 py-32 flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-[#F95F19] mx-auto mb-4"></div>
+        <p className="text-gray-400">{t("loading_showroom")}</p>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const ShowroomPage = () => {
   return (

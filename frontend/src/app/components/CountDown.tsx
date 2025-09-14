@@ -1,6 +1,8 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { JSX, useEffect, useState } from "react";
+import { useTranslation } from "next-i18next";
+import { count } from "console";
 
 interface TimeLeft {
   days: number;
@@ -12,10 +14,10 @@ interface TimeLeft {
 export const CountdownSection = (): JSX.Element => {
   const [timeLeft, setTimeLeft] = useState<TimeLeft | null>(null);
   const router = useRouter();
+  const { t } = useTranslation("common");
 
   useEffect(() => {
     const getTimeRemaining = (): TimeLeft => {
-      
       const storedEndDate = localStorage.getItem("countdownEndDate");
 
       let endDate: Date;
@@ -66,7 +68,7 @@ export const CountdownSection = (): JSX.Element => {
     return () => clearInterval(interval);
   }, []);
 
-  if (!timeLeft) return <div>Loading...</div>;
+  if (!timeLeft) return <div>{t("loading")}</div>;
 
   return (
     <section
@@ -76,22 +78,21 @@ export const CountdownSection = (): JSX.Element => {
       <div className="absolute inset-0 bg-black/70"></div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 md:px-12 text-center grid gap-16 sm:gap-48">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-6 sm:mb-8 text-white leading-snug">
-          Мото урамдааны гал гарсан <br />
-          мөчүүдийг бүү алдаарай
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-6 sm:mb-8 text-white leading-snug w-[600px] text-center m-auto">
+          {t("countTitle")}
         </h2>
 
         <div>
           <p className="text-sm sm:text-base text-gray-300 mb-6 sm:mb-10 max-w-md sm:max-w-xl mx-auto leading-relaxed">
-            Шилдэг уралдаанчид, эрсдэлтэй сорилтууд, хязгааргүй хурд – бүгд энд!
+            {t("countdesc")}
           </p>
 
           <div className="flex justify-center gap-2 sm:gap-4 mb-6 sm:mb-10 flex-wrap">
             {[
-              { value: timeLeft.days, label: "Өдөр" },
-              { value: timeLeft.hours, label: "Цаг" },
-              { value: timeLeft.minutes, label: "Минут" },
-              { value: timeLeft.seconds, label: "Секунд" },
+              { value: timeLeft.days, label: t("day") },
+              { value: timeLeft.hours, label: t("hour") },
+              { value: timeLeft.minutes, label: t("minute") },
+              { value: timeLeft.seconds, label: t("second") },
             ].map(({ value, label }) => (
               <div
                 key={label}
@@ -110,13 +111,13 @@ export const CountdownSection = (): JSX.Element => {
               className="bg-black text-white px-6 py-2 text-sm rounded"
               onClick={() => router.push("/tournament")}
             >
-              Бүртгүүлэх
+              {t("signup")}
             </button>
             <button
               className="border-white text-white bg-[#F95F19] px-6 py-2 text-sm rounded"
               onClick={() => router.push("/tournament")}
             >
-              Тэмцээн мэдээлэл харах
+              {t("countdetail")}
             </button>
           </div>
         </div>

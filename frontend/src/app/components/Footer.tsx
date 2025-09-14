@@ -1,27 +1,28 @@
+"use client";
 import Image from "next/image";
 import Link from "next/link";
+import { useTranslation } from "next-i18next";
 import { BiMapPin } from "react-icons/bi";
 import { BsInstagram, BsYoutube } from "react-icons/bs";
 import { FaFacebook } from "react-icons/fa";
 import { MdLocalPhone, MdOutlineEmail } from "react-icons/md";
 
 export const Footer = () => {
+  const { t } = useTranslation("common");
   return (
-
-    <footer className="bg-[#1C1917] text-gray-300 pt-10 w-full">
+    <footer className="bg-black text-gray-300 pt-10 w-full">
       <div className="max-w-7xl mx-auto px-6 md:px-12 grid gap-20">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
           {/* Help Links */}
           <nav aria-label="Footer Navigation">
-
-            <h3 className="text-white font-bold mb-4">Тусламж</h3>
+            <h3 className="text-white font-bold mb-4">{t("help")}</h3>
             <ul className="space-y-2">
               <li>
                 <Link
                   href="/bike"
                   className="hover:text-moto-orange transition-colors"
                 >
-                  Showroom
+                  {t("showroom")}
                 </Link>
               </li>
               <li>
@@ -29,7 +30,7 @@ export const Footer = () => {
                   href="/tournament"
                   className="hover:text-moto-orange transition-colors"
                 >
-                  Tournament
+                  {t("tournament")}
                 </Link>
               </li>
               <li>
@@ -37,7 +38,7 @@ export const Footer = () => {
                   href="/services"
                   className="hover:text-moto-orange transition-colors"
                 >
-                  Service
+                  {t("services")}
                 </Link>
               </li>
             </ul>
@@ -45,11 +46,11 @@ export const Footer = () => {
 
           {/* Contact Info */}
           <address className="not-italic">
-            <h3 className="text-white font-bold mb-4">Холбоо барих</h3>
+            <h3 className="text-white font-bold mb-4">{t("contact")}</h3>
             <ul className="space-y-2">
               <li className="flex items-center gap-2">
                 <MdLocalPhone size={18} />
-                <span>Утас: 8957-8282</span>
+                <span>{t("phone")}: 8957-8282</span>
               </li>
               <li className="flex items-center gap-2">
                 <MdOutlineEmail size={18} />
@@ -61,21 +62,16 @@ export const Footer = () => {
                 </a>
               </li>
               <li className="flex items-start gap-2">
-                <BiMapPin size={18} className="mt-1" />
-                <span>
-                  Сансрын аюулгүйн тойрог,<br /> эвтэй 4 амьтны чанх ард <br />Auto Undral Service-н 2 давхарт, Ulaanbaatar, Mongolia
-                </span>
+                <BiMapPin size={32} className="mt-1" />
+                <span>{t("location")}</span>
               </li>
             </ul>
           </address>
 
           {/* Social Media */}
           <div>
-            <h3 className="text-white font-bold mb-4">Биднийг дагах</h3>
-            <p className="mb-4 text-sm leading-relaxed">
-              Elite Moto Shop нь мотоциклын худалдаа, засвар үйлчилгээ, дагалдах
-              хэрэгсэл, онлайн захиалга болон түрээсийн үйлчилгээ үзүүлдэг.
-            </p>
+            <h3 className="text-white font-bold mb-4">{t("follow_us")}</h3>
+            <p className="mb-4 text-sm leading-relaxed">{t("our_detail")}</p>
             <div className="flex gap-4">
               <a
                 href="https://www.facebook.com/EliteMotoShop1"
@@ -108,12 +104,10 @@ export const Footer = () => {
           </div>
         </div>
 
-
         {/* Bottom Bar */}
         <div className="border-t border-[#A8A29E] pt-4 flex flex-col md:flex-row justify-between items-center text-sm text-gray-400">
-          <p>© 2025 МОТО. Бүх эрх хуулиар хамгаалагдсан.</p>
-          <p className="mt-2 md:mt-0">Зохиогчийн эрхийн тухай</p>
-
+          <p>{t("all_rights_reserved")}</p>
+          <p className="mt-2 md:mt-0">{t("copyright")}</p>
         </div>
       </div>
 

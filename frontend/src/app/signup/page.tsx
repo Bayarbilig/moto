@@ -2,6 +2,7 @@
 import { api } from "@/lib/axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useTranslation } from "next-i18next";
 import { toast } from "react-toastify";
 
 type Errors = {
@@ -22,6 +23,7 @@ const SignupPage = () => {
     text: "",
     type: "",
   });
+  const { t } = useTranslation("common");
   const router = useRouter();
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -35,19 +37,19 @@ const SignupPage = () => {
     const newErrors: Errors = {};
 
     if (!formData.name.trim()) {
-      newErrors.name = "Нэр оруулна уу";
+      newErrors.name = t("name_attention");
     }
 
     if (!formData.email.trim()) {
-      newErrors.email = "Имэйл оруулна уу";
+      newErrors.email = t("email_required");
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = "Зөв имэйл оруулна уу";
+      newErrors.email = t("email_valid");
     }
 
     if (!formData.password) {
-      newErrors.password = "Нууц үг оруулна уу";
+      newErrors.password = t("password_attention");
     } else if (formData.password.length < 6) {
-      newErrors.password = "Нууц үг хамгийн багадаа 6 тэмдэгт байх ёстой";
+      newErrors.password = t("password_valid");
     }
 
     setErrors(newErrors);
@@ -69,11 +71,10 @@ const SignupPage = () => {
       const { token } = response.data;
 
       localStorage.setItem("token", token);
-      toast.success("Амжилттай нэвтэрлээ!");
+      toast.success(t("loginsucces"));
       router.push("/");
     } catch (error: any) {
-      const errorMessage =
-        error.response?.data?.message || "Бүртгэл амжилтгүй боллоо";
+      const errorMessage = error.response?.data?.message || "500";
       toast.error(errorMessage);
     } finally {
       setIsSubmitting(false);
@@ -81,18 +82,11 @@ const SignupPage = () => {
   };
 
   return (
-    <div
-      className="min-h-screen   flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8"
-      style={{
-        backgroundImage: "url('/honda.jpg')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
-    >
+    <div className="min-h-screen bg-black  flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8 bg-[#1a1a1a]/80 p-8 rounded-lg shadow-lg backdrop-blur-md">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
-            Бүртгүүлэх
+            {t("signup")}
           </h2>
         </div>
 
@@ -100,7 +94,7 @@ const SignupPage = () => {
           <div className="space-y-4">
             <div>
               <label htmlFor="name" className="block text-white mb-1">
-                Нэр
+                {t("username")}
               </label>
               <input
                 id="name"
@@ -108,7 +102,7 @@ const SignupPage = () => {
                 type="text"
                 autoComplete="name"
                 value={formData.name}
-                placeholder="Нэр оруулна уу"
+                placeholder={t("name_attention")}
                 onChange={handleChange}
                 className={`w-full p-2 rounded bg-transparent text-white border ${
                   errors.name ? "border-red-500" : "border-gray-600"
@@ -121,7 +115,7 @@ const SignupPage = () => {
 
             <div>
               <label htmlFor="email" className="block text-white mb-1">
-                Имэйл
+                {t("mail")}
               </label>
               <input
                 id="email"
@@ -130,7 +124,7 @@ const SignupPage = () => {
                 autoComplete="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="Е-майл оруулна уу"
+                placeholder={t("email_attention")}
                 className={`w-full p-2 rounded bg-transparent text-white border ${
                   errors.email ? "border-red-500" : "border-gray-600"
                 }`}
@@ -142,7 +136,7 @@ const SignupPage = () => {
 
             <div>
               <label htmlFor="password" className="block text-white mb-1">
-                Нууц үг
+                {t("password")}
               </label>
               <input
                 id="password"
@@ -150,7 +144,7 @@ const SignupPage = () => {
                 type="password"
                 autoComplete="new-password"
                 value={formData.password}
-                placeholder="Нууц үг оруулна уу"
+                placeholder={t("password_attention")}
                 onChange={handleChange}
                 className={`w-full p-2 rounded bg-transparent text-white border ${
                   errors.password ? "border-red-500" : "border-gray-600"
@@ -170,7 +164,7 @@ const SignupPage = () => {
                 isSubmitting ? "opacity-70 cursor-not-allowed" : ""
               }`}
             >
-              {isSubmitting ? "Түр хүлээнэ үү..." : "Бүртгүүлэх"}
+              {isSubmitting ? t("wait") : t("signup")}
             </button>
           </div>
         </form>

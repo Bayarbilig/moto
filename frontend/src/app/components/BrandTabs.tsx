@@ -5,6 +5,7 @@ import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/axios";
+import { useTranslation } from "next-i18next";
 
 type Bike = {
   brand: any;
@@ -25,7 +26,6 @@ type BikeData = {
 
 export const BrandTabs = () => {
   type BrandSlug = keyof BikeData;
-
   const [activeTab, setActiveTab] = useState<BrandSlug>("harley");
   const [bikeIndex, setBikeIndex] = useState(0);
   const [bikeData, setBikeData] = useState<BikeData | null>(null);
@@ -36,6 +36,7 @@ export const BrandTabs = () => {
       slug: string;
     }[]
   >([]);
+  const { t } = useTranslation("common");
 
   const router = useRouter();
 
@@ -108,12 +109,12 @@ export const BrandTabs = () => {
   }, [brands]);
 
   if (!bikeData)
-    return <div className="text-center py-12">Loading bikes...</div>;
+    return <div className="text-center py-12">{t("loading_bikes")}</div>;
 
   const bikes = bikeData[activeTab] || [];
 
   if (bikes.length === 0)
-    return <div className="text-center py-12">Мэдээлэл олдсонгүй.</div>;
+    return <div className="text-center py-12">{t("not_fount_bikes")}</div>;
 
   const bike = bikes[bikeIndex];
 
@@ -138,7 +139,7 @@ export const BrandTabs = () => {
             const slug = brand.slug.toLowerCase() as BrandSlug;
             const hasBikes = bikeData?.[slug]?.length > 0;
 
-            if (!hasBikes) return null; 
+            if (!hasBikes) return null;
 
             return (
               <button
@@ -208,17 +209,17 @@ export const BrandTabs = () => {
             transition={{ duration: 0.3 }}
             className="bg-moto-dark/70 backdrop-blur-sm p-4 rounded mt-6 absolute bottom-0 left-32"
           >
-            <p className="uppercase text-xs text-gray-400">МОТОЦИКЛ</p>
+            <p className="uppercase text-xs text-gray-400">{t("motorcycle")}</p>
             <h3 className="text-xl font-bold text-white">{bike.bikeModel}</h3>
 
             <div className="flex items-center mt-2 space-x-2">
               <div className="text-sm">
-                <span className="text-gray-400">Моторын багтаамж:</span>
+                <span className="text-gray-400">{t("capacity")}:</span>
                 <span className="text-white ml-2">{bike.cc}</span>
               </div>
               <span className="text-gray-500">•</span>
               <div className="text-sm">
-                <span className="text-gray-400">Хурд:</span>
+                <span className="text-gray-400">{t("speed")}:</span>
                 <span className="text-white ml-2">{bike.power}</span>
               </div>
             </div>
@@ -239,7 +240,7 @@ export const BrandTabs = () => {
             className="absolute right-32 bottom-12 text-[#F95F19] cursor-pointer hover:text-orange-500 transition duration-300"
             onClick={() => router.push("/shworoom/bike")}
           >
-            Бүгдийг үзэх
+            {t("wiew_all")}
           </div>
         </div>
       </section>

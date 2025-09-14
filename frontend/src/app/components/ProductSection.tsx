@@ -4,6 +4,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { api } from "@/lib/axios";
 import { Equipment } from "./Types";
 import { useRouter } from "next/navigation";
+import { useTranslation } from "next-i18next";
+
 export interface Access {
   model: string;
   brand: string;
@@ -14,17 +16,19 @@ export interface Access {
   name: string;
   discount?: string;
 }
+
 export const ProductSection = () => {
   const accessoriesRef = useRef<HTMLDivElement>(null);
   const equipmentRef = useRef<HTMLDivElement>(null);
   const [accessories, setAccessories] = useState<Access[]>([]);
   const [equipment, setEquipment] = useState<Equipment[]>([]);
   const router = useRouter();
+  const { t } = useTranslation("common");
 
   const scrollAccessories = (direction: "left" | "right") => {
     const container = accessoriesRef.current;
     if (container) {
-      const scrollAmount = container.clientWidth * 0.75; // Scroll by 75% of the container width for a smoother experience
+      const scrollAmount = container.clientWidth * 0.75;
       container.scrollBy({
         left: direction === "left" ? -scrollAmount : scrollAmount,
         behavior: "smooth",
@@ -35,13 +39,14 @@ export const ProductSection = () => {
   const scrollEquipment = (direction: "left" | "right") => {
     const container = equipmentRef.current;
     if (container) {
-      const scrollAmount = container.clientWidth * 0.75; // Same as above
+      const scrollAmount = container.clientWidth * 0.75;
       container.scrollBy({
         left: direction === "left" ? -scrollAmount : scrollAmount,
         behavior: "smooth",
       });
     }
   };
+
   const fetchAccessories = useCallback(async () => {
     try {
       const res = await api.get("/api/accessories");
@@ -50,6 +55,7 @@ export const ProductSection = () => {
       console.error("Failed to fetch accessories:", error);
     }
   }, []);
+
   const fetchEquipment = useCallback(async () => {
     try {
       const res = await api.get("/api/equipment");
@@ -63,6 +69,7 @@ export const ProductSection = () => {
     fetchEquipment();
     fetchAccessories();
   }, [fetchEquipment, fetchAccessories]);
+
   const handleClickAccessories = () => {
     router.push("/showroom?type=accessories");
   };
@@ -77,46 +84,49 @@ export const ProductSection = () => {
   };
 
   return (
-    <section className="py-16 bg-moto-dark bg-cover gap-32 grid ">
-      <div className="max-w-7xl mx-auto px-6 md:px-12">
-        <div className="flex items-center justify-between">
-          <h2 className="text-xl md:text-2xl font-bold mb-8 text-white">
-            Мотоциклийн сэлбэг
+    <section className="py-12 md:py-16 bg-moto-dark bg-cover space-y-20">
+      {/* Accessories */}
+      <div className="max-w-7xl mx-auto px-4 md:px-8">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-lg md:text-2xl font-bold text-white">
+            {t("moto_parts")}
           </h2>
-          <button onClick={handleClickAccessories} className="text-[#F95F19]">
-            Бүгдийг харах
+          <button
+            onClick={handleClickAccessories}
+            className="text-[#F95F19] text-sm md:text-base"
+          >
+            {t("wiew_all")}
           </button>
         </div>
 
-        {/* Accessories Section */}
         <div className="relative">
           <div
             ref={accessoriesRef}
-            className="flex space-x-6 overflow-x-auto scroll-smooth scrollbar-hide pb-6"
+            className="flex gap-4 md:gap-6 overflow-x-auto scroll-smooth scrollbar-hide pb-4"
           >
-            {accessories.map((product, index) => (
+            {accessories.map((product) => (
               <button
                 onClick={() => handleClickAccessoriesId(product._id)}
-                key={index}
-                className="min-w-[260px] max-w-[260px]  bg-[#2f2e2e] rounded-md overflow-hidden flex-shrink-0 h-fit"
+                key={product._id}
+                className="w-48 sm:w-56 md:w-64 bg-[#2f2e2e] rounded-lg overflow-hidden flex-shrink-0"
               >
-                <div className="relative h-48 overflow-hidden ">
+                <div className="relative h-40 sm:h-44 md:h-48 overflow-hidden">
                   <img
                     src={product.image}
                     alt={product.name}
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute top-0 left-3 bg-[#F95F19] w-fit transform -skew-x-12">
-                    <span className="product-price text-white py-2 px-3">
+                    <span className="product-price text-white py-1 px-2 text-xs sm:text-sm">
                       {product.price}₮
                     </span>
                   </div>
                 </div>
-                <div className="p-4 bg-black">
-                  <p className="text-gray-400 text-xs md:text-sm uppercase">
+                <div className="p-3 bg-black h-full">
+                  <p className="text-gray-400 text-xs uppercase">
                     {product.brand}
                   </p>
-                  <h3 className="text-white font-bold mt-1 text-sm md:text-base">
+                  <h3 className="text-white font-bold mt-1 text-sm line-clamp-2">
                     {product.name}
                     {product.model && ` ${product.model}`}
                   </h3>
@@ -125,64 +135,67 @@ export const ProductSection = () => {
             ))}
           </div>
 
-          {/* Navigation Buttons */}
           {accessories.length > 4 && (
             <>
               <button
                 onClick={() => scrollAccessories("left")}
-                className="absolute -left-6 top-1/2 transform -translate-y-1/2 -translate-x-4 p-2 bg-[#F95F19] rounded-full hidden md:block"
+                className="absolute -left-3 sm:-left-6 top-1/2 -translate-y-1/2 p-2 bg-[#F95F19] rounded-full hidden md:block"
               >
-                <BiChevronLeft size={24} className="text-white" />
+                <BiChevronLeft size={20} className="text-white" />
               </button>
               <button
                 onClick={() => scrollAccessories("right")}
-                className="absolute -right-6 top-1/2 transform -translate-y-1/2 translate-x-4 p-2 bg-[#F95F19] rounded-full hidden md:block"
+                className="absolute -right-3 sm:-right-6 top-1/2 -translate-y-1/2 p-2 bg-[#F95F19] rounded-full hidden md:block"
               >
-                <BiChevronRight size={24} className="text-white" />
+                <BiChevronRight size={20} className="text-white" />
               </button>
             </>
           )}
         </div>
       </div>
 
-      {/* Equipment Section */}
-      <div className="max-w-7xl mx-auto px-6 md:px-12">
-        <div className="flex items-center justify-between">
-          <h2 className="text-xl md:text-xl font-bold mb-8 text-white">
-            Мотоциклийн багаж хэрэгсэл
+      {/* Equipment */}
+      <div className="max-w-7xl mx-auto px-4 md:px-8">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-lg md:text-2xl font-bold text-white">
+            {t("moto_accessories")}
           </h2>
-          <button onClick={handleClickEquipment} className="text-[#F95F19]">
-            Бүгдийг харах
+          <button
+            onClick={handleClickEquipment}
+            className="text-[#F95F19] text-sm md:text-base"
+          >
+            {t("wiew_all")}
           </button>
         </div>
+
         <div className="relative">
           <div
             ref={equipmentRef}
-            className="flex space-x-6 overflow-x-auto scroll-smooth scrollbar-hide pb-6"
+            className="flex gap-4 md:gap-6 overflow-x-auto scroll-smooth scrollbar-hide pb-4"
           >
-            {equipment.map((product, index) => (
+            {equipment.map((product) => (
               <button
                 onClick={() => handleClickEquipmentId(product._id)}
-                key={index}
-                className="min-w-[260px] max-w-[260px]  bg-[#2f2e2e] rounded-md overflow-hidden flex-shrink-0 h-fit"
+                key={product._id}
+                className="w-48 sm:w-56 md:w-64 bg-[#2f2e2e] rounded-lg overflow-hidden flex-shrink-0"
               >
-                <div className="relative h-48 overflow-hidden">
+                <div className="relative h-40 sm:h-44 md:h-48 overflow-hidden">
                   <img
                     src={product.image}
                     alt={product.name}
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute top-0 left-3 bg-[#F95F19] w-fit transform -skew-x-12">
-                    <span className="product-price text-white py-2 px-3">
+                    <span className="product-price text-white py-1 px-2 text-xs sm:text-sm">
                       {product.price}₮
                     </span>
                   </div>
                 </div>
-                <div className="p-4 bg-black">
-                  <p className="text-gray-400 text-xs md:text-sm uppercase">
+                <div className="p-3 bg-black h-full">
+                  <p className="text-gray-400 text-xs uppercase">
                     {product.brand}
                   </p>
-                  <h3 className="text-white font-bold mt-1 text-sm md:text-base">
+                  <h3 className="text-white font-bold mt-1 text-sm line-clamp-2">
                     {product.name}
                     {product.model && ` ${product.model}`}
                   </h3>
@@ -191,20 +204,19 @@ export const ProductSection = () => {
             ))}
           </div>
 
-          {/* Navigation Buttons */}
           {equipment.length > 4 && (
             <>
               <button
                 onClick={() => scrollEquipment("left")}
-                className="absolute -left-6 top-1/2 transform -translate-y-1/2 -translate-x-4 p-2 bg-[#F95F19] rounded-full hidden md:block"
+                className="absolute -left-3 sm:-left-6 top-1/2 -translate-y-1/2 p-2 bg-[#F95F19] rounded-full hidden md:block"
               >
-                <BiChevronLeft size={24} className="text-white" />
+                <BiChevronLeft size={20} className="text-white" />
               </button>
               <button
                 onClick={() => scrollEquipment("right")}
-                className="absolute -right-6 top-1/2 transform -translate-y-1/2 translate-x-4 p-2 bg-[#F95F19] rounded-full hidden md:block"
+                className="absolute -right-3 sm:-right-6 top-1/2 -translate-y-1/2 p-2 bg-[#F95F19] rounded-full hidden md:block"
               >
-                <BiChevronRight size={24} className="text-white" />
+                <BiChevronRight size={20} className="text-white" />
               </button>
             </>
           )}

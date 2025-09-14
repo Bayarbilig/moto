@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "next-i18next";
 
 interface TeamMemberProps {
   name: string;
@@ -44,52 +45,55 @@ const TeamMember = ({
 };
 
 const About = () => {
+  const { t } = useTranslation("common");
   const teamMembers = [
     {
-      name: "Dorj",
-      role: "Founder",
+      name: t("Dorj"),
+      role: t("founder"),
       image: "dorj.jpg",
       phone: "+976 8957-8282",
     },
     {
-      name: "Bat-erdene",
-      role: "CEO",
+      name: t("Bat-erdene"),
+      role: t("ceo"),
       image: "Bat-erdene.jpg",
       phone: "+976 9910-1857",
     },
     {
-      name: "Tuguldur",
-      role: "Manager",
+      name: t("Tuguldur"),
+      role: t("maneger"),
       image: "tuguldur.jpg",
       phone: "+976 9191-3934",
     },
     {
-      name: "Tselmeg",
-      role: "Mechanic and welder",
+      name: t("Tselmeg"),
+      role: t("mechanic"),
       image: "tselmeg.jpg",
       phone: "+976 8512-9593",
     },
     {
-      name: "Bilguun",
-      role: "Mechanic",
+      name: t("Bilguun"),
+      role: t("mechanic2"),
       image: "u.bilguun.jpg",
       phone: "+976 9577-9159",
     },
     {
-      name: "Radnaabazar",
-      role: "Mechanic",
+      name: t("Radnaabazar"),
+      role: t("mechanic3"),
       image: "radnaa.jpg",
       phone: "+976 9478-6311",
     },
   ];
   const partners = [
-    { img: "/net.jpg", name: "NetCapital" },
-    { img: "/ylguun.jpg", name: "Ялгуун дизайн" },
-    { img: "/msk.jpg", name: "Мөнх-Орших капитал ББСБ" },
-    { img: "/net.jpg", name: "NetCapital" },
-    { img: "/ylguun.jpg", name: "Ялгуун дизайн" },
-    { img: "/msk.jpg", name: "Мөнх-Орших капитал ББСБ" },
+    { img: "/net.jpg", link: "https://www.facebook.com/netcapital.mn" },
+    { img: "/ylguun.jpg", link: "https://www.facebook.com/Yalguundesign" },
+    { img: "/msk.jpg", link: "https://www.facebook.com/munkhorshikhcapital" },
+    { img: "/net.jpg", link: "https://www.facebook.com/netcapital.mn" },
+    { img: "/ylguun.jpg", link: "https://www.facebook.com/Yalguundesign" },
+    { img: "/msk.jpg", link: "https://www.facebook.com/munkhorshikhcapital" },
   ];
+  const marqueePartners = [...partners, ...partners, ...partners];
+
   return (
     <div className="min-h-screen bg-black">
       {/* Intro Section */}
@@ -98,12 +102,11 @@ const About = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <div>
               <h1 className="text-4xl md:text-5xl font-bold text-slate-400 mb-8">
-                "Мотоцикл сонирхогч та бүхэндээ хамгийн чанартай барааг хүргэх
-                болно"
+                {t("detaillefttop")}
               </h1>
               <div className="mt-4 text-white text-lg">
                 <p>
-                  Холбоо барих:{" "}
+                  {t("phone")}:{" "}
                   <a
                     href="tel:+97689578282"
                     className="text-blue-400 underline hover:text-blue-300"
@@ -114,18 +117,8 @@ const About = () => {
               </div>
             </div>
             <div>
-              <p className="text-white text-lg">
-                Мото спортод дуртай, адал явдалд дурлагч та бүхэнд зориулагдсан
-                Мото шоп нь зөвхөн чанартай, баталгаатай бараа бүтээгдэхүүн,
-                тоног төхөөрөмж, мэргэжлийн засвар үйлчилгээ, сэлбэг хэрэгслийг
-                нэг дороос санал болгож байна.
-              </p>
-              <p className="text-white text-lg mt-4">
-                Энэхүү брэнд нь байгаль, хурд болон эрх чөлөө гэсэн гурван үнэ
-                цэнийг эрхэмлэн үйл ажиллагаагаа явуулдаг. Анх хобби маягаар
-                эхэлсэн аялал маань өнөөдөр олон зуун хэрэглэгчтэй, мэргэжлийн
-                түвшний баг болж өргөжсөн.
-              </p>
+              <p className="text-white text-lg">{t("detailrightTop1")}</p>
+              <p className="text-white text-lg mt-4">{t("detailrightTop2")}</p>
             </div>
           </div>
         </div>
@@ -144,14 +137,9 @@ const About = () => {
             </div>
             <div>
               <h2 className="text-2xl md:text-3xl font-bold text-white mb-6">
-                ХҮСЭЛ МӨРӨӨДЛӨӨС ЭРХЭМ ЗОРИЛГОД
+                {t("dream")}
               </h2>
-              <p className="text-white text-lg">
-                Байгальд ээлтэй, аюулгүй, сэтгэл хөдөлгөм аялал зохион байгуулах
-                нь бидний туйлын зорилго. Мөн зөвхөн аялал биш — хэрэглэгч
-                бүрдээ мото ертөнцийн сэтгэл хөдлөл, үнэ цэнийг мэдрүүлэхийг
-                зорьдог.
-              </p>
+              <p className="text-white text-lg">{t("dreamtext")}</p>
             </div>
           </div>
         </div>
@@ -159,20 +147,19 @@ const About = () => {
       <div className="relative py-8">
         <div className="overflow-hidden">
           <div className="flex animate-marquee whitespace-nowrap gap-12">
-            {partners.concat(partners).map((partner, index) => (
-              <div
+            {marqueePartners.map((partner, index) => (
+              <a
+                href={partner.link}
                 key={index}
                 className="flex-shrink-0 flex flex-col items-center"
               >
                 <img
                   src={partner.img}
-                  alt={partner.name}
-                  className="h-16 md:h-20 object-contain transition-transform duration-300 hover:scale-110"
+                  alt={partner.link}
+                  className="h-20 lg:h-40 object-contain transition-transform duration-300 hover:scale-110"
                 />
-                <span className="mt-2 text-gray-300 text-sm md:text-base">
-                  {partner.name}
-                </span>
-              </div>
+                <span className="mt-2 text-gray-300 text-sm md:text-base"></span>
+              </a>
             ))}
           </div>
         </div>
@@ -182,7 +169,7 @@ const About = () => {
       <section className="py-16 px-6 md:px-12">
         <div className="container mx-auto">
           <h2 className="text-2xl md:text-3xl font-bold text-white mb-12">
-            МАНАЙ БАГ
+            {t("our_team")}
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
             {teamMembers.map((member, index) => (

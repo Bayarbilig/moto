@@ -16,6 +16,7 @@ import { EventManager } from "../components/EventManeger";
 import { CreateService } from "../components/CreateService";
 import { Services } from "../components/Services";
 import AlertTab from "../components/Alert";
+import BikeCategory from "../components/BIkeCategoryManeger";
 
 const AdminPanel = () => {
   const [activeTab, setActiveTab] = useState("Users");
@@ -311,6 +312,7 @@ const AdminPanel = () => {
       {activeTab === "Moto" && (
         <div className="grid gap-32 w-full px-32">
           <div className="grid gap-20">
+            <BikeCategory />
             <BrandManager
               brands={brands}
               onCreateBrand={handleCreateBrand}

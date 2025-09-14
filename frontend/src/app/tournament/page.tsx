@@ -4,10 +4,12 @@ import EventCard from "../components/EventCard";
 import { useRouter } from "next/navigation";
 import { Event } from "../components/Types";
 import { api } from "@/lib/axios";
+import { useTranslation } from "next-i18next";
 
 const Page = () => {
   const [events, setEvents] = useState<Event[]>([]);
   const router = useRouter();
+  const { t } = useTranslation("common");
   const fetchEvents = useCallback(async () => {
     try {
       const res = await api.get("/api/event");
@@ -22,30 +24,29 @@ const Page = () => {
   const mockEvents = [
     {
       _id: "68889bd21ae0f631ccbecebd",
-      category: "Sport Bike",
+      category: t("Sport-bikes"),
       createdAt: "2025-07-29T10:00:50.679Z",
       updatedAt: "2025-07-29T10:00:50.679Z",
       date: "2025-09-06",
       title: "EliteMotoGP Round 2",
-      description:
-        "Элит MotoGP тэмцээний 2-р тойрог 9-р сарын 06-нд Power land дээр болно! Өндөр хурд, нарийн ур чадвар, мото спортын оргил тулаанууд таныг хүлээж байна!",
+      description: t("tour_des"),
       image: "./tournament.jpg",
       location: "22 Power land",
       // applyButtonText: "Apply хийх",
-      viewButtonText: "Тэмцээн харах",
+      viewButtonText: t("view_com"),
       roadDetailImage: "./road.jpg",
       tournamentDetail: "./types.jpg",
     },
   ];
 
   return (
-    <div className=" py-32 bg-[#1E1E1E] ">
+    <div className=" py-32 bg-black ">
       <div className=" mx-auto px-4">
         <div className="py-12">
-          <h1 className="text-3xl font-bold text-white mb-2 ">Мото Тэмцээн</h1>
-          <p className="text-[#A1A1AA]">
-            Монголын шилдэг мотоциклын тэмцээнүүд
-          </p>
+          <h1 className="text-3xl font-bold text-white mb-2 ">
+            {t("moto_tournament")}
+          </h1>
+          <p className="text-[#A1A1AA]">{t("moto_tournament_detail")}</p>
         </div>
         <div className="grid gap-10  ">
           {mockEvents.map((event, index) => (

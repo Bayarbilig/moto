@@ -5,24 +5,26 @@ import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import scrollSvg from "../svgs/scrollSvg.svg";
-
-const slides = [
-  {
-    title: "Мото ертөнцийн бүхий л хэрэгцээг\nнэг дороос",
-    background: "/section.png",
-  },
-  {
-    title: "Хамгийн шилдэг мото бараа, үйлчилгээ",
-    background: "/moto2.jpg",
-  },
-  {
-    title: "Эрч хүчтэй амьдралын хэв маяг",
-    background: "/moto3.jpg",
-  },
-];
+import { useTranslation } from "next-i18next";
 
 export const HeroSection = () => {
   const [current, setCurrent] = useState(0);
+  const { t } = useTranslation("common");
+
+  const slides = [
+    {
+      title: t("carouselDetail2"), // { } шаардлагагүй
+      background: "/section.png",
+    },
+    {
+      title: t("carouselDetail3"),
+      background: "/moto2.jpg",
+    },
+    {
+      title: t("carouselDetail1"),
+      background: "/moto3.jpg",
+    },
+  ];
 
   const nextSlide = () => {
     setCurrent((prev) => (prev + 1) % slides.length);
@@ -38,7 +40,7 @@ export const HeroSection = () => {
   }, []);
 
   return (
-    <section className="relative h-screen overflow-hidden ">
+    <section className="relative h-screen overflow-hidden">
       <AnimatePresence mode="wait">
         <motion.div
           key={slides[current].background}
@@ -91,7 +93,7 @@ export const HeroSection = () => {
         </div>
 
         <div className="flex flex-col items-center gap-2">
-          <p className="text-white">Scroll down</p>
+          <p className="text-white">{t("scroll_down")}</p>
           <Image src={scrollSvg} height={60} width={10} alt="Scroll icon" />
         </div>
         <div></div>
@@ -99,4 +101,4 @@ export const HeroSection = () => {
     </section>
   );
 };
-``;
+1;
