@@ -50,6 +50,7 @@ export const Header = () => {
     { label: t("showroom"), path: "/showroom" },
     { label: t("tournament"), path: "/tournament" },
     { label: t("services"), path: "/service" },
+        { label: t("contact"), path: "/contact" },
   ];
 
   const navigate = (path: string) => {

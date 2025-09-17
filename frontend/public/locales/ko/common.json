@@ -87,5 +87,17 @@
   "tour_des": "엘리트 MotoGP 2라운드는 9월 6일 Power Land에서 열립니다! 고속, 정밀한 기술, 모터스포츠의 궁극적인 대결이 여러분을 기다립니다!",
   "scroll_down": "아래로 스크롤",
   "exit": "종료",
-  "save": "저장"
+  "save": "저장",
+    "how_we_work": "우리는 어떻게 일하나요?",
+  "view_on_map": "Google 지도에서 보기",
+  "click_here": "여기를 클릭하세요",
+  "general_info": "일반 정보",
+  "address": "주소",
+  "marketing_manager": "마케팅 매니저",
+  "service": "서비스",
+  "shop": "매장",
+  "feedback": "피드백 및 불만",
+  "working_hours": "영업 시간",
+  "every_day": "매일",
+  "monday_closed": "월요일은 영업하지 않습니다."
 }
