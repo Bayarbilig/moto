@@ -268,7 +268,7 @@ const ShowroomContent = () => {
                 return (
                   <div
                     key={index}
-                    onClick={() => handleClickItem(item._id, type)}
+                    // onClick={() => handleClickItem(item._id, type)}
                     className="cursor-pointer group bg-gradient-to-br from-[#1a1a1a] to-[#111] border border-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300"
                   >
                     <div className="relative w-full h-56 bg-[#0f0f0f]">
