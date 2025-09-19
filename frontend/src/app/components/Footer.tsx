@@ -4,11 +4,12 @@ import Link from "next/link";
 import { useTranslation } from "next-i18next";
 import { BiMapPin } from "react-icons/bi";
 import { BsInstagram, BsYoutube } from "react-icons/bs";
-import { FaFacebook } from "react-icons/fa";
+import { FaFacebook, FaTelegramPlane, FaFacebookMessenger } from "react-icons/fa";
 import { MdLocalPhone, MdOutlineEmail } from "react-icons/md";
 
 export const Footer = () => {
   const { t } = useTranslation("common");
+
   return (
     <footer className="bg-black text-gray-300 pt-10 w-full">
       <div className="max-w-7xl mx-auto px-6 md:px-12 grid gap-20">
@@ -41,16 +42,29 @@ export const Footer = () => {
                   {t("services")}
                 </Link>
               </li>
+              <li>
+                <Link
+                  href="/contact"
+                  className="hover:text-moto-orange transition-colors"
+                >
+                  {t("contact")}
+                </Link>
+              </li>
             </ul>
           </nav>
 
           {/* Contact Info */}
           <address className="not-italic">
             <h3 className="text-white font-bold mb-4">{t("contact")}</h3>
-            <ul className="space-y-2">
+            <ul className="space-y-3 text-sm">
               <li className="flex items-center gap-2">
                 <MdLocalPhone size={18} />
-                <span>{t("phone")}: 8957-8282</span>
+                <a
+                  href="tel:89578282"
+                  className="hover:text-moto-orange transition-colors"
+                >
+                  8957-8282
+                </a>
               </li>
               <li className="flex items-center gap-2">
                 <MdOutlineEmail size={18} />
