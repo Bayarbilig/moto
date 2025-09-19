@@ -106,7 +106,7 @@ export const ProductSection = () => {
           >
             {accessories.map((product) => (
               <button
-                onClick={() => handleClickAccessoriesId(product._id)}
+                // onClick={() => handleClickAccessoriesId(product._id)}
                 key={product._id}
                 className="w-48 sm:w-56 md:w-64 bg-[#2f2e2e] rounded-lg overflow-hidden flex-shrink-0"
               >
@@ -175,7 +175,7 @@ export const ProductSection = () => {
           >
             {equipment.map((product) => (
               <button
-                onClick={() => handleClickEquipmentId(product._id)}
+                // onClick={() => handleClickEquipmentId(product._id)}
                 key={product._id}
                 className="w-48 sm:w-56 md:w-64 bg-[#2f2e2e] rounded-lg overflow-hidden flex-shrink-0"
               >
