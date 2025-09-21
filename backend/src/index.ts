@@ -25,7 +25,7 @@ connectToDatabase();
 
 app.use(
   cors({
-    origin: ["http://192.168.0.101:3000"],
+    origin: ["https://www.elitemoto.mn"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
@@ -47,7 +47,7 @@ app.use("/api/booking", bookingRouter);
 app.use("/api/services", serviceRouter);
 app.use("/api/motoservices", motoServiceRouter);
 app.use("/api/showAlert", showAlertRoute);
-app.use("/api/bikeCategory",bikeCategoryRoute)
+app.use("/api/bikeCategory", bikeCategoryRoute);
 
 app.listen(port, () => {
   console.log(`Сервер ${port} порт дээр ажиллаж байна`);
